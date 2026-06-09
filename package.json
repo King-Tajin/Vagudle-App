@@ -1,0 +1,17 @@
+{
+  "name": "android-app",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "update:web": "git submodule update --remote web-core && git add web-core && git commit -m 'chore: update web-core'",
+    "android": "npm run build && npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0",
+    "typescript": "^6.0.3"
+  }
+}
