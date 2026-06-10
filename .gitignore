@@ -10,5 +10,5 @@ yarn-error.log*
 
 .vscode/*
 /.idea/
-/android/
 /dist/
+/android/.idea/
