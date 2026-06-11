@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.js",
-    "update:web": "git submodule update --remote web-core && git add web-core && git commit -m 'chore: update web-core'",
+    "update:web": "node scripts/check-overrides.js && git submodule update --remote web-core && git add web-core && git commit -m 'chore: update web-core'",
     "android": "npm run build && npx cap open android"
   },
   "dependencies": {
