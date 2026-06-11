@@ -45,5 +45,5 @@ affected.forEach((f) => console.log(`  web-core/${f}  →  overrides/${f}`));
 console.log(`\nReview the diff before updating:`);
 console.log(`  https://github.com/King-Tajin/Vagudle/compare/${currentSha}...${remoteSha}\n`);
 console.log('Update the overrides if needed, then run the update manually:');
-console.log('  git submodule update --remote web-core && git add web-core && git commit -m \'chore: update web-core\'\n');
+console.log('  git submodule update --remote web-core\n');
 process.exit(1);

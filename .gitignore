@@ -12,3 +12,4 @@ yarn-error.log*
 /.idea/
 /dist/
 /android/.idea/
+/.build-tmp/

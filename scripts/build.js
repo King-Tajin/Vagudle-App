@@ -8,6 +8,8 @@ const webCore = path.join(root, 'web-core');
 const overrides = path.join(root, 'overrides');
 const dist = path.join(root, 'dist');
 
+const SERVER_ONLY = ['functions', 'migrations', 'wrangler.toml'];
+
 function run(cmd, cwd = root) {
     execSync(cmd, { cwd, stdio: 'inherit' });
 }
@@ -23,6 +25,10 @@ copyDir(webCore, tmp);
 
 if (fs.existsSync(overrides)) {
     copyDir(overrides, tmp);
+}
+
+for (const entry of SERVER_ONLY) {
+    fs.rmSync(path.join(tmp, entry), { recursive: true, force: true });
 }
 
 run('npm install', tmp);
