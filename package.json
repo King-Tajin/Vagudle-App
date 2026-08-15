@@ -4,14 +4,22 @@
   "scripts": {
     "build": "node scripts/build.js",
     "update:web": "node scripts/check-overrides.js && git submodule update --remote web-core",
-    "android": "npm run build && npx cap open android"
+    "android": "pnpm run build && npx cap open android",
+    "typecheck": "node ./node_modules/typescript-7/bin/tsc --noEmit",
+    "format": "prettier --write \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/*.js\" \"*.{json,js,cjs,md}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\"",
+    "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/*.js\" \"*.{json,js,cjs,md}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\""
   },
   "dependencies": {
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/core": "^7.0.0"
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.0.0",
-    "typescript": "^6.0.3"
-  }
+    "@capacitor/cli": "^8.5.0",
+    "@prettier/plugin-xml": "^3.4.2",
+    "prettier": "^3.9.6",
+    "prettier-plugin-java": "^2.10.3",
+    "typescript": "^6.0.3",
+    "typescript-7": "npm:typescript@^7.0.2"
+  },
+  "packageManager": "pnpm@11.21.0"
 }

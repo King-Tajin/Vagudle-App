@@ -1,0 +1,9 @@
+dist
+node_modules
+web-core
+package-lock.json
+pnpm-lock.yaml
+android/app/capacitor.build.gradle
+android/capacitor.settings.gradle
+android/app/src/main/res/xml/config.xml
+android/app/src/main/assets

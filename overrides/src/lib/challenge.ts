@@ -15,8 +15,8 @@ export type ChallengeGameState = {
   savedAt?: number;
 };
 
-const TWO_YEARS_MS = 2 * 365 * 24 * 60 * 60 * 1000;
-const MAX_CHALLENGE_ENTRIES = 2750;
+const TWO_YEARS_MS = 2.5 * 365 * 24 * 60 * 60 * 1000;
+const MAX_CHALLENGE_ENTRIES = 975;
 
 export const pruneOldChallengeStates = (): void => {
   const now = Date.now();
@@ -67,7 +67,12 @@ export const encodeChallenge = async (
       signal: controller.signal,
     });
     clearTimeout(timeout);
-    const data = await res.json();
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      success: boolean;
+      encoded: string;
+      id: string;
+    };
     if (!data.success) return null;
     return { encoded: data.encoded, id: data.id };
   } catch {
@@ -88,9 +93,13 @@ export const decodeChallenge = async (
       }
     );
     clearTimeout(timeout);
-    const data = await res.json();
+    if (!res.ok) return null;
+    const data = (await res.json()) as {
+      success: boolean;
+      config: ChallengeConfig;
+    };
     if (!data.success) return null;
-    return data.config as ChallengeConfig;
+    return data.config;
   } catch {
     return null;
   }
@@ -99,7 +108,7 @@ export const decodeChallenge = async (
 export const buildChallengeUrl = (encoded: string): string =>
   `https://vagudle.king-tajin.dev/?challenge=${encoded}`;
 
-const challengeStateKey = (id: string) => `chal_${id}`;
+export const challengeStateKey = (id: string) => `chal_${id}`;
 
 export const saveChallengeState = (
   id: string,
@@ -116,7 +125,13 @@ export const saveChallengeState = (
 export const loadChallengeState = (id: string): ChallengeGameState | null => {
   try {
     const stored = localStorage.getItem(challengeStateKey(id));
-    return stored ? (JSON.parse(stored) as ChallengeGameState) : null;
+    if (!stored) return null;
+    const parsed = JSON.parse(stored) as ChallengeGameState;
+    if (!parsed.savedAt || Date.now() - parsed.savedAt > TWO_YEARS_MS) {
+      localStorage.removeItem(challengeStateKey(id));
+      return null;
+    }
+    return parsed;
   } catch {
     localStorage.removeItem(challengeStateKey(id));
     return null;
