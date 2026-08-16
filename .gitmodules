@@ -1,3 +1,4 @@
 [submodule "web-core"]
 	path = web-core
 	url = https://github.com/King-Tajin/Vagudle.git
+	branch = main

@@ -1,4 +1,4 @@
-package dev.kingtajin.vagudle;
+package com.yellowskippergames.vagudle;
 
 import android.graphics.Color;
 import android.os.Bundle;

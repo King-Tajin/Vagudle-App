@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.js",
-    "update:web": "node scripts/check-overrides.js && git submodule update --remote web-core",
+    "update:web": "node scripts/update-web.js",
     "android": "pnpm run build && pnpm exec cap open android",
     "typecheck": "node scripts/typecheck.js",
     "lint": "node scripts/lint.js",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
+    "@capacitor/app": "^8.1.1",
     "@capacitor/core": "^8.5.0"
   },
   "devDependencies": {

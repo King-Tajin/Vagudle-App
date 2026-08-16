@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'dev.kingtajin.vagudle',
+  appId: 'com.yellowskippergames.vagudle',
   appName: 'Vagudle',
   webDir: 'dist',
 };
