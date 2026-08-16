@@ -47,7 +47,7 @@ async function applyColdStartDeepLink(): Promise<boolean> {
 function listenForWarmStartDeepLinks(): void {
   if (!Capacitor.isNativePlatform()) return;
 
-  CapacitorApp.addListener("appUrlOpen", ({ url }) => {
+  void CapacitorApp.addListener("appUrlOpen", ({ url }) => {
     const localPath = toLocalPath(url);
     if (localPath) {
       window.location.href = localPath;
