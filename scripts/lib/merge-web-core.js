@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const root = process.cwd();
-const tmp = path.join(root, ".web-core-tmp");
+const tmp = path.join(root, ".web-tmp");
 const webCore = path.join(root, "web-core");
 const overrides = path.join(root, "overrides");
 
@@ -16,6 +16,8 @@ const SYNC_EXCLUDES = new Set([
   ".eslintcache",
 ]);
 
+const SERVER_ONLY = ["functions", "migrations", "wrangler.toml"];
+
 function run(cmd, cwd = root) {
   execSync(cmd, { cwd, stdio: "inherit" });
 }
@@ -24,7 +26,7 @@ function syncDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
 
   const srcEntries = new Map(
-    fs.readdirSync(src, { withFileTypes: true }).map((e) => [e.name, e])
+      fs.readdirSync(src, { withFileTypes: true }).map((e) => [e.name, e])
   );
 
   for (const name of fs.readdirSync(dest)) {
@@ -51,6 +53,10 @@ export function mergeWebCore() {
 
   if (fs.existsSync(overrides)) {
     fs.cpSync(overrides, tmp, { recursive: true, force: true });
+  }
+
+  for (const entry of SERVER_ONLY) {
+    fs.rmSync(path.join(tmp, entry), { recursive: true, force: true });
   }
 
   run("pnpm install", tmp);
