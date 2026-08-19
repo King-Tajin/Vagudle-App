@@ -13,5 +13,4 @@ pnpm-debug.log*
 /.idea/
 /dist/
 /android/.idea/
-/.build-tmp/
-/.web-core-tmp/
+/.web-tmp/
