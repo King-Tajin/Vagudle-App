@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@capacitor-firebase/app':
+        specifier: ^8.4.0
+        version: 8.4.0(@capacitor/core@8.5.0)
+      '@capacitor-firebase/authentication':
+        specifier: ^8.4.0
+        version: 8.4.0(@capacitor/core@8.5.0)
       '@capacitor/android':
         specifier: ^8.5.0
         version: 8.5.0(@capacitor/core@8.5.0)
@@ -41,6 +47,24 @@ importers:
         version: typescript@7.0.2
 
 packages:
+
+  '@capacitor-firebase/app@8.4.0':
+    resolution: {integrity: sha512-DbZDAZDtuzznNfeLRtHdnUCSVlvFBEHL1dAayWMJWBRTDDT3tM0nq7jIPG4jh+f/JZFqMCNfLz65vJTfQbzfUw==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+      firebase: ^12.6.0
+    peerDependenciesMeta:
+      firebase:
+        optional: true
+
+  '@capacitor-firebase/authentication@8.4.0':
+    resolution: {integrity: sha512-uixpVMSQCVIQ9t7KzD0mgQKEqeqyjoyxjin1eLBt4rKE7xMs6C0tDx+YHY7W4ZQeYhXJHvvqVuxom5vQHPBkEA==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+      firebase: ^12.6.0
+    peerDependenciesMeta:
+      firebase:
+        optional: true
 
   '@capacitor/android@8.5.0':
     resolution: {integrity: sha512-Rb3prJeQiTp0pQhSSOReJuG9VgibOGMG4ECs+UhMwr6TCCHZ3NCZO811bDA0HxD0xrT/gCrJAsY5yfEATu84JQ==}
@@ -591,6 +615,14 @@ packages:
     resolution: {integrity: sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==}
 
 snapshots:
+
+  '@capacitor-firebase/app@8.4.0(@capacitor/core@8.5.0)':
+    dependencies:
+      '@capacitor/core': 8.5.0
+
+  '@capacitor-firebase/authentication@8.4.0(@capacitor/core@8.5.0)':
+    dependencies:
+      '@capacitor/core': 8.5.0
 
   '@capacitor/android@8.5.0(@capacitor/core@8.5.0)':
     dependencies:

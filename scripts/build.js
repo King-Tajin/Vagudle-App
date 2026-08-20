@@ -55,7 +55,7 @@ function runViteBuild(cwd) {
         built = true;
         exitGraceTimer = setTimeout(() => {
           console.warn(
-              `vite build finished but its process did not exit on its own; force-killed the process tree after ${VITE_BUILD_EXIT_GRACE_MS / 1000}s and continuing.`
+            `vite build finished but its process did not exit on its own; force-killed the process tree after ${VITE_BUILD_EXIT_GRACE_MS / 1000}s and continuing.`
           );
           killTree(child.pid);
         }, VITE_BUILD_EXIT_GRACE_MS);
@@ -67,7 +67,11 @@ function runViteBuild(cwd) {
 
     const maxTimer = setTimeout(() => {
       killTree(child.pid);
-      finish(new Error(`vite build did not complete within ${VITE_BUILD_MAX_MS / 1000}s`));
+      finish(
+        new Error(
+          `vite build did not complete within ${VITE_BUILD_MAX_MS / 1000}s`
+        )
+      );
     }, VITE_BUILD_MAX_MS);
 
     child.on("exit", (code) => {

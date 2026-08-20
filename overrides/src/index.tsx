@@ -67,21 +67,21 @@ async function bootstrap() {
 
   await initDiscordSDK();
   createRoot(document.getElementById("root") as HTMLElement).render(
-      <React.StrictMode>
-        <LazyMotion features={domAnimation} strict>
-          <MotionConfig reducedMotion="user">
-            <AlertProvider>
-              {isLinkDiscordRoute ? (
-                  <LinkDiscordPage />
-              ) : isLinkPlayGamesRoute ? (
-                  <LinkPlayGamesPage />
-              ) : (
-                  <App />
-              )}
-            </AlertProvider>
-          </MotionConfig>
-        </LazyMotion>
-      </React.StrictMode>
+    <React.StrictMode>
+      <LazyMotion features={domAnimation} strict>
+        <MotionConfig reducedMotion="user">
+          <AlertProvider>
+            {isLinkDiscordRoute ? (
+              <LinkDiscordPage />
+            ) : isLinkPlayGamesRoute ? (
+              <LinkPlayGamesPage />
+            ) : (
+              <App />
+            )}
+          </AlertProvider>
+        </MotionConfig>
+      </LazyMotion>
+    </React.StrictMode>
   );
 }
 

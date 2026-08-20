@@ -12,6 +12,8 @@
     "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/*.js\" \"*.{json,js,cjs,md}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\""
   },
   "dependencies": {
+    "@capacitor-firebase/app": "^8.4.0",
+    "@capacitor-firebase/authentication": "^8.4.0",
     "@capacitor/android": "^8.5.0",
     "@capacitor/app": "^8.1.1",
     "@capacitor/browser": "^8.0.4",

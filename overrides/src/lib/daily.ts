@@ -307,7 +307,13 @@ export type DailyLeaderboardSelf = DailyLeaderboardEntry & { rank: number };
 export type DailyLeaderboardResponse = {
   top: DailyLeaderboardEntry[];
   self: DailyLeaderboardSelf | null;
+  page: number;
+  totalPages: number;
+  totalEntries: number;
+  pageSize: number;
 };
+
+export const DAILY_LEADERBOARD_PAGE_SIZE = 8;
 
 export type SubmitDailyResultOutcome =
   "recorded" | "already_submitted" | "no_display_name" | "error";
@@ -340,12 +346,13 @@ export const submitDailyResult = async (
 };
 
 export const fetchDailyLeaderboard = async (
-  idToken: string | null
+  idToken: string | null,
+  page: number = 1
 ): Promise<DailyLeaderboardResponse | null> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const res = await fetch("/api/daily-leaderboard", {
+    const res = await fetch(`/api/daily-leaderboard?page=${page}`, {
       headers: idToken ? { Authorization: `Bearer ${idToken}` } : {},
       signal: controller.signal,
     });
@@ -355,10 +362,21 @@ export const fetchDailyLeaderboard = async (
           success: true;
           top: DailyLeaderboardEntry[];
           self: DailyLeaderboardSelf | null;
+          page: number;
+          totalPages: number;
+          totalEntries: number;
+          pageSize: number;
         }
       | { success: false; error: string };
     if (!data.success) return null;
-    return { top: data.top, self: data.self };
+    return {
+      top: data.top,
+      self: data.self,
+      page: data.page,
+      totalPages: data.totalPages,
+      totalEntries: data.totalEntries,
+      pageSize: data.pageSize,
+    };
   } catch {
     return null;
   } finally {

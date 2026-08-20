@@ -16,7 +16,7 @@ const SYNC_EXCLUDES = new Set([
   ".eslintcache",
 ]);
 
-const SERVER_ONLY = ["functions", "migrations", "wrangler.toml"];
+const SERVER_ONLY = ["functions", "migrations", "wrangler.toml", "workers"];
 
 function run(cmd, cwd = root) {
   execSync(cmd, { cwd, stdio: "inherit" });
