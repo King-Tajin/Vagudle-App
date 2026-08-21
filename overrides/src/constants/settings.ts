@@ -11,6 +11,9 @@ export const NAVBAR_BRAND_URL_ACTIVITY =
   "https://King-Tajin.dev/yellow-skipper-games";
 export const SOURCE_CODE_URL = "https://github.com/King-Tajin/Vagudle-App";
 export const ENABLE_OFFLINE_MODE = true;
+export const ENABLE_NOTIFICATION_SETTINGS = true;
+export const INACTIVITY_NUDGE_MIN_DAYS = 1;
+export const INACTIVITY_NUDGE_MAX_DAYS = 33;
 export const OFFLINE_MODE_PING_ATTEMPTS = 3;
 export const OFFLINE_MODE_PING_TIMEOUT_MS = 4000;
 export const OFFLINE_MODE_PING_RETRY_DELAY_MS = 1500;

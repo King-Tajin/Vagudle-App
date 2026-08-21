@@ -313,8 +313,6 @@ export type DailyLeaderboardResponse = {
   pageSize: number;
 };
 
-export const DAILY_LEADERBOARD_PAGE_SIZE = 8;
-
 export type SubmitDailyResultOutcome =
   "recorded" | "already_submitted" | "no_display_name" | "error";
 
