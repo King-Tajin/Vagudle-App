@@ -6,8 +6,8 @@ import { mergeWebCore } from "./lib/merge-web-core.js";
 const root = process.cwd();
 const dist = path.join(root, "dist");
 const VITE_BUILD_COMPLETE_MARKER = /✓ built in/;
-const VITE_BUILD_MAX_MS = 5 * 60 * 1000;
-const VITE_BUILD_EXIT_GRACE_MS = 20 * 1000;
+const VITE_BUILD_MAX_MS = 8 * 60 * 1000;
+const VITE_BUILD_EXIT_GRACE_MS = 25 * 1000;
 
 function run(cmd, cwd = root) {
   execSync(cmd, { cwd, stdio: "inherit" });
