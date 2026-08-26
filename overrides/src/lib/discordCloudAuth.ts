@@ -1,3 +1,5 @@
+import { DISCORD_CLIENT_ID } from "../constants/settings";
+
 export const DISCORD_SESSION_STORAGE_KEY = "vagudle-discord-session:v1";
 const STATE_STORAGE_KEY = "vagudle-discord-oauth-state:v1";
 
@@ -68,9 +70,9 @@ export const clearDiscordSession = (): void => {
 };
 
 export const signInWithDiscord = (): void => {
-  const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID as string;
+  const clientId = DISCORD_CLIENT_ID;
   if (!clientId) {
-    console.error("[DiscordAuth] VITE_DISCORD_CLIENT_ID is not set");
+    console.error("[DiscordAuth] DISCORD_CLIENT_ID is not set");
     return;
   }
 

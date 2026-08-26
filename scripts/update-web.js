@@ -85,8 +85,8 @@ async function main() {
   }
 
   console.log(`Updating web-core to origin/${branch}...`);
-  execSync("git submodule update --remote web-core", {
-    cwd: root,
+  execSync(`git checkout -B ${branch} origin/${branch}`, {
+    cwd: webCoreDir,
     stdio: "inherit",
   });
   console.log(
