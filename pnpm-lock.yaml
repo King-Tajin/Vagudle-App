@@ -26,6 +26,9 @@ importers:
       '@capacitor/core':
         specifier: ^8.5.0
         version: 8.5.0
+      '@capacitor/haptics':
+        specifier: 8.0.1
+        version: 8.0.1(@capacitor/core@8.5.0)
       '@capacitor/local-notifications':
         specifier: ^8.3.1
         version: 8.3.1(@capacitor/core@8.5.0)
@@ -92,6 +95,11 @@ packages:
   '@capacitor/core@8.5.0':
     resolution: {integrity: sha512-Ca4krtqH1hothjtBIwf2J2TW7IhYq1ujp8QeItTiJohNsqij8ja2DYYH3DU0l8RmxCWaBAFTGA2TgOgOMCSNsQ==}
 
+  '@capacitor/haptics@8.0.1':
+    resolution: {integrity: sha512-8v8rowLBMeb3CryqoQvXndwyUsoi4pPXf0qFw7IGA4D32Uk7+K6juN2SjRowqunoovkvvbFmU9TD7JIAz2zmFw==}
+    peerDependencies:
+      '@capacitor/core': '>=8.0.0'
+
   '@capacitor/local-notifications@8.3.1':
     resolution: {integrity: sha512-F7zu/+p/mIR958YP4axOkeI5hBKRaXDyYjbNPrAil2wWfd7OxScPSTvP9t85NpQ0eULVRu0/sntoxOg6ck477A==}
     peerDependencies:
@@ -141,8 +149,8 @@ packages:
   '@types/fs-extra@8.1.5':
     resolution: {integrity: sha512-0dzKcwO+S8s2kuF5Z9oUWatQJj5Uq/iqphEtE3GQJVRRYm/tD1LglU2UnXi2A8jLq5umkGouOXOR9y0n613ZwQ==}
 
-  '@types/node@26.2.0':
-    resolution: {integrity: sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg==}
+  '@types/node@26.3.0':
+    resolution: {integrity: sha512-L3fgrnchriRC2ExBflb8j4uZZURHZfQsmQeyVzhjcHW4kkwVyo8/0h1B2MVzMTrYUJYu6G7EWs14hW/L9putqw==}
 
   '@types/slice-ansi@4.0.0':
     resolution: {integrity: sha512-+OpjSaq85gvlZAYINyzKpLeiFkSC4EsC6IIiT6v6TLSU5k5U83fHGj9Lel8oKEXM0HqgrMVCjXPDPVICtxF7EQ==}
@@ -671,6 +679,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@capacitor/haptics@8.0.1(@capacitor/core@8.5.0)':
+    dependencies:
+      '@capacitor/core': 8.5.0
+
   '@capacitor/local-notifications@8.3.1(@capacitor/core@8.5.0)':
     dependencies:
       '@capacitor/core': 8.5.0
@@ -762,9 +774,9 @@ snapshots:
 
   '@types/fs-extra@8.1.5':
     dependencies:
-      '@types/node': 26.2.0
+      '@types/node': 26.3.0
 
-  '@types/node@26.2.0':
+  '@types/node@26.3.0':
     dependencies:
       undici-types: 8.3.0
 
