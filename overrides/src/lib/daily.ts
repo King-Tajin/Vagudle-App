@@ -188,7 +188,7 @@ export const fetchServerDailyProgress = async (
   }
 };
 
-const progressKey = (date: string) => `daily_progress_${date}`;
+export const dailyProgressKey = (date: string) => `daily_progress_${date}`;
 
 export const saveDailyProgress = (
   date: string,
@@ -196,7 +196,7 @@ export const saveDailyProgress = (
 ): void => {
   try {
     localStorage.setItem(
-      progressKey(date),
+      dailyProgressKey(date),
       JSON.stringify({ ...progress, savedAt: Date.now() })
     );
   } catch {}
@@ -204,7 +204,7 @@ export const saveDailyProgress = (
 
 export const loadDailyProgress = (date: string): DailyProgress | null => {
   try {
-    const stored = localStorage.getItem(progressKey(date));
+    const stored = localStorage.getItem(dailyProgressKey(date));
     return stored ? (JSON.parse(stored) as DailyProgress) : null;
   } catch {
     return null;
@@ -213,7 +213,7 @@ export const loadDailyProgress = (date: string): DailyProgress | null => {
 
 export const clearDailyProgress = (date: string): void => {
   try {
-    localStorage.removeItem(progressKey(date));
+    localStorage.removeItem(dailyProgressKey(date));
   } catch {}
 };
 
