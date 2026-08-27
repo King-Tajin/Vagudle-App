@@ -12,6 +12,7 @@ dependencies {
     implementation project(':capacitor-firebase-app')
     implementation project(':capacitor-firebase-authentication')
     implementation project(':capacitor-app')
+    implementation project(':capacitor-community-safe-area')
     implementation project(':capacitor-browser')
     implementation project(':capacitor-haptics')
     implementation project(':capacitor-local-notifications')

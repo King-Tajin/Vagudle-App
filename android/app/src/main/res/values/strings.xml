@@ -4,4 +4,10 @@
     <string name="title_activity_main">Vagudle</string>
     <string name="package_name">com.yellowskippergames.vagudle</string>
     <string name="custom_url_scheme">com.yellowskippergames.vagudle</string>
+    <string name="update_available_title">Update available</string>
+    <string
+    name="update_available_message"
+  >A new version of Vagudle is ready. Update now for the latest features and fixes.</string>
+    <string name="update_available_update">Update</string>
+    <string name="update_available_not_now">Play without updating</string>
 </resources>

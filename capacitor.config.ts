@@ -9,6 +9,13 @@ const config: CapacitorConfig = {
       smallIcon: "ic_launcher_monochrome",
       iconColor: "#22C55E",
     },
+    SystemBars: {
+      insetsHandling: "disable",
+    },
+    SafeArea: {
+      statusBarStyle: "DARK",
+      navigationBarStyle: "DARK",
+    },
   },
 };
 
