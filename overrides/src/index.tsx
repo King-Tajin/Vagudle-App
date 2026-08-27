@@ -50,7 +50,8 @@ function listenForWarmStartDeepLinks(): void {
 
   void CapacitorApp.addListener("appUrlOpen", ({ url }) => {
     const localPath = toLocalPath(url);
-    if (localPath) {
+    const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (localPath && localPath !== currentPath) {
       window.location.href = localPath;
     }
   });

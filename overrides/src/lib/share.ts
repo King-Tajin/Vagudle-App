@@ -8,6 +8,18 @@ import { DICT_LABELS, type ChallengeConfig } from "./challenge";
 import type { Achievement } from "./achievements";
 import { BACKGROUNDS } from "./backgrounds";
 
+export type CapacitorShareOptions = {
+  title?: string;
+  text?: string;
+  url?: string;
+  dialogTitle?: string;
+  files?: string[];
+};
+
+export type CapacitorSharePlugin = {
+  share: (options: CapacitorShareOptions) => Promise<{ activityType?: string }>;
+};
+
 const parser = new UAParser();
 const browser = parser.getBrowser();
 
@@ -22,12 +34,23 @@ const attemptShare = (shareData: object) => {
   );
 };
 
-const doShare = async (
+const getSharePlugin = (): CapacitorSharePlugin | null => {
+  if (typeof window === "undefined") return null;
+  if (!window.Capacitor?.isNativePlatform?.()) return null;
+  return window.Capacitor.Plugins?.Share ?? null;
+};
+
+export const doShare = async (
   shareData: { title: string; text: string },
   textToShare: string,
   handleShareToClipboard: () => void
 ) => {
   try {
+    const sharePlugin = getSharePlugin();
+    if (sharePlugin) {
+      await sharePlugin.share(shareData);
+      return;
+    }
     if (attemptShare(shareData)) {
       await navigator.share(shareData);
       return;
@@ -163,19 +186,12 @@ export const shareChallengeInvite = async (
     } guesses\n` +
     `(Results won't affect your stats)\n` +
     window.location.href;
-  try {
-    if (
-      typeof navigator.share === "function" &&
-      navigator.canShare?.({ text })
-    ) {
-      await navigator.share({ title: "Vagudle Challenge", text });
-      return;
-    }
-  } catch {}
-  try {
-    await navigator.clipboard.writeText(text);
-    handleShareToClipboard();
-  } catch {}
+
+  await doShare(
+    { title: "Vagudle Challenge", text },
+    text,
+    handleShareToClipboard
+  );
 };
 
 export const shareAchievement = async (
@@ -190,17 +206,10 @@ export const shareAchievement = async (
     `${achievement.description}\n` +
     (bgUnlock ? `Unlocked background: ${bgUnlock.desktopLabel}\n` : "") +
     window.location.href;
-  try {
-    if (
-      typeof navigator.share === "function" &&
-      navigator.canShare?.({ text })
-    ) {
-      await navigator.share({ title: "Vagudle Achievement", text });
-      return;
-    }
-  } catch {}
-  try {
-    await navigator.clipboard.writeText(text);
-    handleShareToClipboard();
-  } catch {}
+
+  await doShare(
+    { title: "Vagudle Achievement", text },
+    text,
+    handleShareToClipboard
+  );
 };
