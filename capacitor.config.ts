@@ -5,6 +5,10 @@ const config: CapacitorConfig = {
   appName: "Vagudle",
   webDir: "dist",
   plugins: {
+    FirebaseAuthentication: {
+      skipNativeAuth: false,
+      providers: ["google.com"],
+    },
     LocalNotifications: {
       smallIcon: "ic_launcher_monochrome",
       iconColor: "#22C55E",

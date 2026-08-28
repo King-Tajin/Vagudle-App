@@ -42,6 +42,11 @@
 
         </activity>
 
+        <meta-data
+      android:name="com.google.android.gms.games.APP_ID"
+      android:value="@string/game_services_project_id"
+    />
+
         <provider
       android:name="androidx.core.content.FileProvider"
       android:authorities="${applicationId}.fileprovider"

@@ -4,6 +4,7 @@
     <string name="title_activity_main">Vagudle</string>
     <string name="package_name">com.yellowskippergames.vagudle</string>
     <string name="custom_url_scheme">com.yellowskippergames.vagudle</string>
+    <string name="game_services_project_id">76056105008</string>
     <string name="update_available_title">Update available</string>
     <string
     name="update_available_message"
