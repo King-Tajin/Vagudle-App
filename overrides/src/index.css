@@ -110,6 +110,11 @@ body {
   margin-bottom: 2%;
 }
 
+.navbar > header {
+  margin-top: calc(-1 * env(safe-area-inset-top));
+  padding-top: env(safe-area-inset-top);
+}
+
 .navbar-content {
   display: flex;
   height: 3.5rem;
