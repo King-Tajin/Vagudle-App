@@ -108,10 +108,10 @@ body {
 
 .navbar {
   margin-bottom: 2%;
+  margin-top: calc(-1 * env(safe-area-inset-top));
 }
 
 .navbar > header {
-  margin-top: calc(-1 * env(safe-area-inset-top));
   padding-top: env(safe-area-inset-top);
 }
 
