@@ -11,7 +11,7 @@ const config: CapacitorConfig = {
     },
     LocalNotifications: {
       smallIcon: "ic_launcher_monochrome",
-      iconColor: "#22C55E",
+      iconColor: "#EAB308",
     },
     SystemBars: {
       insetsHandling: "disable",
