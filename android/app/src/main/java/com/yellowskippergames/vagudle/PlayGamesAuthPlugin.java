@@ -7,6 +7,7 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.google.android.gms.games.AchievementsClient;
 import com.google.android.gms.games.GamesSignInClient;
+import com.google.android.gms.games.LeaderboardsClient;
 import com.google.android.gms.games.PlayGames;
 
 @CapacitorPlugin(name = "PlayGamesAuth")
@@ -114,6 +115,36 @@ public class PlayGamesAuthPlugin extends Plugin {
         getActivity()
       );
       achievementsClient.setSteps(achievementId, steps);
+      call.resolve();
+    });
+  }
+
+  @PluginMethod
+  public void submitScore(PluginCall call) {
+    String leaderboardId = call.getString("leaderboardId");
+    Integer score = call.getInt("score");
+    if (leaderboardId == null || score == null) {
+      call.reject("leaderboardId and score are required.");
+      return;
+    }
+
+    GamesSignInClient signInClient = PlayGames.getGamesSignInClient(
+      getActivity()
+    );
+
+    signInClient.isAuthenticated().addOnCompleteListener((isAuthTask) -> {
+      boolean isAuthenticated =
+        isAuthTask.isSuccessful() && isAuthTask.getResult().isAuthenticated();
+
+      if (!isAuthenticated) {
+        call.reject("Not signed in to Play Games.");
+        return;
+      }
+
+      LeaderboardsClient leaderboardsClient = PlayGames.getLeaderboardsClient(
+        getActivity()
+      );
+      leaderboardsClient.submitScore(leaderboardId, score);
       call.resolve();
     });
   }
