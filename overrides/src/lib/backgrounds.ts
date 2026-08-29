@@ -48,6 +48,7 @@ export type BackgroundDef = {
   videoSrc?: string;
   objectPosition?: string;
   attribution?: BackgroundAttribution;
+  requiresWebGL?: boolean;
 };
 
 export const BACKGROUNDS: BackgroundDef[] = [
@@ -166,7 +167,7 @@ export const BACKGROUNDS: BackgroundDef[] = [
     requiresAchievementId: "guess_mouse",
     kind: "video",
     videoSrc: "/backgrounds/mouse_v3.mp4",
-    objectPosition: "98% 98%",
+    objectPosition: "75% 98%",
     attribution: {
       credits: [
         {
@@ -205,6 +206,7 @@ export const BACKGROUNDS: BackgroundDef[] = [
     mobileLabel: "RIPPLES",
     requiresAchievementId: "blind_faith",
     kind: "css",
+    requiresWebGL: true,
   },
   {
     id: "spinning_seal",
