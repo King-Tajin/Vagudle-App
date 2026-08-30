@@ -15,4 +15,13 @@
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
     </style>
 
+    <style name="PixelDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimAmount">0.75</item>
+        <item name="android:windowMinWidthMajor">0%</item>
+        <item name="android:windowMinWidthMinor">0%</item>
+    </style>
+
 </resources>

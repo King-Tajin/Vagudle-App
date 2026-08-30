@@ -1,8 +1,10 @@
 package com.yellowskippergames.vagudle;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.appcompat.app.AlertDialog;
+import android.widget.Button;
+import android.widget.TextView;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -34,19 +36,31 @@ public class NotificationPrimerPlugin extends Plugin {
     prefs.edit().putBoolean(KEY_PRIMER_SHOWN, true).apply();
 
     getActivity().runOnUiThread(() -> {
-      AlertDialog dialog = new AlertDialog.Builder(getActivity())
-        .setTitle("Stay on your streak")
-        .setMessage(
-          "Get occasional reminders to play your daily puzzle and keep your streak alive. You can change this anytime in Settings."
-        )
-        .setPositiveButton("Enable Reminders", (dialogInterface, which) ->
-          resolvePrimer(call, true)
-        )
-        .setNegativeButton("Not Now", (dialogInterface, which) ->
-          resolvePrimer(call, false)
-        )
-        .setOnCancelListener((dialogInterface) -> resolvePrimer(call, false))
-        .create();
+      Dialog dialog = new Dialog(getActivity(), R.style.PixelDialogTheme);
+      dialog.setContentView(R.layout.dialog_prompt);
+      dialog.setCancelable(true);
+
+      TextView titleView = dialog.findViewById(R.id.dialog_title);
+      TextView messageView = dialog.findViewById(R.id.dialog_message);
+      Button secondaryButton = dialog.findViewById(R.id.btn_secondary);
+      Button primaryButton = dialog.findViewById(R.id.btn_primary);
+
+      titleView.setText(R.string.notification_primer_title);
+      messageView.setText(R.string.notification_primer_message);
+      secondaryButton.setText(R.string.notification_primer_not_now);
+      primaryButton.setText(R.string.notification_primer_enable);
+
+      secondaryButton.setOnClickListener((view) -> {
+        dialog.dismiss();
+        resolvePrimer(call, false);
+      });
+      primaryButton.setOnClickListener((view) -> {
+        dialog.dismiss();
+        resolvePrimer(call, true);
+      });
+      dialog.setOnCancelListener((dialogInterface) ->
+        resolvePrimer(call, false)
+      );
 
       dialog.show();
     });

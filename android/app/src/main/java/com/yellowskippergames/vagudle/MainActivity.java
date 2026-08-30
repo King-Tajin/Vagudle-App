@@ -1,6 +1,7 @@
 package com.yellowskippergames.vagudle;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,8 +12,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
 import com.getcapacitor.BridgeActivity;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
@@ -85,21 +87,31 @@ public class MainActivity extends BridgeActivity {
       return;
     }
 
-    new AlertDialog.Builder(
-      this,
-      androidx.appcompat.R.style.Theme_AppCompat_Dialog_Alert
-    )
-      .setTitle(R.string.update_available_title)
-      .setMessage(R.string.update_available_message)
-      .setCancelable(true)
-      .setPositiveButton(R.string.update_available_update, (dialog, which) -> {
-        rememberDismissedVersion(availableVersionCode);
-        openPlayStoreListing();
-      })
-      .setNegativeButton(R.string.update_available_not_now, (dialog, which) ->
-        rememberDismissedVersion(availableVersionCode)
-      )
-      .show();
+    Dialog dialog = new Dialog(this, R.style.PixelDialogTheme);
+    dialog.setContentView(R.layout.dialog_prompt);
+    dialog.setCancelable(true);
+
+    TextView titleView = dialog.findViewById(R.id.dialog_title);
+    TextView messageView = dialog.findViewById(R.id.dialog_message);
+    Button secondaryButton = dialog.findViewById(R.id.btn_secondary);
+    Button primaryButton = dialog.findViewById(R.id.btn_primary);
+
+    titleView.setText(R.string.update_available_title);
+    messageView.setText(R.string.update_available_message);
+    secondaryButton.setText(R.string.update_available_not_now);
+    primaryButton.setText(R.string.update_available_update);
+
+    secondaryButton.setOnClickListener((view) -> {
+      dialog.dismiss();
+      rememberDismissedVersion(availableVersionCode);
+    });
+    primaryButton.setOnClickListener((view) -> {
+      dialog.dismiss();
+      rememberDismissedVersion(availableVersionCode);
+      openPlayStoreListing();
+    });
+
+    dialog.show();
   }
 
   private void rememberDismissedVersion(int versionCode) {

@@ -11,4 +11,10 @@
   >A new version of Vagudle is ready. Update now for the latest features and fixes.</string>
     <string name="update_available_update">Update</string>
     <string name="update_available_not_now">Play without updating</string>
+    <string name="notification_primer_title">Stay on your streak</string>
+    <string
+    name="notification_primer_message"
+  >Get occasional reminders to play your daily puzzle and keep your streak alive. You can change this anytime in Settings.</string>
+    <string name="notification_primer_enable">Enable Reminders</string>
+    <string name="notification_primer_not_now">Not Now</string>
 </resources>

@@ -7,25 +7,25 @@ import {
 } from "./localStorage";
 
 export type BackgroundId =
-    | "sprinkles"
-    | "flakes"
-    | "tnt_rain"
-    | "pulsing_purple"
-    | "carrots"
-    | "flying_mudskipper"
-    | "escalating_fire"
-    | "dvd_screensaver"
-    | "number_rain"
-    | "seven_letters"
-    | "snowfall"
-    | "letter_pile"
-    | "letter_rain"
-    | "duck_parade"
-    | "mouse_eating"
-    | "emoji_rain"
-    | "fireworks"
-    | "liquid_ripple"
-    | "spinning_seal";
+  | "sprinkles"
+  | "flakes"
+  | "tnt_rain"
+  | "pulsing_purple"
+  | "carrots"
+  | "flying_mudskipper"
+  | "escalating_fire"
+  | "dvd_screensaver"
+  | "number_rain"
+  | "seven_letters"
+  | "snowfall"
+  | "letter_pile"
+  | "letter_rain"
+  | "duck_parade"
+  | "mouse_eating"
+  | "emoji_rain"
+  | "fireworks"
+  | "liquid_ripple"
+  | "spinning_seal";
 
 export type AttributionCredit = {
   role: string;
@@ -167,15 +167,16 @@ export const BACKGROUNDS: BackgroundDef[] = [
     requiresAchievementId: "guess_mouse",
     kind: "video",
     videoSrc: "/backgrounds/mouse_v3.mp4",
-    objectPosition: "75% 98%",
+    objectPosition: "85% 98%",
     attribution: {
       credits: [
         {
           role: "Video",
           title:
-              "3d cartoon mouse dancing loop animation isolated on green screen background Free Video",
+            "3d cartoon mouse dancing loop animation isolated on green screen background Free Video",
           creator: "Vecteezy",
-          sourceUrl: "https://www.vecteezy.com/video/56169680-3d-cartoon-mouse-dancing-loop-animation-isolated-on-green-screen-background",
+          sourceUrl:
+            "https://www.vecteezy.com/video/56169680-3d-cartoon-mouse-dancing-loop-animation-isolated-on-green-screen-background",
         },
         {
           role: "Music",
@@ -238,8 +239,8 @@ export const BG_KEY = "vagudle-bg-theme:v1";
 const LEGACY_BG_KEY = "vagudle-bg-theme";
 
 export const loadBackgroundId = (
-    isMobile: boolean,
-    isDiscordActivity = false
+  isMobile: boolean,
+  isDiscordActivity = false
 ): BackgroundId => {
   migrateLegacyStorageKey(LEGACY_BG_KEY, BG_KEY);
   try {
@@ -263,8 +264,8 @@ const LEGACY_ATTRIBUTION_HIDDEN_KEY = "vagudle-attribution-hidden";
 
 export const loadHiddenAttributionIds = (): BackgroundId[] => {
   migrateLegacyStorageKey(
-      LEGACY_ATTRIBUTION_HIDDEN_KEY,
-      ATTRIBUTION_HIDDEN_KEY
+    LEGACY_ATTRIBUTION_HIDDEN_KEY,
+    ATTRIBUTION_HIDDEN_KEY
   );
   try {
     const stored = localStorage.getItem(ATTRIBUTION_HIDDEN_KEY);
@@ -280,8 +281,8 @@ export const hideAttributionForever = (id: BackgroundId): void => {
     const hidden = loadHiddenAttributionIds();
     if (!hidden.includes(id)) {
       localStorage.setItem(
-          ATTRIBUTION_HIDDEN_KEY,
-          JSON.stringify([...hidden, id])
+        ATTRIBUTION_HIDDEN_KEY,
+        JSON.stringify([...hidden, id])
       );
       stampUpdatedAt(ATTRIBUTION_HIDDEN_KEY);
     }
@@ -292,8 +293,8 @@ export const unhideAttribution = (id: BackgroundId): void => {
   try {
     const hidden = loadHiddenAttributionIds();
     localStorage.setItem(
-        ATTRIBUTION_HIDDEN_KEY,
-        JSON.stringify(hidden.filter((hiddenId) => hiddenId !== id))
+      ATTRIBUTION_HIDDEN_KEY,
+      JSON.stringify(hidden.filter((hiddenId) => hiddenId !== id))
     );
     stampUpdatedAt(ATTRIBUTION_HIDDEN_KEY);
   } catch {}
