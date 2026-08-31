@@ -5,6 +5,8 @@ import {
   clearUpdatedAt,
   cloudSyncKey,
 } from "./localStorage";
+import { BACKGROUND_TEXT } from "../constants/strings";
+import { BACKGROUND_TEXT_MOUSE_EATING } from "../constants/extraStrings";
 
 export type BackgroundId =
   | "sprinkles"
@@ -54,184 +56,120 @@ export type BackgroundDef = {
 export const BACKGROUNDS: BackgroundDef[] = [
   {
     id: "sprinkles",
-    desktopLabel: "VAGUDLE SPRINKLES",
-    mobileLabel: "GRAY",
+    ...BACKGROUND_TEXT.sprinkles,
     kind: "css",
   },
   {
     id: "flakes",
-    desktopLabel: "FLAKE RAIN",
-    mobileLabel: "GRID",
+    ...BACKGROUND_TEXT.flakes,
     kind: "css",
   },
   {
     id: "tnt_rain",
-    desktopLabel: "TNT RAIN",
-    mobileLabel: "TNT",
+    ...BACKGROUND_TEXT.tnt_rain,
     requiresAchievementId: "first_win",
     kind: "css",
   },
   {
     id: "pulsing_purple",
-    desktopLabel: "PULSING PURPLE",
-    mobileLabel: "PURPLE",
+    ...BACKGROUND_TEXT.pulsing_purple,
     requiresAchievementId: "win_15",
     kind: "css",
   },
   {
     id: "carrots",
-    desktopLabel: "SPINNING CARROTS",
-    mobileLabel: "CARROTS",
+    ...BACKGROUND_TEXT.carrots,
     requiresAchievementId: "win_50",
     kind: "css",
   },
   {
     id: "flying_mudskipper",
-    desktopLabel: "FLYING MUDSKIPPER",
-    mobileLabel: "MUDSKIPPER",
+    ...BACKGROUND_TEXT.flying_mudskipper,
     requiresAchievementId: "on_a_roll",
     kind: "css",
   },
   {
     id: "escalating_fire",
-    desktopLabel: "ESCALATING FIRE",
-    mobileLabel: "FIRE",
+    ...BACKGROUND_TEXT.escalating_fire,
     requiresAchievementId: "unstoppable",
     kind: "css",
   },
   {
     id: "dvd_screensaver",
-    desktopLabel: "DVD SCREENSAVER",
-    mobileLabel: "DVD",
+    ...BACKGROUND_TEXT.dvd_screensaver,
     requiresAchievementId: "hard_5plus",
     kind: "css",
   },
   {
     id: "number_rain",
-    desktopLabel: "NUMBER RAIN",
-    mobileLabel: "NUMBERS",
+    ...BACKGROUND_TEXT.number_rain,
     requiresAchievementId: "fifth_guess",
     kind: "video",
     videoSrc: "/backgrounds/number_rain.mp4",
-    attribution: {
-      credits: [
-        {
-          role: "Video",
-          title: "Matrix Rain Codes (4K FULL HD)",
-          creator: "Fatih Kalkan",
-          sourceUrl: "https://www.youtube.com/watch?v=MUVo20q6tx8",
-        },
-      ],
-      license: "Creative Commons Attribution license (reuse allowed)",
-    },
   },
   {
     id: "seven_letters",
-    desktopLabel: "SEVEN LETTER WORDS",
-    mobileLabel: "WORDS",
+    ...BACKGROUND_TEXT.seven_letters,
     requiresAchievementId: "seven_letters",
     kind: "css",
   },
   {
     id: "snowfall",
-    desktopLabel: "SNOWFALL",
-    mobileLabel: "SNOW",
+    ...BACKGROUND_TEXT.snowfall,
     requiresAchievementId: "close_but_no_cigar",
     kind: "css",
   },
   {
     id: "letter_pile",
-    desktopLabel: "LETTER PILE",
-    mobileLabel: "PILE",
+    ...BACKGROUND_TEXT.letter_pile,
     requiresAchievementId: "process_of_elimination",
     kind: "css",
   },
   {
     id: "letter_rain",
-    desktopLabel: "LETTER RAIN",
-    mobileLabel: "LETTERS",
+    ...BACKGROUND_TEXT.letter_rain,
     requiresAchievementId: "word_connoisseur",
     kind: "css",
   },
   {
     id: "duck_parade",
-    desktopLabel: "DUCK PARADE",
-    mobileLabel: "DUCKS",
+    ...BACKGROUND_TEXT.duck_parade,
     requiresAchievementId: "quack",
     kind: "css",
   },
   {
     id: "mouse_eating",
-    desktopLabel: "MOUSE EATING M&M",
-    mobileLabel: "MOUSE",
+    ...BACKGROUND_TEXT_MOUSE_EATING,
     requiresAchievementId: "guess_mouse",
     kind: "video",
     videoSrc: "/backgrounds/mouse_v3.mp4",
     objectPosition: "85% 98%",
-    attribution: {
-      credits: [
-        {
-          role: "Video",
-          title:
-            "3d cartoon mouse dancing loop animation isolated on green screen background Free Video",
-          creator: "Vecteezy",
-          sourceUrl:
-            "https://www.vecteezy.com/video/56169680-3d-cartoon-mouse-dancing-loop-animation-isolated-on-green-screen-background",
-        },
-        {
-          role: "Music",
-          title: "Candyland",
-          creator: "Tobu",
-        },
-      ],
-      license: "Public Domain",
-    },
   },
   {
     id: "emoji_rain",
-    desktopLabel: "EMOJI RAIN",
-    mobileLabel: "EMOJIS",
+    ...BACKGROUND_TEXT.emoji_rain,
     requiresAchievementId: "nail_biter",
     kind: "css",
   },
   {
     id: "fireworks",
-    desktopLabel: "FIREWORKS",
-    mobileLabel: "FIREWORKS",
+    ...BACKGROUND_TEXT.fireworks,
     requiresAchievementId: "diversify",
     kind: "css",
   },
   {
     id: "liquid_ripple",
-    desktopLabel: "LIQUID RIPPLES",
-    mobileLabel: "RIPPLES",
+    ...BACKGROUND_TEXT.liquid_ripple,
     requiresAchievementId: "blind_faith",
     kind: "css",
     requiresWebGL: true,
   },
   {
     id: "spinning_seal",
-    desktopLabel: "SPINNING SEAL",
-    mobileLabel: "SEAL",
+    ...BACKGROUND_TEXT.spinning_seal,
     requiresAchievementId: COMPLETIONIST_ID,
     kind: "video",
     videoSrc: "/backgrounds/seal_v2.mp4",
-    attribution: {
-      credits: [
-        {
-          role: "Video",
-          title: "there is no need to be upset",
-          creator: "High Valley",
-          sourceUrl: "https://www.youtube.com/watch?v=GJDNkVDGM_s&t=14s",
-        },
-        {
-          role: "Music",
-          title: "Happy H. Christmas",
-          creator: "Maniacs of Noise",
-        },
-      ],
-      license: "Creative Commons Attribution (CC BY)",
-    },
   },
 ];
 
