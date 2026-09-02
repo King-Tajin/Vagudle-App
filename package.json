@@ -5,9 +5,9 @@
     "build": "node scripts/build.js",
     "update:web": "node scripts/update-web.js",
     "android": "pnpm run build && pnpm exec cap open android",
-    "typecheck": "node scripts/typecheck.js",
-    "lint": "node scripts/lint.js",
-    "doctor:report": "node scripts/doctor-report.js",
+    "typecheck": "node scripts/web-script.js typecheck",
+    "lint": "node scripts/web-script.js lint",
+    "doctor:report": "node scripts/web-script.js doctor:report",
     "format": "prettier --write \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/*.js\" \"*.{json,js,cjs,md}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\"",
     "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/*.js\" \"*.{json,js,cjs,md}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\""
   },
