@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@capacitor-community/safe-area": "^8.0.1",
-    "@capacitor-firebase/app": "^8.4.0",
-    "@capacitor-firebase/authentication": "^8.4.0",
+    "@capacitor-firebase/app": "^8.5.0",
+    "@capacitor-firebase/authentication": "^8.5.0",
     "@capacitor/android": "^8.5.0",
     "@capacitor/app": "^8.1.1",
     "@capacitor/browser": "^8.0.4",

@@ -6,10 +6,10 @@ include ':capacitor-community-safe-area'
 project(':capacitor-community-safe-area').projectDir = new File('../node_modules/.pnpm/@capacitor-community+safe-area@8.0.1_@capacitor+core@8.5.0/node_modules/@capacitor-community/safe-area/android')
 
 include ':capacitor-firebase-app'
-project(':capacitor-firebase-app').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+app@8.4.0_@capacitor+core@8.5.0/node_modules/@capacitor-firebase/app/android')
+project(':capacitor-firebase-app').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+app@8.5.0_@capacitor+core@8.5.0/node_modules/@capacitor-firebase/app/android')
 
 include ':capacitor-firebase-authentication'
-project(':capacitor-firebase-authentication').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+authent_2a8e4d96b3cb24fee7897f7d439bb4be/node_modules/@capacitor-firebase/authentication/android')
+project(':capacitor-firebase-authentication').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+authent_14a2ec2b0fb854623768bfe2641c5f7a/node_modules/@capacitor-firebase/authentication/android')
 
 include ':capacitor-app'
 project(':capacitor-app').projectDir = new File('../node_modules/.pnpm/@capacitor+app@8.1.1_@capacitor+core@8.5.0/node_modules/@capacitor/app/android')

@@ -5,7 +5,7 @@ import {
   clearUpdatedAt,
   cloudSyncKey,
 } from "./localStorage";
-import { BACKGROUND_TEXT } from "../constants/strings";
+import strings from "../constants/strings";
 import { BACKGROUND_TEXT_MOUSE_EATING } from "../constants/extraStrings";
 
 export type BackgroundId =
@@ -56,84 +56,84 @@ export type BackgroundDef = {
 export const BACKGROUNDS: BackgroundDef[] = [
   {
     id: "sprinkles",
-    ...BACKGROUND_TEXT.sprinkles,
+    ...strings.BACKGROUND_TEXT.sprinkles,
     kind: "css",
   },
   {
     id: "flakes",
-    ...BACKGROUND_TEXT.flakes,
+    ...strings.BACKGROUND_TEXT.flakes,
     kind: "css",
   },
   {
     id: "tnt_rain",
-    ...BACKGROUND_TEXT.tnt_rain,
+    ...strings.BACKGROUND_TEXT.tnt_rain,
     requiresAchievementId: "first_win",
     kind: "css",
   },
   {
     id: "pulsing_purple",
-    ...BACKGROUND_TEXT.pulsing_purple,
+    ...strings.BACKGROUND_TEXT.pulsing_purple,
     requiresAchievementId: "win_15",
     kind: "css",
   },
   {
     id: "carrots",
-    ...BACKGROUND_TEXT.carrots,
+    ...strings.BACKGROUND_TEXT.carrots,
     requiresAchievementId: "win_50",
     kind: "css",
   },
   {
     id: "flying_mudskipper",
-    ...BACKGROUND_TEXT.flying_mudskipper,
+    ...strings.BACKGROUND_TEXT.flying_mudskipper,
     requiresAchievementId: "on_a_roll",
     kind: "css",
   },
   {
     id: "escalating_fire",
-    ...BACKGROUND_TEXT.escalating_fire,
+    ...strings.BACKGROUND_TEXT.escalating_fire,
     requiresAchievementId: "unstoppable",
     kind: "css",
   },
   {
     id: "dvd_screensaver",
-    ...BACKGROUND_TEXT.dvd_screensaver,
+    ...strings.BACKGROUND_TEXT.dvd_screensaver,
     requiresAchievementId: "hard_5plus",
     kind: "css",
   },
   {
     id: "number_rain",
-    ...BACKGROUND_TEXT.number_rain,
+    ...strings.BACKGROUND_TEXT.number_rain,
     requiresAchievementId: "fifth_guess",
     kind: "video",
     videoSrc: "/backgrounds/number_rain.mp4",
   },
   {
     id: "seven_letters",
-    ...BACKGROUND_TEXT.seven_letters,
+    ...strings.BACKGROUND_TEXT.seven_letters,
     requiresAchievementId: "seven_letters",
     kind: "css",
   },
   {
     id: "snowfall",
-    ...BACKGROUND_TEXT.snowfall,
+    ...strings.BACKGROUND_TEXT.snowfall,
     requiresAchievementId: "close_but_no_cigar",
     kind: "css",
   },
   {
     id: "letter_pile",
-    ...BACKGROUND_TEXT.letter_pile,
+    ...strings.BACKGROUND_TEXT.letter_pile,
     requiresAchievementId: "process_of_elimination",
     kind: "css",
   },
   {
     id: "letter_rain",
-    ...BACKGROUND_TEXT.letter_rain,
+    ...strings.BACKGROUND_TEXT.letter_rain,
     requiresAchievementId: "word_connoisseur",
     kind: "css",
   },
   {
     id: "duck_parade",
-    ...BACKGROUND_TEXT.duck_parade,
+    ...strings.BACKGROUND_TEXT.duck_parade,
     requiresAchievementId: "quack",
     kind: "css",
   },
@@ -147,26 +147,26 @@ export const BACKGROUNDS: BackgroundDef[] = [
   },
   {
     id: "emoji_rain",
-    ...BACKGROUND_TEXT.emoji_rain,
+    ...strings.BACKGROUND_TEXT.emoji_rain,
     requiresAchievementId: "nail_biter",
     kind: "css",
   },
   {
     id: "fireworks",
-    ...BACKGROUND_TEXT.fireworks,
+    ...strings.BACKGROUND_TEXT.fireworks,
     requiresAchievementId: "diversify",
     kind: "css",
   },
   {
     id: "liquid_ripple",
-    ...BACKGROUND_TEXT.liquid_ripple,
+    ...strings.BACKGROUND_TEXT.liquid_ripple,
     requiresAchievementId: "blind_faith",
     kind: "css",
     requiresWebGL: true,
   },
   {
     id: "spinning_seal",
-    ...BACKGROUND_TEXT.spinning_seal,
+    ...strings.BACKGROUND_TEXT.spinning_seal,
     requiresAchievementId: COMPLETIONIST_ID,
     kind: "video",
     videoSrc: "/backgrounds/seal_v2.mp4",
