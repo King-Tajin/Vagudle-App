@@ -10,7 +10,7 @@ const config: CapacitorConfig = {
       providers: ["google.com"],
     },
     LocalNotifications: {
-      smallIcon: "ic_launcher_monochrome",
+      smallIcon: "ic_notification_monochrome",
       iconColor: "#EAB308",
     },
     SystemBars: {

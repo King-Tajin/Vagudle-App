@@ -1,0 +1,86 @@
+name: Update GitHub Stats Card
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-card:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Switch to stats branch
+        run: |
+          git fetch origin stats || true
+          if git show-ref --verify --quiet refs/remotes/origin/stats; then
+            git checkout stats
+          else
+            git checkout --orphan stats
+            git rm -rf .
+          fi
+
+      - name: Fetch repo stats
+        id: stats
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          repo_json=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/King-Tajin/Vagudle)
+          stars=$(echo "$repo_json" | jq -r '.stargazers_count')
+          forks=$(echo "$repo_json" | jq -r '.forks_count')
+          issues=$(echo "$repo_json" | jq -r '.open_issues_count')
+          watchers=$(echo "$repo_json" | jq -r '.subscribers_count')
+          language=$(echo "$repo_json" | jq -r '.language')
+
+          commits=$(curl -s -I -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/King-Tajin/Vagudle/commits?per_page=1" | grep -i '^link:' | grep -oP 'page=\K[0-9]+(?=>; rel="last")')
+          if [ -z "$commits" ]; then commits=1; fi
+
+          echo "stars=$stars" >> "$GITHUB_OUTPUT"
+          echo "forks=$forks" >> "$GITHUB_OUTPUT"
+          echo "issues=$issues" >> "$GITHUB_OUTPUT"
+          echo "watchers=$watchers" >> "$GITHUB_OUTPUT"
+          echo "language=$language" >> "$GITHUB_OUTPUT"
+          echo "commits=$commits" >> "$GITHUB_OUTPUT"
+
+      - name: Generate stats card
+        run: |
+          mkdir -p stats
+          cat > stats/vagudle-stats.svg << SVG_EOF
+          <svg width="380" height="220" viewBox="0 0 380 220" xmlns="http://www.w3.org/2000/svg">
+            <rect width="380" height="220" rx="8" fill="#000000" stroke="#FFD700" stroke-width="1.5"/>
+            <text x="20" y="34" font-family="monospace" font-size="17" font-weight="bold" fill="#FFD700">Vagudle</text>
+            <text x="20" y="53" font-family="monospace" font-size="11" fill="#9ca3af">GitHub Repository Stats</text>
+            <line x1="20" y1="64" x2="360" y2="64" stroke="#2a2a2a" stroke-width="1"/>
+
+            <text x="20" y="90" font-family="monospace" font-size="13" fill="#ffffff">Commits</text>
+            <text x="360" y="90" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.commits }}</text>
+
+            <text x="20" y="115" font-family="monospace" font-size="13" fill="#ffffff">Stars</text>
+            <text x="360" y="115" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.stars }}</text>
+
+            <text x="20" y="140" font-family="monospace" font-size="13" fill="#ffffff">Forks</text>
+            <text x="360" y="140" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.forks }}</text>
+
+            <text x="20" y="165" font-family="monospace" font-size="13" fill="#ffffff">Open Issues</text>
+            <text x="360" y="165" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.issues }}</text>
+
+            <text x="20" y="190" font-family="monospace" font-size="13" fill="#ffffff">Watchers</text>
+            <text x="360" y="190" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.watchers }}</text>
+
+            <text x="20" y="212" font-family="monospace" font-size="11" fill="#9ca3af">Primary language: ${{ steps.stats.outputs.language }}</text>
+          </svg>
+          SVG_EOF
+
+      - name: Commit card
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stats/vagudle-stats.svg
+          git diff --staged --quiet || git commit -m "Update GitHub stats card"
+          git push origin HEAD:stats

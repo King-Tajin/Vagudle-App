@@ -102,3 +102,4 @@ app/src/main/res/xml/config.xml
 /gradle/gradle-daemon-jvm.properties
 
 *.properties
+/.kotlin/
