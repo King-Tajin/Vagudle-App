@@ -27,7 +27,7 @@
     android:lineSpacingExtra="2dp"
   />
 
-    <LinearLayout
+    <androidx.appcompat.widget.ButtonBarLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
@@ -70,6 +70,6 @@
       android:minHeight="0dp"
     />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.ButtonBarLayout>
 
 </LinearLayout>
