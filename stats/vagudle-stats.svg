@@ -20,7 +20,7 @@
   <text x="360" y="190" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">0</text>
 
   <text x="20" y="215" font-family="monospace" font-size="13" fill="#ffffff">Repo Size</text>
-  <text x="360" y="215" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">21.8 MB</text>
+  <text x="360" y="215" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">21.6 MB</text>
 
   <text x="20" y="240" font-family="monospace" font-size="13" fill="#ffffff">Latest Commit</text>
   <text x="360" y="240" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">d1299d3 (2026-09-04)</text>
