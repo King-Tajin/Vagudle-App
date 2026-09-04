@@ -11,7 +11,7 @@ export const NAVBAR_BRAND_URL_ACTIVITY =
   "https://King-Tajin.dev/yellow-skipper-games";
 export const SOURCE_CODE_URL = "https://github.com/King-Tajin/Vagudle-App";
 export const GITHUB_STATS_CARD_URL =
-    "https://raw.githubusercontent.com/King-Tajin/Vagudle-App/stats/stats/vagudle-stats.svg";
+  "https://raw.githubusercontent.com/King-Tajin/Vagudle-App/stats/stats/vagudle-stats.svg";
 export const ENABLE_OFFLINE_MODE = true;
 export const ENABLE_NOTIFICATION_SETTINGS = true;
 export const ENABLE_HAPTICS_SETTINGS = true;
