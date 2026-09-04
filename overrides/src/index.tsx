@@ -9,6 +9,10 @@ import { AlertProvider } from "./context/AlertContext";
 import { initDiscordSDK } from "./lib/discord";
 import { LinkDiscordPage } from "./components/screens/LinkDiscordPage";
 import { LinkPlayGamesPage } from "./components/screens/LinkPlayGamesPage";
+import { initCrashReporting } from "./lib/crashReporting";
+import { CrashBoundary } from "./components/CrashBoundary";
+import { listenForReminderNotificationTaps } from "./lib/notifications";
+import { DAILY_PATH } from "./lib/daily";
 
 const API_BASE = "https://vagudle.king-tajin.dev";
 const _fetch = window.fetch.bind(window);
@@ -57,32 +61,44 @@ function listenForWarmStartDeepLinks(): void {
   });
 }
 
+function openDailyFromNotification(): void {
+  const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (currentPath !== DAILY_PATH) {
+    window.location.href = DAILY_PATH;
+  }
+}
+
 async function bootstrap() {
+  initCrashReporting();
+
   const redirecting = await applyColdStartDeepLink();
   if (redirecting) return;
 
   listenForWarmStartDeepLinks();
+  listenForReminderNotificationTaps(openDailyFromNotification);
 
   const isLinkDiscordRoute = window.location.pathname === "/link-discord";
   const isLinkPlayGamesRoute = window.location.pathname === "/link-playgames";
 
   await initDiscordSDK();
   createRoot(document.getElementById("root") as HTMLElement).render(
-    <React.StrictMode>
-      <LazyMotion features={domAnimation} strict>
-        <MotionConfig reducedMotion="user">
-          <AlertProvider>
-            {isLinkDiscordRoute ? (
-              <LinkDiscordPage />
-            ) : isLinkPlayGamesRoute ? (
-              <LinkPlayGamesPage />
-            ) : (
-              <App />
-            )}
-          </AlertProvider>
-        </MotionConfig>
-      </LazyMotion>
-    </React.StrictMode>
+      <React.StrictMode>
+        <LazyMotion features={domAnimation} strict>
+          <MotionConfig reducedMotion="user">
+            <CrashBoundary>
+              <AlertProvider>
+                {isLinkDiscordRoute ? (
+                    <LinkDiscordPage />
+                ) : isLinkPlayGamesRoute ? (
+                    <LinkPlayGamesPage />
+                ) : (
+                    <App />
+                )}
+              </AlertProvider>
+            </CrashBoundary>
+          </MotionConfig>
+        </LazyMotion>
+      </React.StrictMode>
   );
 }
 
