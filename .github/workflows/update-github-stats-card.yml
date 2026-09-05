@@ -35,16 +35,19 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           repo_json=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/King-Tajin/Vagudle-App)
+          sub_json=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/King-Tajin/Vagudle)
+
           stars=$(echo "$repo_json" | jq -r '.stargazers_count')
           forks=$(echo "$repo_json" | jq -r '.forks_count')
           issues=$(echo "$repo_json" | jq -r '.open_issues_count')
           watchers=$(echo "$repo_json" | jq -r '.subscribers_count')
-          language=$(echo "$repo_json" | jq -r '.language')
 
           commits=$(curl -s -I -H "Authorization: Bearer $GH_TOKEN" "https://api.github.com/repos/King-Tajin/Vagudle-App/commits?per_page=1" | grep -i '^link:' | grep -oP 'page=\K[0-9]+(?=>; rel="last")')
           if [ -z "$commits" ]; then commits=1; fi
 
-          size_kb=$(echo "$repo_json" | jq -r '.size')
+          size_kb_app=$(echo "$repo_json" | jq -r '.size')
+          size_kb_sub=$(echo "$sub_json" | jq -r '.size')
+          size_kb=$(( size_kb_app + size_kb_sub ))
           if [ "$size_kb" -ge 1024 ] 2>/dev/null; then
             repo_size=$(awk "BEGIN { printf \"%.1f MB\", $size_kb/1024 }")
           else
@@ -71,7 +74,10 @@ jobs:
             msg_lines=$msg_total_lines
           fi
 
-          languages_json=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/King-Tajin/Vagudle-App/languages)
+          languages_json_app=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/King-Tajin/Vagudle-App/languages)
+          languages_json_sub=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/King-Tajin/Vagudle/languages)
+          languages_json=$(jq -n --argjson a "$languages_json_app" --argjson b "$languages_json_sub" '(($a | keys) + ($b | keys) | unique) as $keys | reduce $keys[] as $k ({}; .[$k] = (($a[$k] // 0) + ($b[$k] // 0)))')
+          language=$(echo "$languages_json" | jq -r 'to_entries | sort_by(-.value) | .[0].key')
           lang_breakdown=$(echo "$languages_json" | jq -r 'to_entries | sort_by(-.value) | (map(.value) | add) as $total | .[0:5] | map("\(.key) \((.value * 100 / $total) | floor)%") | join(", ")')
           lang_wrapped=$(printf '%s' "Languages: $lang_breakdown" | fold -s -w 52)
           lang_line1=$(echo "$lang_wrapped" | sed -n '1p')
