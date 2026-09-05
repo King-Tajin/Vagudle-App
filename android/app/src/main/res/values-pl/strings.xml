@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<resources>
+    <string name="update_available_title">Dostępna aktualizacja</string>
+    <string
+    name="update_available_message"
+  >Nowa wersja Vagudle jest gotowa. Zaktualizuj teraz, aby zyskać najnowsze funkcje i poprawki.</string>
+    <string name="update_available_update">Aktualizuj</string>
+    <string name="update_available_not_now">Graj bez aktualizacji</string>
+    <string name="notification_primer_title">Utrzymaj swoją passę</string>
+    <string
+    name="notification_primer_message"
+  >Otrzymuj sporadyczne przypomnienia o codziennej zagadce, by utrzymać swoją passę. Możesz to zmienić w dowolnej chwili w Ustawieniach.</string>
+    <string name="notification_primer_enable">Włącz przypomnienia</string>
+    <string name="notification_primer_not_now">Nie teraz</string>
+</resources>

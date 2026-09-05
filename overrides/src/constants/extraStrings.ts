@@ -87,6 +87,28 @@ const BACKGROUND_TEXT_MOUSE_EATING_BY_LANGUAGE: Record<
       license: "Allmän egendom",
     },
   },
+  pl: {
+    desktopLabel: "MYSZ JE M&M",
+    mobileLabel: "MYSZ",
+    attribution: {
+      credits: [
+        {
+          role: "Wideo",
+          title:
+            "3d cartoon mouse dancing loop animation isolated on green screen background Free Video",
+          creator: "Vecteezy",
+          sourceUrl:
+            "https://www.vecteezy.com/video/56169680-3d-cartoon-mouse-dancing-loop-animation-isolated-on-green-screen-background",
+        },
+        {
+          role: "Muzyka",
+          title: "Candyland",
+          creator: "Tobu",
+        },
+      ],
+      license: "Domena publiczna",
+    },
+  },
 };
 
 const active =
