@@ -78,7 +78,17 @@ jobs:
           languages_json_sub=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/King-Tajin/Vagudle/languages)
           languages_json=$(jq -n --argjson a "$languages_json_app" --argjson b "$languages_json_sub" '(($a | keys) + ($b | keys) | unique) as $keys | reduce $keys[] as $k ({}; .[$k] = (($a[$k] // 0) + ($b[$k] // 0)))')
           language=$(echo "$languages_json" | jq -r 'to_entries | sort_by(-.value) | .[0].key')
-          lang_breakdown=$(echo "$languages_json" | jq -r 'to_entries | sort_by(-.value) | (map(.value) | add) as $total | .[0:5] | map("\(.key) \((.value * 100 / $total) | floor)%") | join(", ")')
+          lang_top5=$(echo "$languages_json" | jq -r 'to_entries | sort_by(-.value) | (map(.value) | add) as $total | .[0:5] | map("\(.key)|\(.value)|\($total)") | .[]')
+          lang_breakdown=""
+          while IFS='|' read -r lname lvalue ltotal; do
+            lpct=$(awk -v v="$lvalue" -v t="$ltotal" 'BEGIN { p = v * 100 / t; if (p >= 10) printf "%.0f", p; else printf "%.1f", p }')
+            entry="$lname ${lpct}%"
+            if [ -z "$lang_breakdown" ]; then
+              lang_breakdown="$entry"
+            else
+              lang_breakdown="$lang_breakdown, $entry"
+            fi
+          done <<< "$lang_top5"
           lang_wrapped=$(printf '%s' "Languages: $lang_breakdown" | fold -s -w 52)
           lang_line1=$(echo "$lang_wrapped" | sed -n '1p')
           lang_line2=$(echo "$lang_wrapped" | sed -n '2p')
