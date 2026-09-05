@@ -5,7 +5,7 @@
   <line x1="20" y1="64" x2="360" y2="64" stroke="#2a2a2a" stroke-width="1"/>
 
   <text x="20" y="90" font-family="monospace" font-size="13" fill="#ffffff">Commits</text>
-  <text x="360" y="90" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">62</text>
+  <text x="360" y="90" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">63</text>
 
   <text x="20" y="115" font-family="monospace" font-size="13" fill="#ffffff">Stars</text>
   <text x="360" y="115" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">0</text>
@@ -23,9 +23,9 @@
   <text x="360" y="215" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">198.5 MB</text>
 
   <text x="20" y="240" font-family="monospace" font-size="13" fill="#ffffff">Latest Commit</text>
-  <text x="360" y="240" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">2ada104 (2026-09-05)</text>
-  <text x="20" y="257" font-family="monospace" font-size="11" fill="#6b7280">Combined repo size and languages with submodule in </text>
-  <text x="20" y="271" font-family="monospace" font-size="11" fill="#6b7280">stats card.</text>
+  <text x="360" y="240" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">e301cf5 (2026-09-05)</text>
+  <text x="20" y="257" font-family="monospace" font-size="11" fill="#6b7280">Changed language breakdown to show 2 significant </text>
+  <text x="20" y="271" font-family="monospace" font-size="11" fill="#6b7280">figures in stats card.</text>
   
   
   
@@ -33,7 +33,7 @@
   <line x1="20" y1="284" x2="360" y2="284" stroke="#2a2a2a" stroke-width="1"/>
 
   <text x="20" y="304" font-family="monospace" font-size="11" fill="#9ca3af">Primary language: TypeScript</text>
-  <text x="20" y="322" font-family="monospace" font-size="11" fill="#9ca3af">Languages: TypeScript 91%, JavaScript 6%, CSS 0%, </text>
-  <text x="20" y="340" font-family="monospace" font-size="11" fill="#9ca3af">HTML 0%, Java 0%</text>
+  <text x="20" y="322" font-family="monospace" font-size="11" fill="#9ca3af">Languages: TypeScript 91%, JavaScript 6.7%, CSS </text>
+  <text x="20" y="340" font-family="monospace" font-size="11" fill="#9ca3af">0.7%, HTML 0.7%, Java 0.6%</text>
   
 </svg>
