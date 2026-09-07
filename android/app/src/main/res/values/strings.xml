@@ -29,7 +29,10 @@
     <string
     name="daily_widget_description"
   >See your daily streak, rank, and whether today\'s puzzle is done.</string>
-    <string name="widget_empty_state">Play Vagudle</string>
+    <string name="widget_empty_state">Tap to load Vagudle</string>
+    <string
+    name="widget_empty_state_subtitle"
+  >(first time widget setup)</string>
     <string name="widget_start_streak">Start a streak</string>
     <string name="widget_streak_format">🔥 %1$d</string>
     <string name="widget_play_today">Play today\'s puzzle</string>

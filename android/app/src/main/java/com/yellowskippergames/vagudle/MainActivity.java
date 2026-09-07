@@ -59,6 +59,12 @@ public class MainActivity extends BridgeActivity {
     checkForUpdate();
   }
 
+  @Override
+  protected void onResume() {
+    super.onResume();
+    DailyRefreshReceiverKt.refreshWidgetDataIfStale(getApplicationContext());
+  }
+
   private void checkForUpdate() {
     AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(this);
     appUpdateManager

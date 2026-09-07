@@ -24,6 +24,7 @@ private const val KEY_MAX_GUESSES = "maxGuesses"
 private const val KEY_RANK_STATUS = "rankStatus"
 private const val KEY_RANK = "rank"
 private const val KEY_OUT_OF = "outOf"
+private const val KEY_LAST_REFRESH_ATTEMPT_AT = "lastRefreshAttemptAt"
 
 private const val DAILY_RELEASE_HOUR_UTC = 8L
 
@@ -133,24 +134,37 @@ fun parseDailyWidgetPayload(json: JSONObject): DailyWidgetData {
 fun saveDailyWidgetData(
     prefs: SharedPreferences,
     data: DailyWidgetData,
-) {
-    prefs.edit().apply {
-        putString(KEY_DATE, data.date)
-        putInt(KEY_DAILY_NUMBER, data.dailyNumber)
-        putInt(KEY_WORD_LENGTH, data.wordLength)
-        putBoolean(KEY_HARD_MODE, data.hardMode)
-        putInt(KEY_CURRENT_STREAK, data.currentStreak)
-        putInt(KEY_BEST_STREAK, data.bestStreak)
-        putBoolean(KEY_HAS_PLAYED_TODAY, data.hasPlayedToday)
-        putBoolean(KEY_IN_PROGRESS, data.inProgress)
-        if (data.wonToday == null) remove(KEY_WON_TODAY) else putBoolean(KEY_WON_TODAY, data.wonToday)
-        if (data.guessCount == null) remove(KEY_GUESS_COUNT) else putInt(KEY_GUESS_COUNT, data.guessCount)
-        if (data.maxGuesses == null) remove(KEY_MAX_GUESSES) else putInt(KEY_MAX_GUESSES, data.maxGuesses)
-        putString(KEY_RANK_STATUS, data.rank.status.name)
-        if (data.rank.rank == null) remove(KEY_RANK) else putInt(KEY_RANK, data.rank.rank)
-        if (data.rank.outOf == null) remove(KEY_OUT_OF) else putInt(KEY_OUT_OF, data.rank.outOf)
-        apply()
+    commit: Boolean = false,
+): Boolean {
+    val editor =
+        prefs.edit().apply {
+            putString(KEY_DATE, data.date)
+            putInt(KEY_DAILY_NUMBER, data.dailyNumber)
+            putInt(KEY_WORD_LENGTH, data.wordLength)
+            putBoolean(KEY_HARD_MODE, data.hardMode)
+            putInt(KEY_CURRENT_STREAK, data.currentStreak)
+            putInt(KEY_BEST_STREAK, data.bestStreak)
+            putBoolean(KEY_HAS_PLAYED_TODAY, data.hasPlayedToday)
+            putBoolean(KEY_IN_PROGRESS, data.inProgress)
+            if (data.wonToday == null) remove(KEY_WON_TODAY) else putBoolean(KEY_WON_TODAY, data.wonToday)
+            if (data.guessCount == null) remove(KEY_GUESS_COUNT) else putInt(KEY_GUESS_COUNT, data.guessCount)
+            if (data.maxGuesses == null) remove(KEY_MAX_GUESSES) else putInt(KEY_MAX_GUESSES, data.maxGuesses)
+            putString(KEY_RANK_STATUS, data.rank.status.name)
+            if (data.rank.rank == null) remove(KEY_RANK) else putInt(KEY_RANK, data.rank.rank)
+            if (data.rank.outOf == null) remove(KEY_OUT_OF) else putInt(KEY_OUT_OF, data.rank.outOf)
+        }
+    return if (commit) {
+        editor.commit()
+    } else {
+        editor.apply()
+        true
     }
+}
+
+fun lastRefreshAttemptAt(prefs: SharedPreferences): Long = prefs.getLong(KEY_LAST_REFRESH_ATTEMPT_AT, 0L)
+
+fun markRefreshAttemptNow(prefs: SharedPreferences) {
+    prefs.edit().putLong(KEY_LAST_REFRESH_ATTEMPT_AT, System.currentTimeMillis()).apply()
 }
 
 fun loadDailyWidgetData(context: Context): DailyWidgetData? {

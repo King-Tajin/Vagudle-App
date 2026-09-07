@@ -15,7 +15,10 @@
   <string
     name="daily_widget_description"
   >Sprawdź swoją codzienną passę, pozycję w rankingu i czy dzisiejsza zagadka została rozwiązana.</string>
-  <string name="widget_empty_state">Zagraj w Vagudle</string>
+  <string name="widget_empty_state">Dotknij, aby wczytać Vagudle</string>
+  <string
+    name="widget_empty_state_subtitle"
+  >(pierwsza konfiguracja widżetu)</string>
   <string name="widget_start_streak">Rozpocznij passę</string>
   <string name="widget_streak_format">🔥 %1$d</string>
   <string name="widget_play_today">Zagraj w dzisiejszą zagadkę</string>
@@ -42,7 +45,7 @@
     <item quantity="many">Rozwiązane w %1$d próbach</item>
     <item quantity="other">Rozwiązane w %1$d próbach</item>
   </plurals>
-    <string name="widget_streak_label">SERIA</string>
+  <string name="widget_streak_label">SERIA</string>
   <string name="widget_daily_info_short">%1$d liter \u00b7 tryb %2$s</string>
   <string name="widget_play_normal_mode">Graj w trybie normalnym</string>
   <string name="widget_resume">Wznów</string>

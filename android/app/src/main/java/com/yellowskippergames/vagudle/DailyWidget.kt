@@ -64,6 +64,8 @@ private const val PLAQUE_FILL_ARGB = 0xFF0A0014.toInt()
 private const val PLAQUE_BORDER_ARGB = 0xFF4E00A7.toInt()
 private const val GOLD_ARGB = 0xFFFFD700.toInt()
 
+private val MIN_OUTER_CORNER_RADIUS = 8.dp
+
 private val GOLD = fixedColor(Color(0xFFFFD700))
 private val NEAR_BLACK = fixedColor(Color(0xFF0D0D1B))
 private val TEXT_WHITE = fixedColor(Color(0xFFFFFFFF))
@@ -145,8 +147,12 @@ class DailyWidget : GlanceAppWidget() {
 }
 
 fun requestDailyWidgetUpdate(context: Context) {
+    val appContext = context.applicationContext
     CoroutineScope(Dispatchers.IO).launch {
-        DailyWidget().updateAll(context)
+        try {
+            DailyWidget().updateAll(appContext)
+        } catch (_: Exception) {
+        }
     }
 }
 
@@ -166,7 +172,13 @@ private fun DailyWidgetContent(
     val widthScale = size.width.value / reference.width.value
     val heightScale = size.height.value / reference.height.value
     val textBoost = if (isExpanded) EXPANDED_TEXT_BOOST else COMPACT_TEXT_BOOST
-    val scale = WidgetScale(width = widthScale, height = heightScale, visual = sqrt(widthScale * heightScale), textBoost = textBoost)
+    val scale =
+        WidgetScale(
+            width = widthScale,
+            height = heightScale,
+            visual = sqrt(widthScale * heightScale),
+            textBoost = textBoost,
+        )
     val borderThickness = 3.dp.scaled(scale.visual)
     val innerWidth = size.width - borderThickness * 2
     val innerHeight = size.height - borderThickness * 2
@@ -177,7 +189,7 @@ private fun DailyWidgetContent(
         modifier =
             GlanceModifier
                 .fillMaxSize()
-                .cornerRadius(outerRadius.scaled(scale.visual))
+                .cornerRadius(outerRadius.scaled(scale.visual).coerceAtLeast(MIN_OUTER_CORNER_RADIUS))
                 .background(GOLD)
                 .clickable(actionStartActivity(openDailyIntent(context))),
     ) {
@@ -215,10 +227,18 @@ private fun EmptyState(
                 .background(NEAR_BLACK),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = context.getString(R.string.widget_empty_state),
-            style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 6.sp.scaled(scale), color = GOLD),
-        )
+        Column(horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
+            Text(
+                text = context.getString(R.string.widget_empty_state),
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 6.sp.scaled(scale), color = GOLD),
+                maxLines = 1,
+            )
+            Text(
+                text = context.getString(R.string.widget_empty_state_subtitle),
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 5.sp.scaled(scale), color = GOLD),
+                maxLines = 1,
+            )
+        }
     }
 }
 
@@ -289,7 +309,12 @@ private fun Plaque(
             )
             Text(
                 text = context.getString(R.string.widget_daily_number, dailyNumber),
-                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = numberFontSize.scaled(scale), color = TEXT_WHITE),
+                style =
+                    TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = numberFontSize.scaled(scale),
+                        color = TEXT_WHITE,
+                    ),
                 maxLines = 1,
             )
         }
@@ -418,9 +443,17 @@ private fun statusInfo(
         }
     }
     if (isFresh && data.inProgress) {
-        return StatusInfo(context.getString(R.string.widget_in_progress), IN_PROGRESS_ORANGE, baseFontSize.scaled(scale))
+        return StatusInfo(
+            context.getString(R.string.widget_in_progress),
+            IN_PROGRESS_ORANGE,
+            baseFontSize.scaled(scale),
+        )
     }
-    return StatusInfo(context.getString(R.string.widget_not_played_yet), NOT_PLAYED_RED, notPlayedFontSize.scaled(scale))
+    return StatusInfo(
+        context.getString(R.string.widget_not_played_yet),
+        NOT_PLAYED_RED,
+        notPlayedFontSize.scaled(scale),
+    )
 }
 
 private fun rankInfo(
@@ -514,7 +547,11 @@ private fun ExpandedPanelContent(
                     Image(
                         provider = ImageProvider(R.drawable.ic_widget_flame),
                         contentDescription = null,
-                        modifier = GlanceModifier.width(6.29f.dp.scaled(scale.visual)).height(11.dp.scaled(scale.visual)),
+                        modifier =
+                            GlanceModifier
+                                .width(
+                                    6.29f.dp.scaled(scale.visual),
+                                ).height(11.dp.scaled(scale.visual)),
                     )
                     Spacer(modifier = GlanceModifier.width(3.dp.scaled(scale.visual)))
                     Text(
@@ -566,9 +603,16 @@ private fun ExpandedPanelContent(
                             context.getString(
                                 R.string.widget_daily_info_short,
                                 data.wordLength,
-                                context.getString(if (data.hardMode) R.string.widget_mode_hard else R.string.widget_mode_normal),
+                                context.getString(
+                                    if (data.hardMode) R.string.widget_mode_hard else R.string.widget_mode_normal,
+                                ),
                             ),
-                        style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 8.sp.scaled(scale), color = MUTED_GRAY),
+                        style =
+                            TextStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 8.sp.scaled(scale),
+                                color = MUTED_GRAY,
+                            ),
                         maxLines = 1,
                     )
                     Spacer(modifier = GlanceModifier.height(8.dp.scaled(scale.visual)))

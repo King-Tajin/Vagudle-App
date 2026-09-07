@@ -14,6 +14,7 @@ import java.net.URL
 import java.util.concurrent.TimeUnit
 
 private const val RANK_ENDPOINT = "https://vagudle.king-tajin.dev/api/daily-leaderboard-rank"
+private const val MIN_SELF_HEAL_INTERVAL_MS = 30L * 60L * 1000L
 
 class DailyRefreshReceiver : BroadcastReceiver() {
     override fun onReceive(
@@ -24,13 +25,37 @@ class DailyRefreshReceiver : BroadcastReceiver() {
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                rolloverIfNeeded(appContext)
-                refreshRank(appContext)
-            } catch (_: Exception) {
+                performDailyRefresh(appContext)
             } finally {
                 scheduleDailyRefresh(appContext)
                 pendingResult.finish()
             }
+        }
+    }
+}
+
+private fun performDailyRefresh(context: Context) {
+    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+    try {
+        rolloverIfNeeded(context)
+        refreshRank(context)
+    } catch (_: Exception) {
+    } finally {
+        markRefreshAttemptNow(prefs)
+    }
+}
+
+fun refreshWidgetDataIfStale(context: Context) {
+    val appContext = context.applicationContext
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val data = loadDailyWidgetData(appContext) ?: return@launch
+            val prefs = appContext.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+            val isDateStale = data.date != currentDailyDateUtc()
+            val isOverdue = System.currentTimeMillis() - lastRefreshAttemptAt(prefs) >= MIN_SELF_HEAL_INTERVAL_MS
+            if (!isDateStale && !isOverdue) return@launch
+            performDailyRefresh(appContext)
+        } catch (_: Exception) {
         }
     }
 }

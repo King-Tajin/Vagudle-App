@@ -27,9 +27,16 @@ public class DailyWidgetPlugin extends Plugin {
       DailyWidgetDataKt.DAILY_WIDGET_PREFS_NAME,
       Context.MODE_PRIVATE
     );
-    DailyWidgetDataKt.saveDailyWidgetData(prefs, data);
-    DailyWidgetKt.requestDailyWidgetUpdate(getContext());
-    DailyRefreshSchedulerKt.scheduleDailyRefresh(getContext());
+    boolean saved = DailyWidgetDataKt.saveDailyWidgetData(prefs, data, true);
+    if (!saved) {
+      call.reject("Failed to persist widget data.");
+      return;
+    }
+
+    try {
+      DailyWidgetKt.requestDailyWidgetUpdate(getContext());
+      DailyRefreshSchedulerKt.scheduleDailyRefresh(getContext());
+    } catch (Exception ignored) {}
 
     call.resolve();
   }

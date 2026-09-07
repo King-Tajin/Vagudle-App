@@ -15,7 +15,10 @@
   <string
     name="daily_widget_description"
   >Se din dagliga svit, placering och om dagens pussel är klart.</string>
-  <string name="widget_empty_state">Spela Vagudle</string>
+  <string name="widget_empty_state">Tryck för att ladda Vagudle</string>
+  <string
+    name="widget_empty_state_subtitle"
+  >(första widgetinställningen)</string>
   <string name="widget_start_streak">Starta en svit</string>
   <string name="widget_streak_format">🔥 %1$d</string>
   <string name="widget_play_today">Spela dagens pussel</string>
