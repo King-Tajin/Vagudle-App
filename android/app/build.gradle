@@ -29,6 +29,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+            noCompress 'js', 'css', 'html', 'json', 'svg', 'png', 'jpg', 'webp', 'wasm', 'mp4', 'webm', 'ogg', 'woff2'
         }
     }
     compileOptions {
@@ -58,6 +59,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if (hasKeystoreProperties) {
                 signingConfig signingConfigs.release
+            }
+            ndk {
+                debugSymbolLevel 'FULL'
             }
         }
     }
