@@ -20,7 +20,6 @@
   <string name="widget_streak_format">🔥 %1$d</string>
   <string name="widget_play_today">Spela dagens pussel</string>
   <string name="widget_not_solved_today">Inte löst idag</string>
-  <string name="widget_rank_top8">Topp 8</string>
   <string name="widget_rank_number">#%1$d</string>
   <string
     name="widget_link_account"
@@ -36,8 +35,15 @@
   <string name="widget_not_played_yet">Inte spelat än</string>
   <string name="widget_in_progress">Pågår</string>
   <string name="widget_game_lost">Förlorat</string>
+  <string name="widget_play_daily">Spela dagligt läge</string>
   <plurals name="widget_solved_in_guesses">
     <item quantity="one">Löst på %1$d gissning</item>
     <item quantity="other">Löst på %1$d gissningar</item>
   </plurals>
+  <string name="widget_streak_label">SVIT</string>
+  <string
+    name="widget_daily_info_short"
+  >%1$d bokstäver \u00b7 %2$s-läge</string>
+  <string name="widget_play_normal_mode">Spela normalt läge</string>
+  <string name="widget_resume">Fortsätt</string>
 </resources>

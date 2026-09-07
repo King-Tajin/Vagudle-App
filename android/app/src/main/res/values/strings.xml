@@ -34,7 +34,6 @@
     <string name="widget_streak_format">🔥 %1$d</string>
     <string name="widget_play_today">Play today\'s puzzle</string>
     <string name="widget_not_solved_today">Not solved today</string>
-    <string name="widget_rank_top8">Top 8</string>
     <string name="widget_rank_number">#%1$d</string>
     <string
     name="widget_link_account"

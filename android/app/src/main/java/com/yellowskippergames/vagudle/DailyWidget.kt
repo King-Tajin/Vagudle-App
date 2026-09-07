@@ -187,6 +187,7 @@ private fun DailyWidgetContent(
                     .fillMaxSize()
                     .padding(horizontal = borderThickness, vertical = borderThickness)
                     .cornerRadius(innerRadius.scaled(scale.visual)),
+            contentAlignment = Alignment.Center,
         ) {
             if (data == null) {
                 EmptyState(context, scale)
@@ -372,7 +373,7 @@ private fun StreakRow(
         Image(
             provider = ImageProvider(R.drawable.ic_widget_flame),
             contentDescription = null,
-            modifier = GlanceModifier.width(2.92f.dp.scaled(scale.visual)).height(5.1f.dp.scaled(scale.visual)),
+            modifier = GlanceModifier.width(4.67f.dp.scaled(scale.visual)).height(8.16f.dp.scaled(scale.visual)),
         )
         Spacer(modifier = GlanceModifier.width(2.dp.scaled(scale.visual)))
         Text(
@@ -432,13 +433,8 @@ private fun rankInfo(
     when (rank.status) {
         DailyWidgetRankStatus.RANKED -> {
             val position = rank.rank ?: 0
-            val total = rank.outOf ?: 0
-            if (total > 0 && position <= 8) {
-                context.getString(R.string.widget_rank_top8) to baseFontSize.scaled(scale)
-            } else {
-                val fontSize = if (position >= 1000) highRankFontSize else baseFontSize
-                context.getString(R.string.widget_rank_number, position) to fontSize.scaled(scale)
-            }
+            val fontSize = if (position >= 1000) highRankFontSize else baseFontSize
+            context.getString(R.string.widget_rank_number, position) to fontSize.scaled(scale)
         }
         DailyWidgetRankStatus.NO_USERNAME,
         DailyWidgetRankStatus.GUEST,
@@ -467,7 +463,7 @@ private fun StatusRow(
         Image(
             provider = ImageProvider(R.drawable.ic_widget_trophy),
             contentDescription = null,
-            modifier = GlanceModifier.width(3.5f.dp.scaled(scale.visual)).height(4.05f.dp.scaled(scale.visual)),
+            modifier = GlanceModifier.width(5.6f.dp.scaled(scale.visual)).height(6.48f.dp.scaled(scale.visual)),
         )
         Spacer(modifier = GlanceModifier.width(2.dp.scaled(scale.visual)))
         Text(

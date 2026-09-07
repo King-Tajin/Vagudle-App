@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.js",
+    "bundle": "node scripts/gradle.js bundleRelease",
     "update:web": "node scripts/update-web.js",
     "android": "pnpm run build && pnpm exec cap open android",
     "webcore:typecheck": "node scripts/web-script.js typecheck",
