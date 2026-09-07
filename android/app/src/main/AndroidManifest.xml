@@ -5,6 +5,7 @@
 >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
     android:allowBackup="true"
@@ -46,6 +47,36 @@
       android:name="com.google.android.gms.games.APP_ID"
       android:value="@string/game_services_project_id"
     />
+
+        <receiver
+      android:name=".DailyWidgetReceiver"
+      android:exported="false"
+      android:label="@string/title_activity_main"
+    >
+            <intent-filter>
+                <action
+          android:name="android.appwidget.action.APPWIDGET_UPDATE"
+        />
+            </intent-filter>
+            <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/daily_widget_info"
+      />
+        </receiver>
+
+        <receiver
+      android:name=".DailyRefreshReceiver"
+      android:exported="false"
+    />
+
+        <receiver
+      android:name=".BootCompletedReceiver"
+      android:exported="false"
+    >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <provider
       android:name="androidx.core.content.FileProvider"

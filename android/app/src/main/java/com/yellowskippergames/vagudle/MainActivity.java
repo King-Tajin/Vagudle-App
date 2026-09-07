@@ -33,6 +33,7 @@ public class MainActivity extends BridgeActivity {
     registerPlugin(PlayGamesAuthPlugin.class);
     registerPlugin(NotificationPrimerPlugin.class);
     registerPlugin(ReviewPromptPlugin.class);
+    registerPlugin(DailyWidgetPlugin.class);
 
     boolean isLargeScreen =
       getResources().getConfiguration().smallestScreenWidthDp >=

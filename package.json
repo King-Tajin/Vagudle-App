@@ -8,8 +8,8 @@
     "typecheck": "node scripts/web-script.js typecheck",
     "lint": "node scripts/web-script.js lint",
     "doctor:report": "node scripts/web-script.js doctor:report",
-    "format": "prettier --write \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/*.js\" \"*.{json,js,cjs,md}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\"",
-    "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/*.js\" \"*.{json,js,cjs,md}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\""
+    "format": "prettier --write \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\"",
+    "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\""
   },
   "dependencies": {
     "@capacitor-community/safe-area": "^8.0.1",
@@ -32,5 +32,5 @@
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2"
   },
-  "packageManager": "pnpm@11.25.0"
+  "packageManager": "pnpm@12.3.4"
 }

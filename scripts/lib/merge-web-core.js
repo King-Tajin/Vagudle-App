@@ -26,7 +26,7 @@ function syncDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
 
   const srcEntries = new Map(
-      fs.readdirSync(src, { withFileTypes: true }).map((e) => [e.name, e])
+    fs.readdirSync(src, { withFileTypes: true }).map((e) => [e.name, e])
   );
 
   for (const name of fs.readdirSync(dest)) {

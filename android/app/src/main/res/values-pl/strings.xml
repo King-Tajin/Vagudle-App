@@ -1,15 +1,45 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <resources>
-    <string name="update_available_title">Dostępna aktualizacja</string>
-    <string
+  <string name="update_available_title">Dostępna aktualizacja</string>
+  <string
     name="update_available_message"
   >Nowa wersja Vagudle jest gotowa. Zaktualizuj teraz, aby zyskać najnowsze funkcje i poprawki.</string>
-    <string name="update_available_update">Aktualizuj</string>
-    <string name="update_available_not_now">Graj bez aktualizacji</string>
-    <string name="notification_primer_title">Utrzymaj swoją passę</string>
-    <string
+  <string name="update_available_update">Aktualizuj</string>
+  <string name="update_available_not_now">Graj bez aktualizacji</string>
+  <string name="notification_primer_title">Utrzymaj swoją passę</string>
+  <string
     name="notification_primer_message"
   >Otrzymuj sporadyczne przypomnienia o codziennej zagadce, by utrzymać swoją passę. Możesz to zmienić w dowolnej chwili w Ustawieniach.</string>
-    <string name="notification_primer_enable">Włącz przypomnienia</string>
-    <string name="notification_primer_not_now">Nie teraz</string>
+  <string name="notification_primer_enable">Włącz przypomnienia</string>
+  <string name="notification_primer_not_now">Nie teraz</string>
+  <string
+    name="daily_widget_description"
+  >Sprawdź swoją codzienną passę, pozycję w rankingu i czy dzisiejsza zagadka została rozwiązana.</string>
+  <string name="widget_empty_state">Zagraj w Vagudle</string>
+  <string name="widget_start_streak">Rozpocznij passę</string>
+  <string name="widget_streak_format">🔥 %1$d</string>
+  <string name="widget_play_today">Zagraj w dzisiejszą zagadkę</string>
+  <string name="widget_not_solved_today">Nierozwiązane dzisiaj</string>
+  <string name="widget_rank_top8">Top 8</string>
+  <string name="widget_rank_number">#%1$d</string>
+  <string
+    name="widget_link_account"
+  >Połącz konto, aby zobaczyć swoją pozycję</string>
+  <string name="widget_best_streak">Najlepsza: %1$d</string>
+  <string
+    name="widget_daily_info"
+  >Dzień #%1$d \u00b7 %2$d liter \u00b7 tryb %3$s</string>
+  <string name="widget_mode_hard">trudny</string>
+  <string name="widget_mode_normal">normalny</string>
+  <string name="widget_daily_label">DZIEŃ</string>
+  <string name="widget_daily_number">#%1$d</string>
+  <string name="widget_not_played_yet">Jeszcze nie grano</string>
+  <string name="widget_in_progress">W trakcie</string>
+  <string name="widget_game_lost">Przegrana</string>
+  <plurals name="widget_solved_in_guesses">
+    <item quantity="one">Rozwiązane w %1$d próbie</item>
+    <item quantity="few">Rozwiązane w %1$d próbach</item>
+    <item quantity="many">Rozwiązane w %1$d próbach</item>
+    <item quantity="other">Rozwiązane w %1$d próbach</item>
+  </plurals>
 </resources>

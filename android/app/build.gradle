@@ -1,3 +1,8 @@
+plugins {
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+}
+
 apply plugin: 'com.android.application'
 
 def keystorePropertiesFile = rootProject.file('keystore.properties')
@@ -20,6 +25,16 @@ android {
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
+    kotlinOptions {
+        jvmTarget = "21"
+    }
+    buildFeatures {
+        compose true
     }
     signingConfigs {
         if (hasKeystoreProperties) {
@@ -58,6 +73,10 @@ dependencies {
     implementation "com.google.android.play:review:2.0.2"
     implementation project(':capacitor-android')
     implementation "com.google.android.gms:play-services-games-v2:22.0.0"
+    implementation "androidx.glance:glance-appwidget:1.2.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
+    implementation platform("com.google.firebase:firebase-bom:34.14.0")
+    implementation "com.google.firebase:firebase-auth"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
