@@ -3,32 +3,32 @@
     <string name="app_name" translatable="false">Vagudle</string>
     <string name="title_activity_main" translatable="false">Vagudle</string>
     <string
-        name="package_name"
-        translatable="false"
-        >com.yellowskippergames.vagudle</string>
+    name="package_name"
+    translatable="false"
+  >com.yellowskippergames.vagudle</string>
     <string
-        name="custom_url_scheme"
-        translatable="false"
-        >com.yellowskippergames.vagudle</string>
+    name="custom_url_scheme"
+    translatable="false"
+  >com.yellowskippergames.vagudle</string>
     <string
-        name="game_services_project_id"
-        translatable="false"
-        >76056105008</string>
+    name="game_services_project_id"
+    translatable="false"
+  >76056105008</string>
     <string name="update_available_title">Update available</string>
     <string
-        name="update_available_message"
-        >A new version of Vagudle is ready. Update now for the latest features and fixes.</string>
+    name="update_available_message"
+  >A new version of Vagudle is ready. Update now for the latest features and fixes.</string>
     <string name="update_available_update">Update</string>
     <string name="update_available_not_now">Play without updating</string>
     <string name="notification_primer_title">Stay on your streak</string>
     <string
-        name="notification_primer_message"
-        >Get occasional reminders to play your daily puzzle and keep your streak alive. You can change this anytime in Settings.</string>
+    name="notification_primer_message"
+  >Get occasional reminders to play your daily puzzle and keep your streak alive. You can change this anytime in Settings.</string>
     <string name="notification_primer_enable">Enable Reminders</string>
     <string name="notification_primer_not_now">Not Now</string>
     <string
-        name="daily_widget_description"
-        >See your daily streak, rank, and whether today\'s puzzle is done.</string>
+    name="daily_widget_description"
+  >See your daily streak, rank, and whether today\'s puzzle is done.</string>
     <string name="widget_empty_state">Play Vagudle</string>
     <string name="widget_start_streak">Start a streak</string>
     <string name="widget_streak_format">🔥 %1$d</string>
@@ -37,12 +37,12 @@
     <string name="widget_rank_top8">Top 8</string>
     <string name="widget_rank_number">#%1$d</string>
     <string
-        name="widget_link_account"
-        >Link your account to see your rank</string>
+    name="widget_link_account"
+  >Link your account to see your rank</string>
     <string name="widget_best_streak">Best %1$d</string>
     <string
-        name="widget_daily_info"
-        >Daily #%1$d \u00b7 %2$d letters \u00b7 %3$s mode</string>
+    name="widget_daily_info"
+  >Daily #%1$d \u00b7 %2$d letters \u00b7 %3$s mode</string>
     <string name="widget_mode_hard">Hard</string>
     <string name="widget_mode_normal">Normal</string>
     <string name="widget_daily_label">DAILY</string>
@@ -51,7 +51,9 @@
     <string name="widget_in_progress">In Progress</string>
     <string name="widget_game_lost">Game Lost</string>
     <string name="widget_streak_label">STREAK</string>
-    <string name="widget_daily_info_short">%1$d letters \u00b7 %2$s mode</string>
+    <string
+    name="widget_daily_info_short"
+  >%1$d letters \u00b7 %2$s mode</string>
     <string name="widget_play_normal_mode">Play Normal Mode</string>
     <string name="widget_resume">Resume</string>
     <string name="widget_play_daily">Play Daily</string>

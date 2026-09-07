@@ -5,11 +5,12 @@
     "build": "node scripts/build.js",
     "update:web": "node scripts/update-web.js",
     "android": "pnpm run build && pnpm exec cap open android",
-    "typecheck": "node scripts/web-script.js typecheck",
-    "lint": "node scripts/web-script.js lint",
-    "doctor:report": "node scripts/web-script.js doctor:report",
-    "format": "prettier --write \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\"",
-    "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\""
+    "webcore:typecheck": "node scripts/web-script.js typecheck",
+    "webcore:lint": "node scripts/web-script.js lint",
+    "webcore:doctor-report": "node scripts/web-script.js doctor:report",
+    "android:lint": "node scripts/gradle.js lintDebug",
+    "format": "prettier --write \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\" && node scripts/gradle.js ktlintFormat",
+    "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\" && node scripts/gradle.js ktlintCheck"
   },
   "dependencies": {
     "@capacitor-community/safe-area": "^8.0.1",
