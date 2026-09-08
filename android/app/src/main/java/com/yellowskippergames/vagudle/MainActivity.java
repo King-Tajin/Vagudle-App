@@ -9,13 +9,21 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.window.BackEvent;
+import android.window.OnBackAnimationCallback;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.core.splashscreen.SplashScreen;
 import com.getcapacitor.BridgeActivity;
+import com.getcapacitor.PluginHandle;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
@@ -27,13 +35,60 @@ public class MainActivity extends BridgeActivity {
   private static final String UPDATE_PREFS_NAME = "update_prompt";
   private static final String DISMISSED_VERSION_KEY = "dismissed_version_code";
 
+  private OnBackInvokedCallback predictiveBackCallback;
+  private BackNavigationPlugin backNavigationPlugin;
+  private boolean isAtRoot = true;
+  private boolean isBackCallbackRegistered = false;
+
   @SuppressLint("SourceLockedOrientationActivity")
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    EdgeToEdge.enable(this);
+    SplashScreen.installSplashScreen(this);
+
     registerPlugin(PlayGamesAuthPlugin.class);
     registerPlugin(NotificationPrimerPlugin.class);
     registerPlugin(ReviewPromptPlugin.class);
     registerPlugin(DailyWidgetPlugin.class);
+    registerPlugin(BackNavigationPlugin.class);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      predictiveBackCallback = new OnBackAnimationCallback() {
+        @Override
+        public void onBackStarted(@NonNull BackEvent backEvent) {
+          if (backNavigationPlugin != null) {
+            backNavigationPlugin.notifyBackStarted(
+              backEvent.getProgress(),
+              backEvent.getSwipeEdge()
+            );
+          }
+        }
+
+        @Override
+        public void onBackProgressed(@NonNull BackEvent backEvent) {
+          if (backNavigationPlugin != null) {
+            backNavigationPlugin.notifyBackProgressed(
+              backEvent.getProgress(),
+              backEvent.getSwipeEdge()
+            );
+          }
+        }
+
+        @Override
+        public void onBackInvoked() {
+          MainActivity.this.onBackPressed();
+        }
+
+        @Override
+        public void onBackCancelled() {
+          if (backNavigationPlugin != null) {
+            backNavigationPlugin.notifyBackCancelled();
+          }
+        }
+      };
+    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
+      predictiveBackCallback = MainActivity.this::onBackPressed;
+    }
 
     boolean isLargeScreen =
       getResources().getConfiguration().smallestScreenWidthDp >=
@@ -43,8 +98,21 @@ public class MainActivity extends BridgeActivity {
     }
 
     super.onCreate(savedInstanceState);
-    EdgeToEdge.enable(this);
     getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+
+    PluginHandle backNavigationPluginHandle = getBridge().getPlugin(
+      "BackNavigation"
+    );
+    if (backNavigationPluginHandle != null) {
+      backNavigationPlugin =
+        (BackNavigationPlugin) backNavigationPluginHandle.getInstance();
+    }
+    if (backNavigationPlugin != null) {
+      backNavigationPlugin.setOnStateChangeListener((isRoot) -> {
+        isAtRoot = isRoot;
+        updateBackInvocation();
+      });
+    }
 
     WebView webView = getBridge().getWebView();
     webView.setVerticalScrollBarEnabled(false);
@@ -59,10 +127,37 @@ public class MainActivity extends BridgeActivity {
     checkForUpdate();
   }
 
+  private void updateBackInvocation() {
+    if (
+      Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+      predictiveBackCallback == null
+    ) {
+      return;
+    }
+
+    boolean shouldBeRegistered = !isAtRoot;
+    if (shouldBeRegistered == isBackCallbackRegistered) {
+      return;
+    }
+
+    if (shouldBeRegistered) {
+      getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+        OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+        predictiveBackCallback
+      );
+    } else {
+      getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(
+        predictiveBackCallback
+      );
+    }
+    isBackCallbackRegistered = shouldBeRegistered;
+  }
+
   @Override
   public void onResume() {
     super.onResume();
     DailyRefreshReceiverKt.refreshWidgetDataIfStale(getApplicationContext());
+    updateBackInvocation();
   }
 
   private void checkForUpdate() {
