@@ -4,7 +4,11 @@
 -dontwarn androidx.sqlite.db.**
 
 -keep class androidx.work.impl.** { *; }
--keep class **.ListenableWorker { *; }
+#noinspection ShrinkerUnresolvedReference
+-keep class * extends androidx.work.ListenableWorker { *; }
+-keepclassmembers class * extends androidx.work.ListenableWorker {
+    public <init>(...);
+}
 -keep class **.WorkerParameters { *; }
 
 #noinspection ShrinkerUnresolvedReference

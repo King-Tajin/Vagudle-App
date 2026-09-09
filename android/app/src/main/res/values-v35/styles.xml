@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <style name="AppTheme" parent="Base.AppTheme">
+        <!-- v27+ -->
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item
+      name="android:navigationBarDividerColor"
+    >@android:color/transparent</item>
+
+        <!-- v28+ -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <!-- v29+ -->
+        <item name="android:enforceNavigationBarContrast">false</item>
+        <item name="android:enforceStatusBarContrast">false</item>
+
+        <!-- API 35+ edge-to-edge enforcement opt-out -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">false</item>
+    </style>
+
+    <style
+    name="AppTheme.NoActionBarLaunch"
+    parent="Base.AppTheme.NoActionBarLaunch"
+  >
+        <!-- v27+ -->
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item
+      name="android:navigationBarDividerColor"
+    >@android:color/transparent</item>
+
+        <!-- v28+ -->
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+
+        <!-- v29+ -->
+        <item name="android:enforceNavigationBarContrast">false</item>
+        <item name="android:enforceStatusBarContrast">false</item>
+
+        <!-- API 35+ edge-to-edge enforcement opt-out -->
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">false</item>
+    </style>
+</resources>

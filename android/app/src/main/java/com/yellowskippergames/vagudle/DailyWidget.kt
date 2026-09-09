@@ -23,7 +23,6 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity
-import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.updateAll
 import androidx.glance.background
@@ -65,9 +64,9 @@ private const val PLAQUE_BORDER_ARGB = 0xFF4E00A7.toInt()
 private const val GOLD_ARGB = 0xFFFFD700.toInt()
 
 private val MIN_OUTER_CORNER_RADIUS = 8.dp
+private val MIN_INNER_CORNER_RADIUS = 6.dp
 
 private val GOLD = fixedColor(Color(0xFFFFD700))
-private val NEAR_BLACK = fixedColor(Color(0xFF0D0D1B))
 private val TEXT_WHITE = fixedColor(Color(0xFFFFFFFF))
 private val MUTED_GRAY = fixedColor(Color(0xFF8A8A8A))
 private val SOLVED_GREEN = fixedColor(Color(0xFF4A7C3F))
@@ -179,30 +178,33 @@ private fun DailyWidgetContent(
             visual = sqrt(widthScale * heightScale),
             textBoost = textBoost,
         )
+    val density = context.resources.displayMetrics.density
     val borderThickness = 3.dp.scaled(scale.visual)
     val innerWidth = size.width - borderThickness * 2
     val innerHeight = size.height - borderThickness * 2
-    val outerRadius = if (isExpanded) 15.dp else 16.dp
-    val innerRadius = if (isExpanded) 12.dp else 13.dp
+    val outerRadius = (if (isExpanded) 15.dp else 16.dp).scaled(scale.visual).coerceAtLeast(MIN_OUTER_CORNER_RADIUS)
+    val innerRadius = (if (isExpanded) 12.dp else 13.dp).scaled(scale.visual).coerceAtLeast(MIN_INNER_CORNER_RADIUS)
 
-    Box(
-        modifier =
-            GlanceModifier
-                .fillMaxSize()
-                .cornerRadius(outerRadius.scaled(scale.visual).coerceAtLeast(MIN_OUTER_CORNER_RADIUS))
-                .background(GOLD)
-                .clickable(actionStartActivity(openDailyIntent(context))),
+    RoundedZoneBox(
+        width = size.width,
+        height = size.height,
+        fillColor = GOLD_ARGB,
+        topLeftRadius = outerRadius,
+        topRightRadius = outerRadius,
+        bottomRightRadius = outerRadius,
+        bottomLeftRadius = outerRadius,
+        density = density,
+        modifier = GlanceModifier.clickable(actionStartActivity(openDailyIntent(context))),
     ) {
         Box(
             modifier =
                 GlanceModifier
                     .fillMaxSize()
-                    .padding(horizontal = borderThickness, vertical = borderThickness)
-                    .cornerRadius(innerRadius.scaled(scale.visual)),
+                    .padding(horizontal = borderThickness, vertical = borderThickness),
             contentAlignment = Alignment.Center,
         ) {
             if (data == null) {
-                EmptyState(context, scale)
+                EmptyState(context, innerWidth, innerHeight, innerRadius, density, scale)
             } else {
                 val isFresh = data.date == currentDailyDateUtc()
                 if (isExpanded) {
@@ -218,13 +220,21 @@ private fun DailyWidgetContent(
 @Composable
 private fun EmptyState(
     context: Context,
+    width: Dp,
+    height: Dp,
+    cornerRadius: Dp,
+    density: Float,
     scale: WidgetScale,
 ) {
-    Box(
-        modifier =
-            GlanceModifier
-                .fillMaxSize()
-                .background(NEAR_BLACK),
+    RoundedZoneBox(
+        width = width,
+        height = height,
+        fillColor = NEAR_BLACK_ARGB,
+        topLeftRadius = cornerRadius,
+        topRightRadius = cornerRadius,
+        bottomRightRadius = cornerRadius,
+        bottomLeftRadius = cornerRadius,
+        density = density,
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
