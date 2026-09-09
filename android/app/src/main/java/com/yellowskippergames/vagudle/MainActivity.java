@@ -98,6 +98,12 @@ public class MainActivity extends BridgeActivity {
     }
 
     super.onCreate(savedInstanceState);
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().hide();
+    }
+    if (getActionBar() != null) {
+      getActionBar().hide();
+    }
     getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 
     PluginHandle backNavigationPluginHandle = getBridge().getPlugin(
