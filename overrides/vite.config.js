@@ -16,9 +16,9 @@ export default defineConfig({
   build: {
     rolldownOptions: {
       output: {
-        entryFileNames: 'assets/[name].js',
-        chunkFileNames: 'assets/[name].js',
-        assetFileNames: 'assets/[name].[ext]',
+        entryFileNames: "assets/[name].js",
+        chunkFileNames: "assets/[name].js",
+        assetFileNames: "assets/[name].[ext]",
         codeSplitting: {
           groups: [
             { name: "vendor-react", test: /node_modules\/(react|react-dom)\// },

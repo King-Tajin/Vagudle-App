@@ -3,14 +3,29 @@
 -dontwarn androidx.room.**
 -dontwarn androidx.sqlite.db.**
 
--keep class androidx.work.impl.** { *; }
 #noinspection ShrinkerUnresolvedReference
--keep class * extends androidx.work.ListenableWorker { *; }
+-keep class * extends androidx.work.ListenableWorker
 -keepclassmembers class * extends androidx.work.ListenableWorker {
-    public <init>(...);
+    #noinspection ShrinkerUnresolvedReference
+    public <init>(android.content.Context, androidx.work.WorkerParameters);
 }
--keep class **.WorkerParameters { *; }
+-keep class * extends androidx.work.InputMerger
+-keepclassmembers class * extends androidx.work.InputMerger {
+    public <init>();
+}
 
-#noinspection ShrinkerUnresolvedReference
 -keep class * extends androidx.room.RoomDatabase
--keep class androidx.room.** { *; }
+-keepclassmembers class * extends androidx.room.RoomDatabase {
+    public <init>();
+}
+
+-keep class * extends androidx.glance.appwidget.GlanceAppWidget
+-keepclassmembers class * extends androidx.glance.appwidget.GlanceAppWidget {
+    public <init>();
+}
+-keep class * extends androidx.glance.appwidget.GlanceAppWidgetReceiver
+-keepclassmembers class * extends androidx.glance.appwidget.GlanceAppWidgetReceiver {
+    public <init>();
+}
+
+-keepattributes InnerClasses,EnclosingMethod,Signature,*Annotation*

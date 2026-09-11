@@ -16,6 +16,7 @@ public class PlayGamesAuthPlugin extends Plugin {
   private static final String WEB_CLIENT_ID =
     "76056105008-5j81emvd1qk891mb3kmlusisjeslorau.apps.googleusercontent.com";
 
+  @SuppressWarnings("unused")
   @PluginMethod
   public void signIn(PluginCall call) {
     GamesSignInClient signInClient = PlayGames.getGamesSignInClient(
@@ -60,6 +61,7 @@ public class PlayGamesAuthPlugin extends Plugin {
       });
   }
 
+  @SuppressWarnings("unused")
   @PluginMethod
   public void unlockAchievement(PluginCall call) {
     String achievementId = call.getString("achievementId");
@@ -89,6 +91,7 @@ public class PlayGamesAuthPlugin extends Plugin {
     });
   }
 
+  @SuppressWarnings("unused")
   @PluginMethod
   public void setAchievementSteps(PluginCall call) {
     String achievementId = call.getString("achievementId");
@@ -119,6 +122,7 @@ public class PlayGamesAuthPlugin extends Plugin {
     });
   }
 
+  @SuppressWarnings("unused")
   @PluginMethod
   public void submitScore(PluginCall call) {
     String leaderboardId = call.getString("leaderboardId");

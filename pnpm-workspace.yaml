@@ -1,2 +1,4 @@
 minimumReleaseAge: 2160
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - "undici-types"

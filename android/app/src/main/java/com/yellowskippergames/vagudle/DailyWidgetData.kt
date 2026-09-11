@@ -2,6 +2,7 @@ package com.yellowskippergames.vagudle
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import org.json.JSONObject
 import java.time.Instant
 import java.time.LocalDate
@@ -102,13 +103,26 @@ fun rolledOverDailyWidgetData(
     )
 }
 
-fun parseDailyWidgetPayload(json: JSONObject): DailyWidgetData {
-    val rankJson = json.getJSONObject("rank")
-    val rankStatus =
-        when (rankJson.getString("status")) {
-            "ranked" -> DailyWidgetRankStatus.RANKED
-            "no_username" -> DailyWidgetRankStatus.NO_USERNAME
-            else -> DailyWidgetRankStatus.GUEST
+fun parseDailyWidgetPayload(
+    json: JSONObject,
+    previousRank: DailyWidgetRank? = null,
+): DailyWidgetData {
+    val rankJson = json.optJSONObject("rank")
+    val rank =
+        if (rankJson == null) {
+            previousRank ?: DailyWidgetRank(status = DailyWidgetRankStatus.GUEST)
+        } else {
+            val rankStatus =
+                when (rankJson.getString("status")) {
+                    "ranked" -> DailyWidgetRankStatus.RANKED
+                    "no_username" -> DailyWidgetRankStatus.NO_USERNAME
+                    else -> DailyWidgetRankStatus.GUEST
+                }
+            DailyWidgetRank(
+                status = rankStatus,
+                rank = if (rankJson.has("rank")) rankJson.getInt("rank") else null,
+                outOf = if (rankJson.has("outOf")) rankJson.getInt("outOf") else null,
+            )
         }
     return DailyWidgetData(
         date = json.getString("date"),
@@ -122,49 +136,36 @@ fun parseDailyWidgetPayload(json: JSONObject): DailyWidgetData {
         wonToday = if (json.isNull("wonToday")) null else json.getBoolean("wonToday"),
         guessCount = if (json.isNull("guessCount")) null else json.getInt("guessCount"),
         maxGuesses = if (json.isNull("maxGuesses")) null else json.getInt("maxGuesses"),
-        rank =
-            DailyWidgetRank(
-                status = rankStatus,
-                rank = if (rankJson.has("rank")) rankJson.getInt("rank") else null,
-                outOf = if (rankJson.has("outOf")) rankJson.getInt("outOf") else null,
-            ),
+        rank = rank,
     )
 }
 
 fun saveDailyWidgetData(
     prefs: SharedPreferences,
     data: DailyWidgetData,
-    commit: Boolean = false,
-): Boolean {
-    val editor =
-        prefs.edit().apply {
-            putString(KEY_DATE, data.date)
-            putInt(KEY_DAILY_NUMBER, data.dailyNumber)
-            putInt(KEY_WORD_LENGTH, data.wordLength)
-            putBoolean(KEY_HARD_MODE, data.hardMode)
-            putInt(KEY_CURRENT_STREAK, data.currentStreak)
-            putInt(KEY_BEST_STREAK, data.bestStreak)
-            putBoolean(KEY_HAS_PLAYED_TODAY, data.hasPlayedToday)
-            putBoolean(KEY_IN_PROGRESS, data.inProgress)
-            if (data.wonToday == null) remove(KEY_WON_TODAY) else putBoolean(KEY_WON_TODAY, data.wonToday)
-            if (data.guessCount == null) remove(KEY_GUESS_COUNT) else putInt(KEY_GUESS_COUNT, data.guessCount)
-            if (data.maxGuesses == null) remove(KEY_MAX_GUESSES) else putInt(KEY_MAX_GUESSES, data.maxGuesses)
-            putString(KEY_RANK_STATUS, data.rank.status.name)
-            if (data.rank.rank == null) remove(KEY_RANK) else putInt(KEY_RANK, data.rank.rank)
-            if (data.rank.outOf == null) remove(KEY_OUT_OF) else putInt(KEY_OUT_OF, data.rank.outOf)
-        }
-    return if (commit) {
-        editor.commit()
-    } else {
-        editor.apply()
-        true
+) {
+    prefs.edit {
+        putString(KEY_DATE, data.date)
+        putInt(KEY_DAILY_NUMBER, data.dailyNumber)
+        putInt(KEY_WORD_LENGTH, data.wordLength)
+        putBoolean(KEY_HARD_MODE, data.hardMode)
+        putInt(KEY_CURRENT_STREAK, data.currentStreak)
+        putInt(KEY_BEST_STREAK, data.bestStreak)
+        putBoolean(KEY_HAS_PLAYED_TODAY, data.hasPlayedToday)
+        putBoolean(KEY_IN_PROGRESS, data.inProgress)
+        if (data.wonToday == null) remove(KEY_WON_TODAY) else putBoolean(KEY_WON_TODAY, data.wonToday)
+        if (data.guessCount == null) remove(KEY_GUESS_COUNT) else putInt(KEY_GUESS_COUNT, data.guessCount)
+        if (data.maxGuesses == null) remove(KEY_MAX_GUESSES) else putInt(KEY_MAX_GUESSES, data.maxGuesses)
+        putString(KEY_RANK_STATUS, data.rank.status.name)
+        if (data.rank.rank == null) remove(KEY_RANK) else putInt(KEY_RANK, data.rank.rank)
+        if (data.rank.outOf == null) remove(KEY_OUT_OF) else putInt(KEY_OUT_OF, data.rank.outOf)
     }
 }
 
 fun lastRefreshAttemptAt(prefs: SharedPreferences): Long = prefs.getLong(KEY_LAST_REFRESH_ATTEMPT_AT, 0L)
 
 fun markRefreshAttemptNow(prefs: SharedPreferences) {
-    prefs.edit().putLong(KEY_LAST_REFRESH_ATTEMPT_AT, System.currentTimeMillis()).apply()
+    prefs.edit { putLong(KEY_LAST_REFRESH_ATTEMPT_AT, System.currentTimeMillis()) }
 }
 
 fun loadDailyWidgetData(context: Context): DailyWidgetData? {

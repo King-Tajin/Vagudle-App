@@ -15,9 +15,13 @@ public class DailyWidgetPlugin extends Plugin {
   @PluginMethod
   public void syncWidgetData(PluginCall call) {
     JSObject payload = call.getData();
+    DailyWidgetData existing = DailyWidgetDataKt.loadDailyWidgetData(
+      getContext()
+    );
+    DailyWidgetRank previousRank = existing != null ? existing.getRank() : null;
     DailyWidgetData data;
     try {
-      data = DailyWidgetDataKt.parseDailyWidgetPayload(payload);
+      data = DailyWidgetDataKt.parseDailyWidgetPayload(payload, previousRank);
     } catch (Exception e) {
       call.reject("Invalid widget payload.", e);
       return;
@@ -27,14 +31,10 @@ public class DailyWidgetPlugin extends Plugin {
       DailyWidgetDataKt.DAILY_WIDGET_PREFS_NAME,
       Context.MODE_PRIVATE
     );
-    boolean saved = DailyWidgetDataKt.saveDailyWidgetData(prefs, data, true);
-    if (!saved) {
-      call.reject("Failed to persist widget data.");
-      return;
-    }
+    DailyWidgetDataKt.saveDailyWidgetData(prefs, data);
 
     try {
-      DailyWidgetKt.requestDailyWidgetUpdate(getContext());
+      DailyWidgetUpdateWorkerKt.requestDailyWidgetUpdate(getContext());
       DailyRefreshSchedulerKt.scheduleDailyRefresh(getContext());
     } catch (Exception ignored) {}
 

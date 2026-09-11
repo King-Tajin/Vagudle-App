@@ -23,8 +23,8 @@ android {
         applicationId "com.yellowskippergames.vagudle"
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        versionCode 13
-        versionName "0.10.3"
+        versionCode 14
+        versionName "0.10.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -89,8 +89,9 @@ dependencies {
     implementation project(':capacitor-android')
     implementation "com.google.android.gms:play-services-games-v2:22.0.0"
     implementation "androidx.glance:glance-appwidget:1.2.0"
+    implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
-    implementation platform("com.google.firebase:firebase-bom:34.18.0")
+    implementation platform("com.google.firebase:firebase-bom:34.19.0")
     //noinspection LoginCredentials
     implementation "com.google.firebase:firebase-auth"
     testImplementation "junit:junit:$junitVersion"

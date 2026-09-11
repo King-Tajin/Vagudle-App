@@ -19,6 +19,7 @@ public class BackNavigationPlugin extends Plugin {
     this.listener = listener;
   }
 
+  @SuppressWarnings("unused")
   @PluginMethod
   public void setIsRoot(PluginCall call) {
     Boolean isRoot = call.getBoolean("isRoot", true);

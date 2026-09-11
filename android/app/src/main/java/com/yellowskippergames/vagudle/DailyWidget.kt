@@ -24,7 +24,6 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
 import androidx.glance.layout.Alignment
@@ -42,9 +41,6 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
@@ -95,6 +91,19 @@ private fun dpToPx(
     density: Float,
 ): Int = (dp.value * density).roundToInt().coerceAtLeast(1)
 
+private fun fitTextSp(
+    width: Dp,
+    height: Dp,
+    textLength: Int,
+    heightFraction: Float,
+    minSp: Float,
+    maxSp: Float,
+): TextUnit {
+    val heightBound = height.value * heightFraction
+    val widthBound = (width.value * 0.9f) / (textLength * 0.52f)
+    return minOf(heightBound, widthBound).coerceIn(minSp, maxSp).sp
+}
+
 private fun roundedRectBitmap(
     widthPx: Int,
     heightPx: Int,
@@ -141,16 +150,6 @@ class DailyWidget : GlanceAppWidget() {
         val data = loadDailyWidgetData(context)
         provideContent {
             DailyWidgetContent(context, data)
-        }
-    }
-}
-
-fun requestDailyWidgetUpdate(context: Context) {
-    val appContext = context.applicationContext
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            DailyWidget().updateAll(appContext)
-        } catch (_: Exception) {
         }
     }
 }
@@ -204,7 +203,7 @@ private fun DailyWidgetContent(
             contentAlignment = Alignment.Center,
         ) {
             if (data == null) {
-                EmptyState(context, innerWidth, innerHeight, innerRadius, density, scale)
+                EmptyState(context, innerWidth, innerHeight, innerRadius, density)
             } else {
                 val isFresh = data.date == currentDailyDateUtc()
                 if (isExpanded) {
@@ -224,8 +223,13 @@ private fun EmptyState(
     height: Dp,
     cornerRadius: Dp,
     density: Float,
-    scale: WidgetScale,
 ) {
+    val titleText = context.getString(R.string.widget_empty_state)
+    val subtitleText = context.getString(R.string.widget_empty_state_subtitle)
+    val titleFontSize = fitTextSp(width, height, titleText.length, heightFraction = 0.32f, minSp = 6f, maxSp = 22f)
+    val subtitleFontSize =
+        fitTextSp(width, height, subtitleText.length, heightFraction = 0.2f, minSp = 5f, maxSp = 16f)
+
     RoundedZoneBox(
         width = width,
         height = height,
@@ -239,13 +243,14 @@ private fun EmptyState(
     ) {
         Column(horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
             Text(
-                text = context.getString(R.string.widget_empty_state),
-                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 6.sp.scaled(scale), color = GOLD),
+                text = titleText,
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = titleFontSize, color = GOLD),
                 maxLines = 1,
             )
+            Spacer(modifier = GlanceModifier.height((height.value * 0.06f).dp.coerceAtLeast(2.dp)))
             Text(
-                text = context.getString(R.string.widget_empty_state_subtitle),
-                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 5.sp.scaled(scale), color = GOLD),
+                text = subtitleText,
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = subtitleFontSize, color = GOLD),
                 maxLines = 1,
             )
         }
