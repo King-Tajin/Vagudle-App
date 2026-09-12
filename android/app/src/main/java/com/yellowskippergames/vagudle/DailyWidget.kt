@@ -91,6 +91,19 @@ private fun dpToPx(
     density: Float,
 ): Int = (dp.value * density).roundToInt().coerceAtLeast(1)
 
+private fun systemWidgetCornerRadius(
+    context: Context,
+    density: Float,
+): Dp? {
+    if (android.os.Build.VERSION.SDK_INT < 31) return null
+    return try {
+        val radiusPx = context.resources.getDimension(android.R.dimen.system_app_widget_background_radius)
+        (radiusPx / density).dp
+    } catch (_: android.content.res.Resources.NotFoundException) {
+        null
+    }
+}
+
 private fun fitTextSp(
     width: Dp,
     height: Dp,
@@ -164,7 +177,13 @@ private fun DailyWidgetContent(
     context: Context,
     data: DailyWidgetData?,
 ) {
-    val size = LocalSize.current
+    val reportedSize = LocalSize.current
+    val edgeSafeMargin = 3.dp
+    val size =
+        DpSize(
+            width = (reportedSize.width - edgeSafeMargin * 2).coerceAtLeast(1.dp),
+            height = (reportedSize.height - edgeSafeMargin * 2).coerceAtLeast(1.dp),
+        )
     val isExpanded = (size.height.value / size.width.value) >= EXPANDED_ASPECT_THRESHOLD
     val reference = if (isExpanded) SIZE_EXPANDED else SIZE_COMPACT
     val widthScale = size.width.value / reference.width.value
@@ -181,35 +200,42 @@ private fun DailyWidgetContent(
     val borderThickness = 3.dp.scaled(scale.visual)
     val innerWidth = size.width - borderThickness * 2
     val innerHeight = size.height - borderThickness * 2
-    val outerRadius = (if (isExpanded) 15.dp else 16.dp).scaled(scale.visual).coerceAtLeast(MIN_OUTER_CORNER_RADIUS)
-    val innerRadius = (if (isExpanded) 12.dp else 13.dp).scaled(scale.visual).coerceAtLeast(MIN_INNER_CORNER_RADIUS)
+    val fallbackOuterRadius =
+        (if (isExpanded) 15.dp else 16.dp).scaled(scale.visual).coerceAtLeast(MIN_OUTER_CORNER_RADIUS)
+    val outerRadius = systemWidgetCornerRadius(context, density) ?: fallbackOuterRadius
+    val innerRadius = (outerRadius - borderThickness).coerceAtLeast(MIN_INNER_CORNER_RADIUS)
 
-    RoundedZoneBox(
-        width = size.width,
-        height = size.height,
-        fillColor = GOLD_ARGB,
-        topLeftRadius = outerRadius,
-        topRightRadius = outerRadius,
-        bottomRightRadius = outerRadius,
-        bottomLeftRadius = outerRadius,
-        density = density,
-        modifier = GlanceModifier.clickable(actionStartActivity(openDailyIntent(context))),
+    Box(
+        modifier = GlanceModifier.fillMaxSize().padding(edgeSafeMargin),
+        contentAlignment = Alignment.Center,
     ) {
-        Box(
-            modifier =
-                GlanceModifier
-                    .fillMaxSize()
-                    .padding(horizontal = borderThickness, vertical = borderThickness),
-            contentAlignment = Alignment.Center,
+        RoundedZoneBox(
+            width = size.width,
+            height = size.height,
+            fillColor = GOLD_ARGB,
+            topLeftRadius = outerRadius,
+            topRightRadius = outerRadius,
+            bottomRightRadius = outerRadius,
+            bottomLeftRadius = outerRadius,
+            density = density,
+            modifier = GlanceModifier.clickable(actionStartActivity(openDailyIntent(context))),
         ) {
-            if (data == null) {
-                EmptyState(context, innerWidth, innerHeight, innerRadius, density)
-            } else {
-                val isFresh = data.date == currentDailyDateUtc()
-                if (isExpanded) {
-                    ExpandedPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
+            Box(
+                modifier =
+                    GlanceModifier
+                        .fillMaxSize()
+                        .padding(horizontal = borderThickness, vertical = borderThickness),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (data == null) {
+                    EmptyState(context, innerWidth, innerHeight, innerRadius, density)
                 } else {
-                    CompactPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
+                    val isFresh = data.date == currentDailyDateUtc()
+                    if (isExpanded) {
+                        ExpandedPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
+                    } else {
+                        CompactPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
+                    }
                 }
             }
         }

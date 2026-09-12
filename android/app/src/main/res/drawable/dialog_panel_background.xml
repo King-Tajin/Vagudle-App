@@ -12,8 +12,13 @@
     android:right="4dp"
   >
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimary" />
-            <stroke android:width="2dp" android:color="@color/colorAccent" />
+            <gradient
+        android:type="linear"
+        android:angle="135"
+        android:startColor="@color/dialogPanelStart"
+        android:endColor="@color/dialogPanelEnd"
+      />
+            <stroke android:width="3dp" android:color="@color/dialogPurple" />
         </shape>
     </item>
 </layer-list>

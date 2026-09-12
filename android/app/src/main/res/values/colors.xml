@@ -3,4 +3,12 @@
     <color name="colorPrimary">#0D1322</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#E3C31E</color>
+
+    <color name="dialogPanelStart">#1C0033</color>
+    <color name="dialogPanelEnd">#0A0014</color>
+    <color name="dialogPurple">#5000AA</color>
+    <color name="dialogPurplePressed">#3A0080</color>
+    <color name="dialogGold">#FFD700</color>
+    <color name="dialogAmber">#FFBF00</color>
+    <color name="dialogDarkPressed">#150029</color>
 </resources>
