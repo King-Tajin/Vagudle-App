@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -40,7 +41,6 @@ public class MainActivity extends BridgeActivity {
   private boolean isAtRoot = true;
   private boolean isBackCallbackRegistered = false;
 
-  @SuppressLint("SourceLockedOrientationActivity")
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     EdgeToEdge.enable(this);
@@ -90,12 +90,7 @@ public class MainActivity extends BridgeActivity {
       predictiveBackCallback = MainActivity.this::onBackPressed;
     }
 
-    boolean isLargeScreen =
-      getResources().getConfiguration().smallestScreenWidthDp >=
-      LARGE_SCREEN_BREAKPOINT_DP;
-    if (!isLargeScreen) {
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
+    applyOrientationLockForCurrentConfiguration();
 
     super.onCreate(savedInstanceState);
     if (getSupportActionBar() != null) {
@@ -131,6 +126,24 @@ public class MainActivity extends BridgeActivity {
     settings.setDisplayZoomControls(false);
 
     checkForUpdate();
+  }
+
+  @SuppressLint("SourceLockedOrientationActivity")
+  private void applyOrientationLockForCurrentConfiguration() {
+    boolean isLargeScreen =
+      getResources().getConfiguration().smallestScreenWidthDp >=
+      LARGE_SCREEN_BREAKPOINT_DP;
+    setRequestedOrientation(
+      isLargeScreen
+        ? ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    );
+  }
+
+  @Override
+  public void onConfigurationChanged(@NonNull Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    applyOrientationLockForCurrentConfiguration();
   }
 
   private void updateBackInvocation() {

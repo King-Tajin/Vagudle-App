@@ -21,7 +21,7 @@
   >
 
         <activity
-      android:configChanges="keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
+      android:configChanges="keyboardHidden|keyboard|orientation|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
       android:name=".MainActivity"
       android:label="@string/title_activity_main"
       android:theme="@style/AppTheme.NoActionBarLaunch"
