@@ -3,6 +3,9 @@ package com.yellowskippergames.vagudle
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import org.json.JSONObject
 import java.time.Instant
 import java.time.LocalDate
@@ -26,6 +29,12 @@ private const val KEY_RANK_STATUS = "rankStatus"
 private const val KEY_RANK = "rank"
 private const val KEY_OUT_OF = "outOf"
 private const val KEY_LAST_REFRESH_ATTEMPT_AT = "lastRefreshAttemptAt"
+private const val KEY_WIDGET_FIRST_SYNC_COMPLETED = "widgetFirstSyncCompleted"
+private const val KEY_WIDGET_LAST_SYNC_FAILED_AT = "widgetLastSyncFailedAt"
+
+const val EXTRA_QUICK_WIDGET_SETUP = "quickWidgetSetup"
+const val QUICK_WIDGET_SETUP_TIMEOUT_MS = 10_000L
+const val QUICK_WIDGET_SETUP_SETTLE_DELAY_MS = 600L
 
 private const val DAILY_RELEASE_HOUR_UTC = 8L
 
@@ -168,6 +177,26 @@ fun markRefreshAttemptNow(prefs: SharedPreferences) {
     prefs.edit { putLong(KEY_LAST_REFRESH_ATTEMPT_AT, System.currentTimeMillis()) }
 }
 
+fun isWidgetFirstSyncCompleted(prefs: SharedPreferences): Boolean =
+    prefs.getBoolean(KEY_WIDGET_FIRST_SYNC_COMPLETED, false)
+
+fun markWidgetFirstSyncCompleted(prefs: SharedPreferences) {
+    prefs.edit {
+        putBoolean(KEY_WIDGET_FIRST_SYNC_COMPLETED, true)
+        remove(KEY_WIDGET_LAST_SYNC_FAILED_AT)
+    }
+}
+
+fun hasWidgetSyncFailed(prefs: SharedPreferences): Boolean = prefs.contains(KEY_WIDGET_LAST_SYNC_FAILED_AT)
+
+fun markWidgetSyncFailed(prefs: SharedPreferences) {
+    prefs.edit { putLong(KEY_WIDGET_LAST_SYNC_FAILED_AT, System.currentTimeMillis()) }
+}
+
+fun clearWidgetSyncFailure(prefs: SharedPreferences) {
+    prefs.edit { remove(KEY_WIDGET_LAST_SYNC_FAILED_AT) }
+}
+
 fun loadDailyWidgetData(context: Context): DailyWidgetData? {
     val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
     val date = prefs.getString(KEY_DATE, null) ?: return null
@@ -197,3 +226,28 @@ fun loadDailyWidgetData(context: Context): DailyWidgetData? {
             ),
     )
 }
+
+data class DailyWidgetViewState(
+    val data: DailyWidgetData?,
+    val setupFailed: Boolean,
+)
+
+fun loadDailyWidgetViewState(context: Context): DailyWidgetViewState {
+    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+    return DailyWidgetViewState(
+        data = loadDailyWidgetData(context),
+        setupFailed = hasWidgetSyncFailed(prefs),
+    )
+}
+
+fun dailyWidgetViewStateUpdates(context: Context): Flow<DailyWidgetViewState> =
+    callbackFlow {
+        val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+        trySend(loadDailyWidgetViewState(context))
+        val listener =
+            SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+                trySend(loadDailyWidgetViewState(context))
+            }
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }

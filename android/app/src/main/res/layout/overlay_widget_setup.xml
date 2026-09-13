@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:gravity="center"
+  android:background="#000000"
+>
+
+    <ImageView
+    android:layout_width="200dp"
+    android:layout_height="200dp"
+    android:contentDescription="@null"
+    android:src="@drawable/splash_logo"
+  />
+
+    <ProgressBar
+    style="?android:attr/progressBarStyleLarge"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="28dp"
+    android:indeterminateTint="@color/dialogGold"
+  />
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:fontFamily="@font/plus_jakarta_sans_bold"
+    android:textColor="@color/dialogAmber"
+    android:textSize="16sp"
+    android:text="@string/widget_quick_setup_title"
+  />
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:textColor="#FFFFFF"
+    android:textSize="13sp"
+    android:text="@string/widget_quick_setup_subtitle"
+  />
+
+</LinearLayout>

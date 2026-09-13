@@ -20,6 +20,14 @@ public class NotificationPrimerPlugin extends Plugin {
   @SuppressWarnings("unused")
   @PluginMethod
   public void showPrimer(PluginCall call) {
+    if (QuickWidgetSetupState.INSTANCE.isActive()) {
+      JSObject result = new JSObject();
+      result.put("alreadyShown", false);
+      result.put("accepted", false);
+      call.resolve(result);
+      return;
+    }
+
     SharedPreferences prefs = getContext().getSharedPreferences(
       PREFS_NAME,
       Context.MODE_PRIVATE

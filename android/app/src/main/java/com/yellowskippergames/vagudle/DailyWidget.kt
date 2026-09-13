@@ -3,6 +3,8 @@ package com.yellowskippergames.vagudle
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -34,23 +36,31 @@ class DailyWidget : GlanceAppWidget() {
         context: Context,
         id: GlanceId,
     ) {
-        val data = loadDailyWidgetData(context)
+        val initialViewState = loadDailyWidgetViewState(context)
         provideContent {
-            DailyWidgetContent(context, data)
+            val viewState by dailyWidgetViewStateUpdates(context).collectAsState(initial = initialViewState)
+            DailyWidgetContent(context, viewState)
         }
     }
 }
 
-internal fun openDailyIntent(context: Context): Intent =
-    Intent(Intent.ACTION_VIEW, DEEP_LINK_URL.toUri()).apply {
+internal fun openDailyIntent(context: Context): Intent {
+    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+    val needsQuickSetup = !isWidgetFirstSyncCompleted(prefs)
+    return Intent(Intent.ACTION_VIEW, DEEP_LINK_URL.toUri()).apply {
         setPackage(context.packageName)
+        if (needsQuickSetup) {
+            putExtra(EXTRA_QUICK_WIDGET_SETUP, true)
+        }
     }
+}
 
 @Composable
 private fun DailyWidgetContent(
     context: Context,
-    data: DailyWidgetData?,
+    viewState: DailyWidgetViewState,
 ) {
+    val data = viewState.data
     val reportedSize = LocalSize.current
     val edgeSafeMargin = 3.dp
     val size =
@@ -102,7 +112,7 @@ private fun DailyWidgetContent(
                 contentAlignment = Alignment.Center,
             ) {
                 if (data == null) {
-                    EmptyState(context, innerWidth, innerHeight, innerRadius, density)
+                    EmptyState(context, innerWidth, innerHeight, innerRadius, density, viewState.setupFailed)
                 } else {
                     val isFresh = data.date == currentDailyDateUtc()
                     if (isExpanded) {
@@ -123,9 +133,13 @@ private fun EmptyState(
     height: Dp,
     cornerRadius: Dp,
     density: Float,
+    setupFailed: Boolean,
 ) {
-    val titleText = context.getString(R.string.widget_empty_state)
-    val subtitleText = context.getString(R.string.widget_empty_state_subtitle)
+    val titleText = context.getString(if (setupFailed) R.string.widget_setup_retry else R.string.widget_empty_state)
+    val subtitleText =
+        context.getString(
+            if (setupFailed) R.string.widget_setup_retry_subtitle else R.string.widget_empty_state_subtitle,
+        )
     val titleFontSize = fitTextSp(width, height, titleText.length, heightFraction = 0.32f, minSp = 6f, maxSp = 22f)
     val subtitleFontSize =
         fitTextSp(width, height, subtitleText.length, heightFraction = 0.2f, minSp = 5f, maxSp = 16f)

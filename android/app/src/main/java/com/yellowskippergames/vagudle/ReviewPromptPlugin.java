@@ -26,6 +26,11 @@ public class ReviewPromptPlugin extends Plugin {
   @SuppressWarnings("unused")
   @PluginMethod
   public void requestReview(PluginCall call) {
+    if (QuickWidgetSetupState.INSTANCE.isActive()) {
+      resolveRequested(call, false);
+      return;
+    }
+
     SharedPreferences prefs = getContext().getSharedPreferences(
       PREFS_NAME,
       Context.MODE_PRIVATE

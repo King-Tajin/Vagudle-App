@@ -12,6 +12,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -40,6 +45,12 @@ public class MainActivity extends BridgeActivity {
   private BackNavigationPlugin backNavigationPlugin;
   private boolean isAtRoot = true;
   private boolean isBackCallbackRegistered = false;
+
+  private final Handler quickWidgetSetupHandler = new Handler(
+    Looper.getMainLooper()
+  );
+  private View quickWidgetSetupOverlay;
+  private Runnable quickWidgetSetupTimeoutRunnable;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +87,7 @@ public class MainActivity extends BridgeActivity {
 
         @Override
         public void onBackInvoked() {
-          MainActivity.this.onBackPressed();
+          getOnBackPressedDispatcher().onBackPressed();
         }
 
         @Override
@@ -87,7 +98,8 @@ public class MainActivity extends BridgeActivity {
         }
       };
     } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.TIRAMISU) {
-      predictiveBackCallback = MainActivity.this::onBackPressed;
+      predictiveBackCallback = () ->
+        getOnBackPressedDispatcher().onBackPressed();
     }
 
     applyOrientationLockForCurrentConfiguration();
@@ -126,6 +138,96 @@ public class MainActivity extends BridgeActivity {
     settings.setDisplayZoomControls(false);
 
     checkForUpdate();
+    maybeBeginQuickWidgetSetup(getIntent());
+  }
+
+  @Override
+  public void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    setIntent(intent);
+    maybeBeginQuickWidgetSetup(intent);
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    quickWidgetSetupHandler.removeCallbacksAndMessages(null);
+    quickWidgetSetupTimeoutRunnable = null;
+    QuickWidgetSetupState.INSTANCE.setActive(false);
+    DailyWidgetSyncNotifier.INSTANCE.clearListener();
+  }
+
+  private void maybeBeginQuickWidgetSetup(Intent intent) {
+    if (
+      intent == null ||
+      !intent.getBooleanExtra(
+        DailyWidgetDataKt.EXTRA_QUICK_WIDGET_SETUP,
+        false
+      ) ||
+      quickWidgetSetupOverlay != null
+    ) {
+      return;
+    }
+
+    QuickWidgetSetupState.INSTANCE.setActive(true);
+
+    SharedPreferences prefs = getSharedPreferences(
+      DailyWidgetDataKt.DAILY_WIDGET_PREFS_NAME,
+      MODE_PRIVATE
+    );
+    DailyWidgetDataKt.clearWidgetSyncFailure(prefs);
+
+    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+    quickWidgetSetupOverlay = LayoutInflater.from(this).inflate(
+      R.layout.overlay_widget_setup,
+      decorView,
+      false
+    );
+    decorView.addView(
+      quickWidgetSetupOverlay,
+      new ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+      )
+    );
+
+    DailyWidgetSyncNotifier.INSTANCE.setListener(() ->
+      runOnUiThread(this::finishQuickWidgetSetup)
+    );
+
+    quickWidgetSetupTimeoutRunnable = this::failQuickWidgetSetup;
+    quickWidgetSetupHandler.postDelayed(
+      quickWidgetSetupTimeoutRunnable,
+      DailyWidgetDataKt.QUICK_WIDGET_SETUP_TIMEOUT_MS
+    );
+  }
+
+  private void finishQuickWidgetSetup() {
+    cancelQuickWidgetSetupTimeout();
+    DailyWidgetSyncNotifier.INSTANCE.clearListener();
+    QuickWidgetSetupState.INSTANCE.setActive(false);
+    quickWidgetSetupHandler.postDelayed(
+      this::finish,
+      DailyWidgetDataKt.QUICK_WIDGET_SETUP_SETTLE_DELAY_MS
+    );
+  }
+
+  private void failQuickWidgetSetup() {
+    DailyWidgetSyncNotifier.INSTANCE.clearListener();
+    QuickWidgetSetupState.INSTANCE.setActive(false);
+    SharedPreferences prefs = getSharedPreferences(
+      DailyWidgetDataKt.DAILY_WIDGET_PREFS_NAME,
+      MODE_PRIVATE
+    );
+    DailyWidgetDataKt.markWidgetSyncFailed(prefs);
+    finish();
+  }
+
+  private void cancelQuickWidgetSetupTimeout() {
+    if (quickWidgetSetupTimeoutRunnable != null) {
+      quickWidgetSetupHandler.removeCallbacks(quickWidgetSetupTimeoutRunnable);
+      quickWidgetSetupTimeoutRunnable = null;
+    }
   }
 
   @SuppressLint("SourceLockedOrientationActivity")
@@ -194,6 +296,10 @@ public class MainActivity extends BridgeActivity {
       return;
     }
 
+    if (QuickWidgetSetupState.INSTANCE.isActive()) {
+      return;
+    }
+
     int availableVersionCode = appUpdateInfo.availableVersionCode();
     SharedPreferences prefs = getSharedPreferences(
       UPDATE_PREFS_NAME,
@@ -208,6 +314,13 @@ public class MainActivity extends BridgeActivity {
       return;
     }
 
+    Dialog dialog = getDialog(availableVersionCode);
+
+    dialog.show();
+  }
+
+  @NonNull
+  private Dialog getDialog(int availableVersionCode) {
     Dialog dialog = new Dialog(this, R.style.PixelDialogTheme);
     dialog.setContentView(R.layout.dialog_prompt);
     dialog.setCancelable(true);
@@ -231,8 +344,7 @@ public class MainActivity extends BridgeActivity {
       rememberDismissedVersion(availableVersionCode);
       openPlayStoreListing();
     });
-
-    dialog.show();
+    return dialog;
   }
 
   private void rememberDismissedVersion(int versionCode) {

@@ -33,6 +33,14 @@
     <string
     name="widget_empty_state_subtitle"
   >(first time widget setup)</string>
+    <string
+    name="widget_setup_retry"
+  >Couldn\'t set up \u2014 tap to retry</string>
+    <string name="widget_setup_retry_subtitle">Check your connection</string>
+    <string
+    name="widget_quick_setup_title"
+  >Setting up your widget\u2026</string>
+    <string name="widget_quick_setup_subtitle">This only happens once</string>
     <string name="widget_start_streak">Start a streak</string>
     <string name="widget_streak_format">🔥 %1$d</string>
     <string name="widget_play_today">Play today\'s puzzle</string>

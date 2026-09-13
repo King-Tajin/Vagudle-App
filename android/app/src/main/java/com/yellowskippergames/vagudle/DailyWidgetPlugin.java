@@ -32,9 +32,15 @@ public class DailyWidgetPlugin extends Plugin {
       Context.MODE_PRIVATE
     );
     DailyWidgetDataKt.saveDailyWidgetData(prefs, data);
+    DailyWidgetDataKt.markWidgetFirstSyncCompleted(prefs);
 
     try {
-      DailyWidgetUpdateWorkerKt.requestDailyWidgetUpdate(getContext());
+      DailyWidgetUpdateWorkerKt.updateDailyWidgetNow(getContext());
+    } catch (Exception ignored) {}
+
+    DailyWidgetSyncNotifier.INSTANCE.notifySynced();
+
+    try {
       DailyRefreshSchedulerKt.scheduleDailyRefresh(getContext());
     } catch (Exception ignored) {}
 
