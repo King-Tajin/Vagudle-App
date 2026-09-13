@@ -17,8 +17,8 @@ const config: CapacitorConfig = {
       insetsHandling: "disable",
     },
     SafeArea: {
-      statusBarStyle: "DARK",
-      navigationBarStyle: "DARK",
+      // statusBarStyle: "DARK",
+      // navigationBarStyle: "DARK",
     },
   },
 };
