@@ -169,7 +169,7 @@ export const BACKGROUNDS: BackgroundDef[] = [
     ...strings.BACKGROUND_TEXT.spinning_seal,
     requiresAchievementId: COMPLETIONIST_ID,
     kind: "video",
-    videoSrc: "/backgrounds/seal_v2.mp4",
+    videoSrc: "/backgrounds/seal_v3.mp4",
   },
 ];
 

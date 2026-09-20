@@ -23,8 +23,8 @@ android {
         applicationId "com.yellowskippergames.vagudle"
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        versionCode 19
-        versionName "0.12.0"
+        versionCode 20
+        versionName "0.12.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
