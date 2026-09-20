@@ -29,12 +29,6 @@ private const val KEY_RANK_STATUS = "rankStatus"
 private const val KEY_RANK = "rank"
 private const val KEY_OUT_OF = "outOf"
 private const val KEY_LAST_REFRESH_ATTEMPT_AT = "lastRefreshAttemptAt"
-private const val KEY_WIDGET_FIRST_SYNC_COMPLETED = "widgetFirstSyncCompleted"
-private const val KEY_WIDGET_LAST_SYNC_FAILED_AT = "widgetLastSyncFailedAt"
-
-const val EXTRA_QUICK_WIDGET_SETUP = "quickWidgetSetup"
-const val QUICK_WIDGET_SETUP_TIMEOUT_MS = 10_000L
-const val QUICK_WIDGET_SETUP_SETTLE_DELAY_MS = 600L
 
 private const val DAILY_RELEASE_HOUR_UTC = 8L
 
@@ -175,26 +169,6 @@ fun lastRefreshAttemptAt(prefs: SharedPreferences): Long = prefs.getLong(KEY_LAS
 
 fun markRefreshAttemptNow(prefs: SharedPreferences) {
     prefs.edit { putLong(KEY_LAST_REFRESH_ATTEMPT_AT, System.currentTimeMillis()) }
-}
-
-fun isWidgetFirstSyncCompleted(prefs: SharedPreferences): Boolean =
-    prefs.getBoolean(KEY_WIDGET_FIRST_SYNC_COMPLETED, false)
-
-fun markWidgetFirstSyncCompleted(prefs: SharedPreferences) {
-    prefs.edit {
-        putBoolean(KEY_WIDGET_FIRST_SYNC_COMPLETED, true)
-        remove(KEY_WIDGET_LAST_SYNC_FAILED_AT)
-    }
-}
-
-fun hasWidgetSyncFailed(prefs: SharedPreferences): Boolean = prefs.contains(KEY_WIDGET_LAST_SYNC_FAILED_AT)
-
-fun markWidgetSyncFailed(prefs: SharedPreferences) {
-    prefs.edit { putLong(KEY_WIDGET_LAST_SYNC_FAILED_AT, System.currentTimeMillis()) }
-}
-
-fun clearWidgetSyncFailure(prefs: SharedPreferences) {
-    prefs.edit { remove(KEY_WIDGET_LAST_SYNC_FAILED_AT) }
 }
 
 fun loadDailyWidgetData(context: Context): DailyWidgetData? {

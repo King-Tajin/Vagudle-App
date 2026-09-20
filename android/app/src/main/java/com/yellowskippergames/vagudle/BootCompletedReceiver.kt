@@ -1,8 +1,6 @@
 package com.yellowskippergames.vagudle
 
-import android.appwidget.AppWidgetManager
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.glance.appwidget.updateAll
@@ -20,18 +18,17 @@ class BootCompletedReceiver : BroadcastReceiver() {
         intent: Intent,
     ) {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED) return
-        val appWidgetManager = AppWidgetManager.getInstance(context)
-        val widgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, DailyWidgetReceiver::class.java))
-        if (widgetIds.isEmpty()) return
+        val installedKinds = WidgetKind.entries.filter { it.installedWidgetIds(context).isNotEmpty() }
+        if (installedKinds.isEmpty()) return
 
-        scheduleDailyRefresh(context)
+        installedKinds.forEach { it.handler.onBoot(context) }
 
         val appContext = context.applicationContext
         val pendingResult = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 delay(WIDGET_HOST_SETTLE_DELAY_MS.milliseconds)
-                DailyWidget().updateAll(appContext)
+                installedKinds.forEach { it.createWidget().updateAll(appContext) }
             } finally {
                 pendingResult.finish()
             }

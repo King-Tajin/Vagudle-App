@@ -13,41 +13,54 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import kotlinx.coroutines.runBlocking
 
-private const val DAILY_WIDGET_UPDATE_WORK_NAME = "daily_widget_update"
+private const val WIDGET_UPDATE_WORK_NAME_PREFIX = "widget_update_"
+private const val KEY_WIDGET = "widget"
 private const val KEY_REQUESTED_AT = "requestedAt"
 
-class DailyWidgetUpdateWorker(
+class WidgetUpdateWorker(
     context: Context,
     params: WorkerParameters,
 ) : CoroutineWorker(context, params) {
-    override suspend fun doWork(): Result =
-        try {
-            DailyWidget().updateAll(applicationContext)
+    override suspend fun doWork(): Result {
+        val kind = WidgetKind.fromKey(inputData.getString(KEY_WIDGET)) ?: return Result.failure()
+        return try {
+            kind.createWidget().updateAll(applicationContext)
             Result.success()
         } catch (_: Exception) {
             Result.retry()
         }
+    }
 }
 
-fun requestDailyWidgetUpdate(context: Context) {
+fun requestWidgetUpdate(
+    context: Context,
+    kind: WidgetKind,
+) {
     val appContext = context.applicationContext
     val request =
-        OneTimeWorkRequestBuilder<DailyWidgetUpdateWorker>()
-            .setInputData(workDataOf(KEY_REQUESTED_AT to System.currentTimeMillis()))
-            .build()
+        OneTimeWorkRequestBuilder<WidgetUpdateWorker>()
+            .setInputData(
+                workDataOf(
+                    KEY_WIDGET to kind.key,
+                    KEY_REQUESTED_AT to System.currentTimeMillis(),
+                ),
+            ).build()
     WorkManager.getInstance(appContext).enqueueUniqueWork(
-        DAILY_WIDGET_UPDATE_WORK_NAME,
+        WIDGET_UPDATE_WORK_NAME_PREFIX + kind.key,
         ExistingWorkPolicy.REPLACE,
         request,
     )
 }
 
-suspend fun pushDailyWidgetUpdateNow(context: Context) {
+suspend fun pushWidgetUpdateNow(
+    context: Context,
+    kind: WidgetKind,
+) {
     val appContext = context.applicationContext
-    val widget = DailyWidget()
+    val widget = kind.createWidget()
     val glanceManager = GlanceAppWidgetManager(appContext)
     val appWidgetManager = AppWidgetManager.getInstance(appContext)
-    glanceManager.getGlanceIds(DailyWidget::class.java).forEach { glanceId ->
+    glanceManager.getGlanceIds(widget.javaClass).forEach { glanceId ->
         val appWidgetId = glanceManager.getAppWidgetId(glanceId)
         val options = appWidgetManager.getAppWidgetOptions(appWidgetId)
         val remoteViews = widget.compose(appContext, glanceId, options = options, size = null, state = null)
@@ -55,8 +68,11 @@ suspend fun pushDailyWidgetUpdateNow(context: Context) {
     }
 }
 
-fun updateDailyWidgetNow(context: Context) {
+fun updateWidgetNow(
+    context: Context,
+    kind: WidgetKind,
+) {
     runBlocking {
-        pushDailyWidgetUpdateNow(context)
+        pushWidgetUpdateNow(context, kind)
     }
 }

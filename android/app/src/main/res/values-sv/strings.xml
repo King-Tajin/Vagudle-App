@@ -59,4 +59,18 @@
   >%1$d bokstäver \u00b7 %2$s-läge</string>
     <string name="widget_play_normal_mode">Spela normalt läge</string>
     <string name="widget_resume">Fortsätt</string>
+    <string name="achievements_widget_label">Prestationer</string>
+    <string
+    name="achievements_widget_description"
+  >Följ dina upplåsta prestationer och se vad du kan uppnå härnäst.</string>
+    <string name="widget_achievements_next_up">NÄSTA</string>
+    <string name="widget_achievements_still_locked">FORTFARANDE LÅST</string>
+    <string name="widget_achievements_complete">KLAR</string>
+    <string name="widget_achievements_unlocked">Upplåst</string>
+    <string name="widget_achievements_fraction">%1$d/%2$d</string>
+    <string name="widget_achievements_tap">Tryck</string>
+    <string name="widget_achievements_retry">Försök</string>
+    <string
+    name="widget_achievements_content_description"
+  >Prestationer %1$d av %2$d</string>
 </resources>

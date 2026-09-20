@@ -8,7 +8,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalSize
@@ -44,16 +43,7 @@ class DailyWidget : GlanceAppWidget() {
     }
 }
 
-internal fun openDailyIntent(context: Context): Intent {
-    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
-    val needsQuickSetup = !isWidgetFirstSyncCompleted(prefs)
-    return Intent(Intent.ACTION_VIEW, DEEP_LINK_URL.toUri()).apply {
-        setPackage(context.packageName)
-        if (needsQuickSetup) {
-            putExtra(EXTRA_QUICK_WIDGET_SETUP, true)
-        }
-    }
-}
+internal fun openDailyIntent(context: Context): Intent = openWidgetIntent(context, WidgetKind.DAILY, DEEP_LINK_URL)
 
 @Composable
 private fun DailyWidgetContent(

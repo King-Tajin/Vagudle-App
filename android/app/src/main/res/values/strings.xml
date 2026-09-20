@@ -71,4 +71,18 @@
         <item quantity="one">Solved in %1$d guess</item>
         <item quantity="other">Solved in %1$d guesses</item>
     </plurals>
+    <string name="achievements_widget_label">Achievements</string>
+    <string
+    name="achievements_widget_description"
+  >Track your unlocked achievements and see what to earn next.</string>
+    <string name="widget_achievements_next_up">NEXT UP</string>
+    <string name="widget_achievements_still_locked">STILL LOCKED</string>
+    <string name="widget_achievements_complete">COMPLETE</string>
+    <string name="widget_achievements_unlocked">Unlocked</string>
+    <string name="widget_achievements_fraction">%1$d/%2$d</string>
+    <string name="widget_achievements_tap">Tap</string>
+    <string name="widget_achievements_retry">Retry</string>
+    <string
+    name="widget_achievements_content_description"
+  >Achievements %1$d of %2$d</string>
 </resources>

@@ -210,8 +210,8 @@ importers:
         specifier: ^3.9.8
         version: 3.9.8
       prettier-plugin-java:
-        specifier: ^2.10.3
-        version: 2.10.3(prettier@3.9.8)
+        specifier: ^2.10.4
+        version: 2.10.4(prettier@3.9.8)
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -657,8 +657,8 @@ packages:
     resolution: {integrity: sha512-ZIfcLJC+7E7FBFnDxm9MPmt7D+DidyQ26lewieO75AdhA2ayMtsJSES0iWzqJQbcVRSrTufQoy0DR94xHue0oA==}
     engines: {node: '>=10.4.0'}
 
-  prettier-plugin-java@2.10.3:
-    resolution: {integrity: sha512-/g52mTbsN2ee8JjLRpBWGGmcmRhdv2zRWyj4QbsL9CQ+nKR022GRJhebwEpRyaCc8hLV6aO3JPGNQyXp1DPrCA==}
+  prettier-plugin-java@2.10.4:
+    resolution: {integrity: sha512-Hinkucn49lx848MnWEktfGozLPp9dMYtdKPG+Z3pridBv71PJIVibe4jp0Lzb+rcA3eMZfU5+oWtJoI2oQ2XTg==}
     peerDependencies:
       prettier: ^3.0.0
 
@@ -781,8 +781,8 @@ packages:
     deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
-  web-tree-sitter@0.26.11:
-    resolution: {integrity: sha512-Q5Dm3YTIXSXuH6FxX6RuzX2Qwpc4DPGiYMU87Wg5Z8OIStiQFiUex4zMDc0vBTw78EphaYJacncJghCHzbZptg==}
+  web-tree-sitter@0.27.0:
+    resolution: {integrity: sha512-XK08gj6RwTMQatAG7uVRP8MunqotL/XC19vHgkSPKmELgbGPBj4ECvB8haHOUnyj6ls2B8t42UTro14zxGgAHg==}
 
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
@@ -1216,10 +1216,10 @@ snapshots:
       base64-js: 1.5.1
       xmlbuilder: 15.1.1
 
-  prettier-plugin-java@2.10.3(prettier@3.9.8):
+  prettier-plugin-java@2.10.4(prettier@3.9.8):
     dependencies:
       prettier: 3.9.8
-      web-tree-sitter: 0.26.11
+      web-tree-sitter: 0.27.0
 
   prettier@3.9.8: {}
 
@@ -1340,7 +1340,7 @@ snapshots:
 
   uuid@7.0.3: {}
 
-  web-tree-sitter@0.26.11: {}
+  web-tree-sitter@0.27.0: {}
 
   which@2.0.2:
     dependencies:

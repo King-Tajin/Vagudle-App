@@ -51,6 +51,7 @@ public class MainActivity extends BridgeActivity {
   );
   private View quickWidgetSetupOverlay;
   private Runnable quickWidgetSetupTimeoutRunnable;
+  private volatile String quickWidgetSetupWidgetKey;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class MainActivity extends BridgeActivity {
     registerPlugin(PlayGamesAuthPlugin.class);
     registerPlugin(NotificationPrimerPlugin.class);
     registerPlugin(ReviewPromptPlugin.class);
-    registerPlugin(DailyWidgetPlugin.class);
+    registerPlugin(WidgetSyncPlugin.class);
     registerPlugin(BackNavigationPlugin.class);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -154,14 +155,14 @@ public class MainActivity extends BridgeActivity {
     quickWidgetSetupHandler.removeCallbacksAndMessages(null);
     quickWidgetSetupTimeoutRunnable = null;
     QuickWidgetSetupState.INSTANCE.setActive(false);
-    DailyWidgetSyncNotifier.INSTANCE.clearListener();
+    WidgetSyncNotifier.INSTANCE.clearListener();
   }
 
   private void maybeBeginQuickWidgetSetup(Intent intent) {
     if (
       intent == null ||
       !intent.getBooleanExtra(
-        DailyWidgetDataKt.EXTRA_QUICK_WIDGET_SETUP,
+        WidgetSyncStateKt.EXTRA_QUICK_WIDGET_SETUP,
         false
       ) ||
       quickWidgetSetupOverlay != null
@@ -169,13 +170,14 @@ public class MainActivity extends BridgeActivity {
       return;
     }
 
-    QuickWidgetSetupState.INSTANCE.setActive(true);
-
-    SharedPreferences prefs = getSharedPreferences(
-      DailyWidgetDataKt.DAILY_WIDGET_PREFS_NAME,
-      MODE_PRIVATE
+    String widgetKey = intent.getStringExtra(
+      WidgetSyncStateKt.EXTRA_QUICK_WIDGET_SETUP_KIND
     );
-    DailyWidgetDataKt.clearWidgetSyncFailure(prefs);
+    quickWidgetSetupWidgetKey =
+      widgetKey != null ? widgetKey : WidgetKind.DAILY.getKey();
+
+    QuickWidgetSetupState.INSTANCE.setActive(true);
+    WidgetSyncStateKt.clearWidgetSetupFailure(this, quickWidgetSetupWidgetKey);
 
     ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
     quickWidgetSetupOverlay = LayoutInflater.from(this).inflate(
@@ -191,35 +193,33 @@ public class MainActivity extends BridgeActivity {
       )
     );
 
-    DailyWidgetSyncNotifier.INSTANCE.setListener(() ->
-      runOnUiThread(this::finishQuickWidgetSetup)
-    );
+    WidgetSyncNotifier.INSTANCE.setListener((syncedWidgetKey) -> {
+      if (syncedWidgetKey.equals(quickWidgetSetupWidgetKey)) {
+        runOnUiThread(this::finishQuickWidgetSetup);
+      }
+    });
 
     quickWidgetSetupTimeoutRunnable = this::failQuickWidgetSetup;
     quickWidgetSetupHandler.postDelayed(
       quickWidgetSetupTimeoutRunnable,
-      DailyWidgetDataKt.QUICK_WIDGET_SETUP_TIMEOUT_MS
+      WidgetSyncStateKt.QUICK_WIDGET_SETUP_TIMEOUT_MS
     );
   }
 
   private void finishQuickWidgetSetup() {
     cancelQuickWidgetSetupTimeout();
-    DailyWidgetSyncNotifier.INSTANCE.clearListener();
+    WidgetSyncNotifier.INSTANCE.clearListener();
     QuickWidgetSetupState.INSTANCE.setActive(false);
     quickWidgetSetupHandler.postDelayed(
       this::finish,
-      DailyWidgetDataKt.QUICK_WIDGET_SETUP_SETTLE_DELAY_MS
+      WidgetSyncStateKt.QUICK_WIDGET_SETUP_SETTLE_DELAY_MS
     );
   }
 
   private void failQuickWidgetSetup() {
-    DailyWidgetSyncNotifier.INSTANCE.clearListener();
+    WidgetSyncNotifier.INSTANCE.clearListener();
     QuickWidgetSetupState.INSTANCE.setActive(false);
-    SharedPreferences prefs = getSharedPreferences(
-      DailyWidgetDataKt.DAILY_WIDGET_PREFS_NAME,
-      MODE_PRIVATE
-    );
-    DailyWidgetDataKt.markWidgetSyncFailed(prefs);
+    WidgetSyncStateKt.markWidgetSetupFailed(this, quickWidgetSetupWidgetKey);
     finish();
   }
 

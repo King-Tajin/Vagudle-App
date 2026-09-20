@@ -66,7 +66,7 @@ private fun rolloverIfNeeded(context: Context) {
     if (previous.date == today) return
     val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
     saveDailyWidgetData(prefs, rolledOverDailyWidgetData(previous, today))
-    requestDailyWidgetUpdate(context)
+    requestWidgetUpdate(context, WidgetKind.DAILY)
 }
 
 private fun refreshRank(context: Context) {
@@ -82,7 +82,7 @@ private fun refreshRank(context: Context) {
     val current = loadDailyWidgetData(context) ?: return
     val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
     saveDailyWidgetData(prefs, current.copy(rank = rank))
-    requestDailyWidgetUpdate(context)
+    requestWidgetUpdate(context, WidgetKind.DAILY)
 }
 
 private fun fetchDailyLeaderboardRank(idToken: String): DailyWidgetRank? {
