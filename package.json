@@ -29,10 +29,10 @@
   "devDependencies": {
     "@capacitor/cli": "^8.5.2",
     "@prettier/plugin-xml": "^3.4.2",
-    "prettier": "^3.9.8",
+    "prettier": "^3.9.9",
     "prettier-plugin-java": "^2.10.4",
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2"
   },
-  "packageManager": "pnpm@12.4.2"
+  "packageManager": "pnpm@12.5.1"
 }
