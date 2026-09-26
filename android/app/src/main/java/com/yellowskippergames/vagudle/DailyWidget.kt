@@ -19,10 +19,13 @@ import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
+import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
@@ -95,21 +98,27 @@ private fun DailyWidgetContent(
             modifier = GlanceModifier.clickable(actionStartActivity(openDailyIntent(context))),
         ) {
             Box(
-                modifier =
-                    GlanceModifier
-                        .fillMaxSize()
-                        .padding(horizontal = borderThickness, vertical = borderThickness),
+                modifier = GlanceModifier.fillMaxSize().padding(vertical = borderThickness),
                 contentAlignment = Alignment.Center,
             ) {
-                if (data == null) {
-                    EmptyState(context, innerWidth, innerHeight, innerRadius, density, viewState.setupFailed)
-                } else {
-                    val isFresh = data.date == currentDailyDateUtc()
-                    if (isExpanded) {
-                        ExpandedPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
-                    } else {
-                        CompactPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
+                Row(modifier = GlanceModifier.fillMaxSize()) {
+                    Spacer(modifier = GlanceModifier.width(borderThickness).fillMaxHeight())
+                    Box(
+                        modifier = GlanceModifier.width(innerWidth).height(innerHeight),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        if (data == null) {
+                            EmptyState(context, innerWidth, innerHeight, innerRadius, density, viewState.setupFailed)
+                        } else {
+                            val isFresh = data.date == currentDailyDateUtc()
+                            if (isExpanded) {
+                                ExpandedPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
+                            } else {
+                                CompactPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
+                            }
+                        }
                     }
+                    Spacer(modifier = GlanceModifier.width(borderThickness).fillMaxHeight())
                 }
             }
         }

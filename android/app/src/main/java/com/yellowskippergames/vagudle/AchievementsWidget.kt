@@ -16,8 +16,13 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.width
 import kotlin.math.sqrt
 
 private const val COMPACT_REFERENCE_SIZE = 40f
@@ -83,29 +88,38 @@ private fun AchievementsWidgetContent(
             modifier = GlanceModifier.clickable(openApp),
         ) {
             Box(
-                modifier = GlanceModifier.fillMaxSize().padding(borderThickness),
+                modifier = GlanceModifier.fillMaxSize().padding(vertical = borderThickness),
                 contentAlignment = Alignment.Center,
             ) {
-                if (isExpanded) {
-                    AchievementsExpandedContent(
-                        context,
-                        viewState,
-                        scale,
-                        innerWidth,
-                        innerHeight,
-                        innerRadius,
-                        density,
-                    )
-                } else {
-                    AchievementsCompactContent(
-                        context,
-                        viewState,
-                        scale,
-                        innerWidth,
-                        innerHeight,
-                        innerRadius,
-                        density,
-                    )
+                Row(modifier = GlanceModifier.fillMaxSize()) {
+                    Spacer(modifier = GlanceModifier.width(borderThickness).fillMaxHeight())
+                    Box(
+                        modifier = GlanceModifier.width(innerWidth).height(innerHeight),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        if (isExpanded) {
+                            AchievementsExpandedContent(
+                                context,
+                                viewState,
+                                scale,
+                                innerWidth,
+                                innerHeight,
+                                innerRadius,
+                                density,
+                            )
+                        } else {
+                            AchievementsCompactContent(
+                                context,
+                                viewState,
+                                scale,
+                                innerWidth,
+                                innerHeight,
+                                innerRadius,
+                                density,
+                            )
+                        }
+                    }
+                    Spacer(modifier = GlanceModifier.width(borderThickness).fillMaxHeight())
                 }
             }
         }
