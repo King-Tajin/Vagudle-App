@@ -29,6 +29,15 @@
     name="widget_quick_setup_title"
   >Konfigurerar din widget\u2026</string>
     <string name="widget_quick_setup_subtitle">Detta sker bara en gång</string>
+    <string name="widget_tips_channel_name">Widgettips</string>
+    <string
+    name="widget_tips_channel_description"
+  >Praktiska engångstips om dina widgetar på hemskärmen.</string>
+    <string name="widget_resize_tip_title">Visste du det?</string>
+    <string
+    name="widget_resize_tip_message"
+  >Den här widgeten går att ändra storlek på! Tryck och håll ned den, dra sedan i handtagen för att göra den större eller mindre åt båda hållen.</string>
+    <string name="widget_resize_tip_acknowledge">Uppfattat</string>
     <string name="widget_start_streak">Starta en svit</string>
     <string name="widget_streak_format">🔥 %1$d</string>
     <string name="widget_play_today">Spela dagens pussel</string>

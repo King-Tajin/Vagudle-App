@@ -27,6 +27,17 @@
     name="widget_quick_setup_title"
   >Konfigurowanie widżetu\u2026</string>
     <string name="widget_quick_setup_subtitle">To zdarza się tylko raz</string>
+    <string
+    name="widget_tips_channel_name"
+  >Wskazówki dotyczące widżetów</string>
+    <string
+    name="widget_tips_channel_description"
+  >Przydatne, jednorazowe wskazówki dotyczące widżetów na ekranie głównym.</string>
+    <string name="widget_resize_tip_title">Czy wiesz, że\u2026</string>
+    <string
+    name="widget_resize_tip_message"
+  >Ten widżet można zmieniać rozmiar! Naciśnij i przytrzymaj go, a następnie przeciągnij uchwyty, aby powiększyć lub zmniejszyć go w obu kierunkach.</string>
+    <string name="widget_resize_tip_acknowledge">Rozumiem</string>
     <string name="widget_start_streak">Rozpocznij passę</string>
     <string name="widget_streak_format">🔥 %1$d</string>
     <string name="widget_play_today">Zagraj w dzisiejszą zagadkę</string>

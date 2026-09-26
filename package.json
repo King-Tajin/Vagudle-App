@@ -3,13 +3,14 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.js",
-    "bundle": "node scripts/gradle.js bundleRelease",
+    "bundle": "pnpm run update:web && pnpm run build && node scripts/gradle.js bundleRelease",
     "update:web": "node scripts/update-web.js",
     "android:launch": "pnpm run build && pnpm exec cap open android",
     "webcore:typecheck": "node scripts/web-script.js typecheck",
     "webcore:lint": "node scripts/web-script.js lint",
     "webcore:doctor-report": "node scripts/web-script.js doctor:report",
     "android:lint": "node scripts/gradle.js lintDebug",
+    "android:update-catalog": "node scripts/gradle.js versionCatalogUpdate",
     "format": "prettier --write \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\" && node scripts/gradle.js ktlintFormat",
     "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\" && node scripts/gradle.js ktlintCheck"
   },
@@ -24,6 +25,7 @@
     "@capacitor/core": "^8.5.2",
     "@capacitor/haptics": "8.0.1",
     "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/network": "^8.0.1",
     "@capacitor/share": "^8.0.2"
   },
   "devDependencies": {
@@ -34,5 +36,5 @@
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2"
   },
-  "packageManager": "pnpm@12.5.1"
+  "packageManager": "pnpm@12.6.0"
 }

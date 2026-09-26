@@ -10,6 +10,7 @@ class DailyWidgetReceiver : GlanceAppWidgetReceiver() {
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
         scheduleDailyRefresh(context)
+        WidgetResizeTipNotifier.maybeShow(context)
     }
 
     override fun onDisabled(context: Context) {
