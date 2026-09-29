@@ -109,6 +109,28 @@ const BACKGROUND_TEXT_MOUSE_EATING_BY_LANGUAGE: Record<
       license: "Domena publiczna",
     },
   },
+  pt: {
+    desktopLabel: "RATO COMENDO M&M",
+    mobileLabel: "RATO",
+    attribution: {
+      credits: [
+        {
+          role: "Vídeo",
+          title:
+            "3d cartoon mouse dancing loop animation isolated on green screen background Free Video",
+          creator: "Vecteezy",
+          sourceUrl:
+            "https://www.vecteezy.com/video/56169680-3d-cartoon-mouse-dancing-loop-animation-isolated-on-green-screen-background",
+        },
+        {
+          role: "Música",
+          title: "Candyland",
+          creator: "Tobu",
+        },
+      ],
+      license: "Domínio público",
+    },
+  },
 };
 
 const active =

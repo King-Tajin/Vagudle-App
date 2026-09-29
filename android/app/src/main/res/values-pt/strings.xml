@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<resources>
+    <string name="update_available_title">Atualização disponível</string>
+    <string
+    name="update_available_message"
+  >Uma nova versão do Vagudle está pronta. Atualize agora para ter os recursos e as correções mais recentes.</string>
+    <string name="update_available_update">Atualizar</string>
+    <string name="update_available_not_now">Jogar sem atualizar</string>
+    <string name="notification_primer_title">Mantenha a sua sequência</string>
+    <string
+    name="notification_primer_message"
+  >Receba lembretes ocasionais para jogar o seu desafio diário e manter a sua sequência ativa. Você pode mudar isso quando quiser em Configurações.</string>
+    <string name="notification_primer_enable">Ativar lembretes</string>
+    <string name="notification_primer_not_now">Agora não</string>
+    <string
+    name="daily_widget_description"
+  >Veja a sua sequência diária, a sua posição no ranking e se o desafio de hoje já foi concluído.</string>
+    <string name="widget_empty_state">Toque para carregar o Vagudle</string>
+    <string
+    name="widget_empty_state_subtitle"
+  >(primeira configuração do widget)</string>
+    <string
+    name="widget_setup_retry"
+  >Não foi possível configurar \\u2014 toque para tentar novamente</string>
+    <string name="widget_setup_retry_subtitle">Verifique a sua conexão</string>
+    <string
+    name="widget_quick_setup_title"
+  >Configurando o seu widget\\u2026</string>
+    <string name="widget_quick_setup_subtitle">Isso só acontece uma vez</string>
+    <string name="widget_tips_channel_name">Dicas de widgets</string>
+    <string
+    name="widget_tips_channel_description"
+  >Dicas úteis e únicas sobre os widgets da sua tela inicial.</string>
+    <string name="widget_resize_tip_title">Você sabia?</string>
+    <string
+    name="widget_resize_tip_message"
+  >Este widget pode ser redimensionado! Toque e segure nele, depois arraste as alças para deixá-lo maior ou menor nas duas direções.</string>
+    <string name="widget_resize_tip_acknowledge">Entendi</string>
+    <string name="widget_start_streak">Comece uma sequência</string>
+    <string name="widget_streak_format">🔥 %1$d</string>
+    <string name="widget_play_today">Jogar o desafio de hoje</string>
+    <string name="widget_not_solved_today">Não resolvido hoje</string>
+    <string name="widget_rank_number">#%1$d</string>
+    <string
+    name="widget_link_account"
+  >Vincule a sua conta para ver a sua posição</string>
+    <string name="widget_best_streak">Melhor: %1$d</string>
+    <string
+    name="widget_daily_info"
+  >Diário nº %1$d \\u00b7 %2$d letras \\u00b7 modo %3$s</string>
+    <string name="widget_mode_hard">difícil</string>
+    <string name="widget_mode_normal">normal</string>
+    <string name="widget_daily_label">DIÁRIO</string>
+    <string name="widget_daily_number">#%1$d</string>
+    <string name="widget_not_played_yet">Ainda não jogado</string>
+    <string name="widget_in_progress">Em andamento</string>
+    <string name="widget_game_lost">Derrota</string>
+    <string name="widget_play_daily">Jogar o diário</string>
+    <plurals name="widget_solved_in_guesses">
+        <item quantity="one">Resolvido em %1$d palpite</item>
+        <item quantity="many">Resolvido em %1$d de palpites</item>
+        <item quantity="other">Resolvido em %1$d palpites</item>
+    </plurals>
+    <string name="widget_streak_label">SEQUÊNCIA</string>
+    <string
+    name="widget_daily_info_short"
+  >%1$d letras \\u00b7 modo %2$s</string>
+    <string name="widget_play_normal_mode">Jogar no modo normal</string>
+    <string name="widget_resume">Continuar</string>
+    <string name="achievements_widget_label">Conquistas</string>
+    <string
+    name="achievements_widget_description"
+  >Acompanhe as conquistas que você desbloqueou e veja o que conquistar em seguida.</string>
+    <string name="widget_achievements_next_up">PRÓXIMAS</string>
+    <string name="widget_achievements_still_locked">AINDA BLOQUEADAS</string>
+    <string name="widget_achievements_complete">COMPLETO</string>
+    <string name="widget_achievements_unlocked">Desbloqueadas</string>
+    <string name="widget_achievements_fraction">%1$d/%2$d</string>
+    <string name="widget_achievements_tap">Toque</string>
+    <string name="widget_achievements_retry">Tentar</string>
+    <string
+    name="widget_achievements_content_description"
+  >Conquistas: %1$d de %2$d</string>
+</resources>
