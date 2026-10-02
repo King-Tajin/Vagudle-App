@@ -11,6 +11,7 @@ import org.json.JSONObject
 const val ACHIEVEMENTS_WIDGET_PREFS_NAME = "vagudle_achievements_widget_prefs"
 private const val KEY_UNLOCKED_COUNT = "unlockedCount"
 private const val KEY_TOTAL_ACHIEVEMENTS = "totalAchievements"
+private const val KEY_NEXT_UP_ID = "nextUpId"
 private const val KEY_NEXT_UP_TITLE = "nextUpTitle"
 private const val KEY_NEXT_UP_PROGRESS = "nextUpProgress"
 private const val KEY_NEXT_UP_TARGET = "nextUpTarget"
@@ -18,6 +19,7 @@ private const val KEY_NEXT_UP_TARGET = "nextUpTarget"
 data class AchievementsWidgetData(
     val unlockedCount: Int,
     val totalAchievements: Int,
+    val nextUpId: String,
     val nextUpTitle: String,
     val nextUpProgress: Int?,
     val nextUpTarget: Int?,
@@ -42,6 +44,7 @@ fun parseAchievementsWidgetPayload(json: JSONObject): AchievementsWidgetData {
     return AchievementsWidgetData(
         unlockedCount = json.getInt("unlockedCount").coerceIn(0, total),
         totalAchievements = total,
+        nextUpId = json.optString("nextUpId", ""),
         nextUpTitle = json.optString("nextUpTitle", ""),
         nextUpProgress = counter?.first,
         nextUpTarget = counter?.second,
@@ -55,6 +58,7 @@ fun saveAchievementsWidgetData(
     prefs.edit {
         putInt(KEY_UNLOCKED_COUNT, data.unlockedCount)
         putInt(KEY_TOTAL_ACHIEVEMENTS, data.totalAchievements)
+        putString(KEY_NEXT_UP_ID, data.nextUpId)
         putString(KEY_NEXT_UP_TITLE, data.nextUpTitle)
         val progress = data.nextUpProgress
         val target = data.nextUpTarget
@@ -69,6 +73,7 @@ fun loadAchievementsWidgetData(context: Context): AchievementsWidgetData? {
     return AchievementsWidgetData(
         unlockedCount = prefs.getInt(KEY_UNLOCKED_COUNT, 0),
         totalAchievements = prefs.getInt(KEY_TOTAL_ACHIEVEMENTS, 1),
+        nextUpId = prefs.getString(KEY_NEXT_UP_ID, "") ?: "",
         nextUpTitle = prefs.getString(KEY_NEXT_UP_TITLE, "") ?: "",
         nextUpProgress = if (prefs.contains(KEY_NEXT_UP_PROGRESS)) prefs.getInt(KEY_NEXT_UP_PROGRESS, 0) else null,
         nextUpTarget = if (prefs.contains(KEY_NEXT_UP_TARGET)) prefs.getInt(KEY_NEXT_UP_TARGET, 0) else null,

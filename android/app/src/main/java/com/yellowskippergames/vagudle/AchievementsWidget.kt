@@ -1,6 +1,8 @@
 package com.yellowskippergames.vagudle
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,6 +30,7 @@ private const val COMPACT_REFERENCE_SIZE = 40f
 private const val EXPANDED_REFERENCE_WIDTH = 180f
 private const val ACHIEVEMENTS_EXPANDED_MIN_ASPECT = 1.6f
 private val ACHIEVEMENTS_EXPANDED_MIN_WIDTH = 150.dp
+private const val ACHIEVEMENTS_DEEP_LINK_URL = "https://vagudle.king-tajin.dev/?achievement="
 
 class AchievementsWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
@@ -43,6 +46,16 @@ class AchievementsWidget : GlanceAppWidget() {
         }
     }
 }
+
+private fun openAchievementsIntent(
+    context: Context,
+    achievementId: String?,
+): Intent =
+    openWidgetIntent(
+        context,
+        WidgetKind.ACHIEVEMENTS,
+        ACHIEVEMENTS_DEEP_LINK_URL + Uri.encode(achievementId.orEmpty()),
+    )
 
 @Composable
 private fun AchievementsWidgetContent(
@@ -69,7 +82,7 @@ private fun AchievementsWidgetContent(
         (systemWidgetCornerRadius(context, density) ?: fallbackOuterRadius)
             .coerceAtMost(minOf(size.width, size.height) / 2)
     val innerRadius = (outerRadius - borderThickness).coerceAtLeast(MIN_INNER_CORNER_RADIUS)
-    val openApp = actionStartActivity(openWidgetIntent(context, WidgetKind.ACHIEVEMENTS))
+    val openApp = actionStartActivity(openAchievementsIntent(context, viewState.data?.nextUpId))
 
     Box(
         modifier = GlanceModifier.fillMaxSize().padding(edgeSafeMargin),
