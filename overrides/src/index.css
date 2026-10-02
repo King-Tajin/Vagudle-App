@@ -11,6 +11,10 @@
 }
 
 :root {
+  --app-inset-top: 0px;
+  --app-inset-right: 0px;
+  --app-inset-bottom: 0px;
+  --app-inset-left: 0px;
   --animation-speed: 1000ms;
   --animation-speed-fast: 250ms;
   --default-cell-bg-color: #141420;
@@ -68,9 +72,8 @@ body {
   overflow-x: hidden;
   overscroll-behavior: none;
   touch-action: pan-x pan-y;
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+  padding-left: var(--app-inset-left);
+  padding-right: var(--app-inset-right);
 }
 
 .pixel-border {
@@ -112,11 +115,11 @@ body {
 
 .navbar {
   margin-bottom: 2%;
-  margin-top: calc(-1 * env(safe-area-inset-top));
+  margin-top: calc(-1 * var(--app-inset-top));
 }
 
 .navbar > header {
-  padding-top: env(safe-area-inset-top);
+  padding-top: var(--app-inset-top);
 }
 
 .navbar-content {

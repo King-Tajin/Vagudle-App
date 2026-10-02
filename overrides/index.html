@@ -8,6 +8,23 @@
       content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover"
     />
     <meta name="theme-color" content="#000000" />
+    <script>
+      (function () {
+        var root = document.documentElement;
+        function apply(insets) {
+          root.style.setProperty("--app-inset-top", insets.top + "px");
+          root.style.setProperty("--app-inset-right", insets.right + "px");
+          root.style.setProperty("--app-inset-bottom", insets.bottom + "px");
+          root.style.setProperty("--app-inset-left", insets.left + "px");
+        }
+        window.__applyAppInsets = apply;
+        try {
+          if (window.AppInsetsBridge) {
+            apply(JSON.parse(window.AppInsetsBridge.get()));
+          }
+        } catch (error) {}
+      })();
+    </script>
     <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="manifest" href="/manifest.json" />
     <title>Vagudle</title>

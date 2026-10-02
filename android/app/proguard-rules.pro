@@ -29,3 +29,7 @@
 }
 
 -keepattributes InnerClasses,EnclosingMethod,Signature,*Annotation*
+
+-keepclassmembers class com.yellowskippergames.vagudle.AppInsetsPlugin$InsetsBridge {
+    @android.webkit.JavascriptInterface <methods>;
+}

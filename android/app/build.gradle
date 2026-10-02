@@ -18,13 +18,13 @@ if (hasKeystoreProperties) {
 
 android {
     namespace "com.yellowskippergames.vagudle"
-    compileSdk = libs.versions.compileSdk.get().toInteger()
+    compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.yellowskippergames.vagudle"
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        versionCode 23
-        versionName "0.13.0"
+        versionCode 24
+        versionName "0.13.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'

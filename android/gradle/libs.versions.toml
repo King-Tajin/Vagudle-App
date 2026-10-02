@@ -19,7 +19,6 @@ playServicesGamesV2 = "22.1.0"
 review = "2.0.2"
 versionCatalogUpdate = "1.1.1"
 workRuntimeKtx = "2.12.0"
-compileSdk = "37"
 
 [libraries]
 app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdate" }

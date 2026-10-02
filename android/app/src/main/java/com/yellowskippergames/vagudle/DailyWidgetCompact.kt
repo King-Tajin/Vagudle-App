@@ -40,6 +40,8 @@ internal fun CompactPanelContent(
         RoundedZoneBox(
             width = leftZoneWidth,
             height = innerHeight,
+            modifier = GlanceModifier.fillMaxHeight(),
+            flexibleHeight = true,
             fillColor = SLATE_ARGB,
             topLeftRadius = 13.dp.scaled(scale.visual),
             topRightRadius = 6.dp.scaled(scale.visual),
@@ -61,6 +63,9 @@ internal fun CompactPanelContent(
         RoundedZoneBox(
             width = rightZoneWidth,
             height = innerHeight,
+            modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
+            flexibleWidth = true,
+            flexibleHeight = true,
             fillColor = NEAR_BLACK_ARGB,
             topLeftRadius = 6.dp.scaled(scale.visual),
             topRightRadius = 13.dp.scaled(scale.visual),

@@ -15,7 +15,6 @@
     "format:check": "prettier --check \"overrides/**/*.{ts,tsx,js,jsx,css,html,md}\" \"scripts/**/*.js\" \"*.{json,js,cjs,md,ts}\" \"android/**/*.java\" \"android/app/src/main/AndroidManifest.xml\" \"android/app/src/main/res/**/*.xml\" \".github/workflows/*.yml\" \"pnpm-workspace.yaml\" && node scripts/gradle.js ktlintCheck"
   },
   "dependencies": {
-    "@capacitor-community/safe-area": "^8.0.1",
     "@capacitor-firebase/app": "^8.5.2",
     "@capacitor-firebase/authentication": "^8.5.2",
     "@capacitor-firebase/crashlytics": "^8.5.2",

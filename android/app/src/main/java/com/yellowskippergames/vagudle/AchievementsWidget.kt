@@ -20,7 +20,6 @@ import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.width
 import kotlin.math.sqrt
@@ -85,7 +84,9 @@ private fun AchievementsWidgetContent(
             bottomRightRadius = outerRadius,
             bottomLeftRadius = outerRadius,
             density = density,
-            modifier = GlanceModifier.clickable(openApp),
+            modifier = GlanceModifier.fillMaxSize().clickable(openApp),
+            flexibleWidth = true,
+            flexibleHeight = true,
         ) {
             Box(
                 modifier = GlanceModifier.fillMaxSize().padding(vertical = borderThickness),
@@ -94,7 +95,7 @@ private fun AchievementsWidgetContent(
                 Row(modifier = GlanceModifier.fillMaxSize()) {
                     Spacer(modifier = GlanceModifier.width(borderThickness).fillMaxHeight())
                     Box(
-                        modifier = GlanceModifier.width(innerWidth).height(innerHeight),
+                        modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
                         contentAlignment = Alignment.Center,
                     ) {
                         if (isExpanded) {

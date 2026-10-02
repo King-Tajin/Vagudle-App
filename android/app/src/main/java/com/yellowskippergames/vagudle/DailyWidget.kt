@@ -95,7 +95,9 @@ private fun DailyWidgetContent(
             bottomRightRadius = outerRadius,
             bottomLeftRadius = outerRadius,
             density = density,
-            modifier = GlanceModifier.clickable(actionStartActivity(openDailyIntent(context))),
+            modifier = GlanceModifier.fillMaxSize().clickable(actionStartActivity(openDailyIntent(context))),
+            flexibleWidth = true,
+            flexibleHeight = true,
         ) {
             Box(
                 modifier = GlanceModifier.fillMaxSize().padding(vertical = borderThickness),
@@ -104,7 +106,7 @@ private fun DailyWidgetContent(
                 Row(modifier = GlanceModifier.fillMaxSize()) {
                     Spacer(modifier = GlanceModifier.width(borderThickness).fillMaxHeight())
                     Box(
-                        modifier = GlanceModifier.width(innerWidth).height(innerHeight),
+                        modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
                         contentAlignment = Alignment.Center,
                     ) {
                         if (data == null) {
@@ -153,6 +155,9 @@ private fun EmptyState(
         bottomLeftRadius = cornerRadius,
         density = density,
         contentAlignment = Alignment.Center,
+        modifier = GlanceModifier.fillMaxSize(),
+        flexibleWidth = true,
+        flexibleHeight = true,
     ) {
         Column(horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
             Text(

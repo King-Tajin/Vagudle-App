@@ -71,6 +71,8 @@ internal fun RoundedZoneBox(
     strokeColor: Int = 0,
     contentAlignment: Alignment = Alignment.Center,
     modifier: GlanceModifier = GlanceModifier,
+    flexibleWidth: Boolean = false,
+    flexibleHeight: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val bitmap =
@@ -85,8 +87,10 @@ internal fun RoundedZoneBox(
             strokeWidthPx = dpToPx(strokeWidth, density).let { if (strokeWidth.value > 0f) it else 0 },
             strokeColor = strokeColor,
         )
+    val withWidth = if (flexibleWidth) modifier else modifier.width(width)
+    val sized = if (flexibleHeight) withWidth else withWidth.height(height)
     Box(
-        modifier = modifier.width(width).height(height).background(ImageProvider(bitmap)),
+        modifier = sized.background(ImageProvider(bitmap)),
         contentAlignment = contentAlignment,
     ) {
         content()

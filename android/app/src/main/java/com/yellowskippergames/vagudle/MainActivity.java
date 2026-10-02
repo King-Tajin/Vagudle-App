@@ -63,6 +63,7 @@ public class MainActivity extends BridgeActivity {
     registerPlugin(ReviewPromptPlugin.class);
     registerPlugin(WidgetSyncPlugin.class);
     registerPlugin(BackNavigationPlugin.class);
+    registerPlugin(AppInsetsPlugin.class);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
       predictiveBackCallback = new OnBackAnimationCallback() {
@@ -113,6 +114,13 @@ public class MainActivity extends BridgeActivity {
       getActionBar().hide();
     }
     getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+
+    PluginHandle appInsetsPluginHandle = getBridge().getPlugin("AppInsets");
+    if (appInsetsPluginHandle != null) {
+      (
+        (AppInsetsPlugin) appInsetsPluginHandle.getInstance()
+      ).installInsetsListener();
+    }
 
     PluginHandle backNavigationPluginHandle = getBridge().getPlugin(
       "BackNavigation"

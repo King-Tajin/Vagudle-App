@@ -1,6 +1,7 @@
 export const HARD_MODE_MAX_CHALLENGES = 9;
 export const NORMAL_MODE_MAX_CHALLENGES = 11;
 export const ALERT_TIME_MS = 2500;
+export const LOSS_ALERT_TIME_MS = 6500;
 export const REVEAL_TIME_MS = 350;
 export const WELCOME_INFO_MODAL_MS = 350;
 export const MIN_LOADING_WORDS_TIME_MS = 250;
