@@ -86,6 +86,22 @@
         </receiver>
 
         <receiver
+      android:name=".StatsWidgetReceiver"
+      android:exported="false"
+      android:label="@string/stats_widget_label"
+    >
+            <intent-filter>
+                <action
+          android:name="android.appwidget.action.APPWIDGET_UPDATE"
+        />
+            </intent-filter>
+            <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/stats_widget_info"
+      />
+        </receiver>
+
+        <receiver
       android:name=".DailyRefreshReceiver"
       android:exported="false"
     />

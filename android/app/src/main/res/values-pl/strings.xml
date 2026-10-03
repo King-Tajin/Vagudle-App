@@ -82,4 +82,14 @@
     <string
     name="widget_achievements_content_description"
   >Osiągnięcia: %1$d z %2$d</string>
+    <string name="stats_widget_label">Statystyki</string>
+    <string
+    name="stats_widget_description"
+  >Zobacz skuteczność w trybie normalnym i trudnym, liczbę prób i serie.</string>
+    <string name="widget_stats_games">GRY</string>
+    <string name="widget_stats_guess_distribution">LICZBA PRÓB</string>
+    <string name="widget_stats_streaks">SERIE</string>
+    <string
+    name="widget_stats_content_description"
+  >Statystyki: %1$d gier, normalny %2$d%%, trudny %3$d%%</string>
 </resources>

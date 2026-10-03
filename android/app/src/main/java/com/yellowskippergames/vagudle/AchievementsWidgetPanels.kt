@@ -45,20 +45,15 @@ private fun rightPanel(
 ): RightPanel {
     val data = viewState.data
     return when {
-        data == null && viewState.setupFailed ->
+        data == null -> {
+            val message = widgetMessage(context, viewState.setupFailed)
             RightPanel(
                 label = null,
-                title = context.getString(R.string.widget_setup_retry),
-                titleColor = NOT_PLAYED_RED,
-                subtitle = context.getString(R.string.widget_setup_retry_subtitle),
+                title = message.title,
+                titleColor = if (message.isError) NOT_PLAYED_RED else GOLD,
+                subtitle = message.subtitle,
             )
-        data == null ->
-            RightPanel(
-                label = null,
-                title = context.getString(R.string.widget_empty_state),
-                titleColor = GOLD,
-                subtitle = context.getString(R.string.widget_empty_state_subtitle),
-            )
+        }
         data.isComplete ->
             RightPanel(
                 label = context.getString(R.string.widget_achievements_complete),
@@ -93,20 +88,17 @@ internal fun AchievementsCompactContent(
     context: Context,
     viewState: AchievementsWidgetViewState,
     scale: WidgetScale,
-    innerWidth: Dp,
-    innerHeight: Dp,
-    innerRadius: Dp,
-    density: Float,
+    frame: WidgetFrame,
 ) {
     RoundedZoneBox(
-        width = innerWidth,
-        height = innerHeight,
+        width = frame.innerWidth,
+        height = frame.innerHeight,
         fillColor = SLATE_ARGB,
-        topLeftRadius = innerRadius,
-        topRightRadius = innerRadius,
-        bottomRightRadius = innerRadius,
-        bottomLeftRadius = innerRadius,
-        density = density,
+        topLeftRadius = frame.innerRadius,
+        topRightRadius = frame.innerRadius,
+        bottomRightRadius = frame.innerRadius,
+        bottomLeftRadius = frame.innerRadius,
+        density = frame.density,
         modifier = GlanceModifier.fillMaxSize(),
         flexibleWidth = true,
         flexibleHeight = true,
@@ -114,8 +106,8 @@ internal fun AchievementsCompactContent(
         AchievementsCoin(
             context = context,
             model = coinModel(context, viewState),
-            scale = minOf(scale.visual, innerWidth.value / COIN_BOX_DP, innerHeight.value / COIN_BOX_DP),
-            density = density,
+            scale = minOf(scale.visual, frame.innerWidth.value / COIN_BOX_DP, frame.innerHeight.value / COIN_BOX_DP),
+            density = frame.density,
         )
     }
 }
@@ -125,50 +117,55 @@ internal fun AchievementsExpandedContent(
     context: Context,
     viewState: AchievementsWidgetViewState,
     scale: WidgetScale,
-    innerWidth: Dp,
-    innerHeight: Dp,
-    innerRadius: Dp,
-    density: Float,
+    frame: WidgetFrame,
 ) {
-    val gapWidth = 3.dp.scaled(scale.visual)
-    val leftZoneWidth = minOf(innerHeight * (50f / 34f), innerWidth * 0.36f)
-    val rightZoneWidth = innerWidth - leftZoneWidth - gapWidth
-    val inwardRadius = 6.dp.scaled(scale.visual)
+    val split = widgetSplitLayout(frame.innerWidth, frame.innerHeight, scale.visual)
     Row(modifier = GlanceModifier.fillMaxSize()) {
         RoundedZoneBox(
-            width = leftZoneWidth,
-            height = innerHeight,
+            width = split.leftWidth,
+            height = frame.innerHeight,
             modifier = GlanceModifier.fillMaxHeight(),
             flexibleHeight = true,
             fillColor = SLATE_ARGB,
-            topLeftRadius = innerRadius,
-            topRightRadius = inwardRadius,
-            bottomRightRadius = inwardRadius,
-            bottomLeftRadius = innerRadius,
-            density = density,
+            topLeftRadius = frame.innerRadius,
+            topRightRadius = split.inwardRadius,
+            bottomRightRadius = split.inwardRadius,
+            bottomLeftRadius = frame.innerRadius,
+            density = frame.density,
         ) {
             AchievementsCoin(
                 context = context,
                 model = coinModel(context, viewState),
-                scale = minOf(scale.visual, leftZoneWidth.value / COIN_BOX_DP, innerHeight.value / COIN_BOX_DP),
-                density = density,
+                scale =
+                    minOf(
+                        scale.visual,
+                        split.leftWidth.value / COIN_BOX_DP,
+                        frame.innerHeight.value / COIN_BOX_DP,
+                    ),
+                density = frame.density,
             )
         }
-        Spacer(modifier = GlanceModifier.width(gapWidth).fillMaxHeight())
+        Spacer(modifier = GlanceModifier.width(split.gap).fillMaxHeight())
         RoundedZoneBox(
-            width = rightZoneWidth,
-            height = innerHeight,
+            width = split.rightWidth,
+            height = frame.innerHeight,
             modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
             flexibleWidth = true,
             flexibleHeight = true,
             fillColor = NEAR_BLACK_ARGB,
-            topLeftRadius = inwardRadius,
-            topRightRadius = innerRadius,
-            bottomRightRadius = innerRadius,
-            bottomLeftRadius = inwardRadius,
-            density = density,
+            topLeftRadius = split.inwardRadius,
+            topRightRadius = frame.innerRadius,
+            bottomRightRadius = frame.innerRadius,
+            bottomLeftRadius = split.inwardRadius,
+            density = frame.density,
         ) {
-            AchievementsRightZone(rightPanel(context, viewState), rightZoneWidth, innerHeight, scale, density)
+            AchievementsRightZone(
+                rightPanel(context, viewState),
+                split.rightWidth,
+                frame.innerHeight,
+                scale,
+                frame.density,
+            )
         }
     }
 }

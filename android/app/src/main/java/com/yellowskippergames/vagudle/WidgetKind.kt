@@ -8,6 +8,8 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import org.json.JSONObject
 
+private const val WEB_ORIGIN = "https://vagudle.king-tajin.dev"
+
 interface WidgetHandler {
     fun sync(
         context: Context,
@@ -21,6 +23,7 @@ interface WidgetHandler {
 
 enum class WidgetKind(
     val key: String,
+    val deepLinkUrl: String,
     private val prefsName: String,
     private val receiverClass: Class<out GlanceAppWidgetReceiver>,
     private val widgetFactory: () -> GlanceAppWidget,
@@ -28,6 +31,7 @@ enum class WidgetKind(
 ) {
     DAILY(
         key = "daily",
+        deepLinkUrl = "$WEB_ORIGIN/daily",
         prefsName = DAILY_WIDGET_PREFS_NAME,
         receiverClass = DailyWidgetReceiver::class.java,
         widgetFactory = { DailyWidget() },
@@ -35,10 +39,19 @@ enum class WidgetKind(
     ),
     ACHIEVEMENTS(
         key = "achievements",
+        deepLinkUrl = "$WEB_ORIGIN/?achievement=",
         prefsName = ACHIEVEMENTS_WIDGET_PREFS_NAME,
         receiverClass = AchievementsWidgetReceiver::class.java,
         widgetFactory = { AchievementsWidget() },
         handler = AchievementsWidgetHandler,
+    ),
+    STATS(
+        key = "stats",
+        deepLinkUrl = "$WEB_ORIGIN/?stats=1",
+        prefsName = STATS_WIDGET_PREFS_NAME,
+        receiverClass = StatsWidgetReceiver::class.java,
+        widgetFactory = { StatsWidget() },
+        handler = StatsWidgetHandler,
     ),
     ;
 

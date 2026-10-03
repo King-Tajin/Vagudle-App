@@ -3,9 +3,7 @@ package com.yellowskippergames.vagudle
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import org.json.JSONObject
 import java.time.Instant
 import java.time.LocalDate
@@ -172,7 +170,7 @@ fun markRefreshAttemptNow(prefs: SharedPreferences) {
 }
 
 fun loadDailyWidgetData(context: Context): DailyWidgetData? {
-    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+    val prefs = WidgetKind.DAILY.prefs(context)
     val date = prefs.getString(KEY_DATE, null) ?: return null
     val rankStatus =
         try {
@@ -201,27 +199,10 @@ fun loadDailyWidgetData(context: Context): DailyWidgetData? {
     )
 }
 
-data class DailyWidgetViewState(
-    val data: DailyWidgetData?,
-    val setupFailed: Boolean,
-)
+typealias DailyWidgetViewState = WidgetViewState<DailyWidgetData>
 
-fun loadDailyWidgetViewState(context: Context): DailyWidgetViewState {
-    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
-    return DailyWidgetViewState(
-        data = loadDailyWidgetData(context),
-        setupFailed = hasWidgetSyncFailed(prefs),
-    )
-}
+fun loadDailyWidgetViewState(context: Context): DailyWidgetViewState =
+    loadWidgetViewState(context, WidgetKind.DAILY, ::loadDailyWidgetData)
 
 fun dailyWidgetViewStateUpdates(context: Context): Flow<DailyWidgetViewState> =
-    callbackFlow {
-        val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
-        trySend(loadDailyWidgetViewState(context))
-        val listener =
-            SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
-                trySend(loadDailyWidgetViewState(context))
-            }
-        prefs.registerOnSharedPreferenceChangeListener(listener)
-        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
-    }
+    widgetViewStateUpdates(context, WidgetKind.DAILY, ::loadDailyWidgetData)

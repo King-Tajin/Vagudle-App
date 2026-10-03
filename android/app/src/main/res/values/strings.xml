@@ -94,4 +94,14 @@
     <string
     name="widget_achievements_content_description"
   >Achievements %1$d of %2$d</string>
+    <string name="stats_widget_label">Statistics</string>
+    <string
+    name="stats_widget_description"
+  >See your Normal and Hard win rates, guess distribution, and streaks.</string>
+    <string name="widget_stats_games">GAMES</string>
+    <string name="widget_stats_guess_distribution">GUESS DISTRIBUTION</string>
+    <string name="widget_stats_streaks">STREAKS</string>
+    <string
+    name="widget_stats_content_description"
+  >Statistics: %1$d games, Normal %2$d%%, Hard %3$d%%</string>
 </resources>

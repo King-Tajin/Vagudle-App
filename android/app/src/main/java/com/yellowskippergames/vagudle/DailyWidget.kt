@@ -5,31 +5,30 @@ import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalSize
-import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
 import androidx.glance.layout.Column
-import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.height
-import androidx.glance.layout.padding
-import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import kotlin.math.sqrt
+
+internal val SIZE_COMPACT = DpSize(180.dp, 40.dp)
+internal val SIZE_EXPANDED = DpSize(180.dp, 110.dp)
+internal val COMPACT_ASPECT = SIZE_COMPACT.height.value / SIZE_COMPACT.width.value
+internal val EXPANDED_ASPECT = SIZE_EXPANDED.height.value / SIZE_EXPANDED.width.value
+internal val EXPANDED_ASPECT_THRESHOLD = (COMPACT_ASPECT + EXPANDED_ASPECT) / 2f
 
 class DailyWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
@@ -46,7 +45,7 @@ class DailyWidget : GlanceAppWidget() {
     }
 }
 
-internal fun openDailyIntent(context: Context): Intent = openWidgetIntent(context, WidgetKind.DAILY, DEEP_LINK_URL)
+internal fun openDailyIntent(context: Context): Intent = openWidgetIntent(context, WidgetKind.DAILY)
 
 @Composable
 private fun DailyWidgetContent(
@@ -54,13 +53,7 @@ private fun DailyWidgetContent(
     viewState: DailyWidgetViewState,
 ) {
     val data = viewState.data
-    val reportedSize = LocalSize.current
-    val edgeSafeMargin = 3.dp
-    val size =
-        DpSize(
-            width = (reportedSize.width - edgeSafeMargin * 2).coerceAtLeast(1.dp),
-            height = (reportedSize.height - edgeSafeMargin * 2).coerceAtLeast(1.dp),
-        )
+    val size = edgeSafeSize(LocalSize.current)
     val isExpanded = (size.height.value / size.width.value) >= EXPANDED_ASPECT_THRESHOLD
     val reference = if (isExpanded) SIZE_EXPANDED else SIZE_COMPACT
     val widthScale = size.width.value / reference.width.value
@@ -73,55 +66,17 @@ private fun DailyWidgetContent(
             visual = sqrt(widthScale * heightScale),
             textBoost = textBoost,
         )
-    val density = context.resources.displayMetrics.density
-    val borderThickness = 3.dp.scaled(scale.visual)
-    val innerWidth = size.width - borderThickness * 2
-    val innerHeight = size.height - borderThickness * 2
-    val fallbackOuterRadius =
-        (if (isExpanded) 15.dp else 16.dp).scaled(scale.visual).coerceAtLeast(MIN_OUTER_CORNER_RADIUS)
-    val outerRadius = systemWidgetCornerRadius(context, density) ?: fallbackOuterRadius
-    val innerRadius = (outerRadius - borderThickness).coerceAtLeast(MIN_INNER_CORNER_RADIUS)
+    val frame = widgetFrame(context, size, scale.visual, if (isExpanded) 15.dp else 16.dp)
 
-    Box(
-        modifier = GlanceModifier.fillMaxSize().padding(edgeSafeMargin),
-        contentAlignment = Alignment.Center,
-    ) {
-        RoundedZoneBox(
-            width = size.width,
-            height = size.height,
-            fillColor = GOLD_ARGB,
-            topLeftRadius = outerRadius,
-            topRightRadius = outerRadius,
-            bottomRightRadius = outerRadius,
-            bottomLeftRadius = outerRadius,
-            density = density,
-            modifier = GlanceModifier.fillMaxSize().clickable(actionStartActivity(openDailyIntent(context))),
-            flexibleWidth = true,
-            flexibleHeight = true,
-        ) {
-            Box(
-                modifier = GlanceModifier.fillMaxSize().padding(vertical = borderThickness),
-                contentAlignment = Alignment.Center,
-            ) {
-                Row(modifier = GlanceModifier.fillMaxSize()) {
-                    Spacer(modifier = GlanceModifier.width(borderThickness).fillMaxHeight())
-                    Box(
-                        modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        if (data == null) {
-                            EmptyState(context, innerWidth, innerHeight, innerRadius, density, viewState.setupFailed)
-                        } else {
-                            val isFresh = data.date == currentDailyDateUtc()
-                            if (isExpanded) {
-                                ExpandedPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
-                            } else {
-                                CompactPanelContent(context, data, isFresh, scale, innerWidth, innerHeight)
-                            }
-                        }
-                    }
-                    Spacer(modifier = GlanceModifier.width(borderThickness).fillMaxHeight())
-                }
+    WidgetFrameBox(frame, actionStartActivity(openDailyIntent(context))) {
+        if (data == null) {
+            EmptyState(context, frame, viewState.setupFailed)
+        } else {
+            val isFresh = data.date == currentDailyDateUtc()
+            if (isExpanded) {
+                ExpandedPanelContent(context, data, isFresh, scale, frame.innerWidth, frame.innerHeight)
+            } else {
+                CompactPanelContent(context, data, isFresh, scale, frame.innerWidth, frame.innerHeight)
             }
         }
     }
@@ -130,30 +85,25 @@ private fun DailyWidgetContent(
 @Composable
 private fun EmptyState(
     context: Context,
-    width: Dp,
-    height: Dp,
-    cornerRadius: Dp,
-    density: Float,
+    frame: WidgetFrame,
     setupFailed: Boolean,
 ) {
-    val titleText = context.getString(if (setupFailed) R.string.widget_setup_retry else R.string.widget_empty_state)
-    val subtitleText =
-        context.getString(
-            if (setupFailed) R.string.widget_setup_retry_subtitle else R.string.widget_empty_state_subtitle,
-        )
-    val titleFontSize = fitTextSp(width, height, titleText.length, heightFraction = 0.32f, minSp = 6f, maxSp = 22f)
+    val width = frame.innerWidth
+    val height = frame.innerHeight
+    val message = widgetMessage(context, setupFailed)
+    val titleFontSize = fitTextSp(width, height, message.title.length, heightFraction = 0.32f, minSp = 6f, maxSp = 22f)
     val subtitleFontSize =
-        fitTextSp(width, height, subtitleText.length, heightFraction = 0.2f, minSp = 5f, maxSp = 16f)
+        fitTextSp(width, height, message.subtitle.length, heightFraction = 0.2f, minSp = 5f, maxSp = 16f)
 
     RoundedZoneBox(
         width = width,
         height = height,
         fillColor = NEAR_BLACK_ARGB,
-        topLeftRadius = cornerRadius,
-        topRightRadius = cornerRadius,
-        bottomRightRadius = cornerRadius,
-        bottomLeftRadius = cornerRadius,
-        density = density,
+        topLeftRadius = frame.innerRadius,
+        topRightRadius = frame.innerRadius,
+        bottomRightRadius = frame.innerRadius,
+        bottomLeftRadius = frame.innerRadius,
+        density = frame.density,
         contentAlignment = Alignment.Center,
         modifier = GlanceModifier.fillMaxSize(),
         flexibleWidth = true,
@@ -161,13 +111,13 @@ private fun EmptyState(
     ) {
         Column(horizontalAlignment = Alignment.Horizontal.CenterHorizontally) {
             Text(
-                text = titleText,
+                text = message.title,
                 style = TextStyle(fontWeight = FontWeight.Bold, fontSize = titleFontSize, color = GOLD),
                 maxLines = 1,
             )
             Spacer(modifier = GlanceModifier.height((height.value * 0.06f).dp.coerceAtLeast(2.dp)))
             Text(
-                text = subtitleText,
+                text = message.subtitle,
                 style = TextStyle(fontWeight = FontWeight.Bold, fontSize = subtitleFontSize, color = GOLD),
                 maxLines = 1,
             )

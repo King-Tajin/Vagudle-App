@@ -3,9 +3,7 @@ package com.yellowskippergames.vagudle
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import org.json.JSONObject
 
 const val ACHIEVEMENTS_WIDGET_PREFS_NAME = "vagudle_achievements_widget_prefs"
@@ -80,34 +78,10 @@ fun loadAchievementsWidgetData(context: Context): AchievementsWidgetData? {
     )
 }
 
-data class AchievementsWidgetViewState(
-    val data: AchievementsWidgetData?,
-    val setupFailed: Boolean,
-)
+typealias AchievementsWidgetViewState = WidgetViewState<AchievementsWidgetData>
 
 fun loadAchievementsWidgetViewState(context: Context): AchievementsWidgetViewState =
-    AchievementsWidgetViewState(
-        data = loadAchievementsWidgetData(context),
-        setupFailed = hasWidgetSyncFailed(WidgetKind.ACHIEVEMENTS.prefs(context)),
-    )
+    loadWidgetViewState(context, WidgetKind.ACHIEVEMENTS, ::loadAchievementsWidgetData)
 
 fun achievementsWidgetViewStateUpdates(context: Context): Flow<AchievementsWidgetViewState> =
-    callbackFlow {
-        val prefs = WidgetKind.ACHIEVEMENTS.prefs(context)
-        trySend(loadAchievementsWidgetViewState(context))
-        val listener =
-            SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
-                trySend(loadAchievementsWidgetViewState(context))
-            }
-        prefs.registerOnSharedPreferenceChangeListener(listener)
-        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
-    }
-
-internal object AchievementsWidgetHandler : WidgetHandler {
-    override fun sync(
-        context: Context,
-        payload: JSONObject,
-    ) {
-        saveAchievementsWidgetData(WidgetKind.ACHIEVEMENTS.prefs(context), parseAchievementsWidgetPayload(payload))
-    }
-}
+    widgetViewStateUpdates(context, WidgetKind.ACHIEVEMENTS, ::loadAchievementsWidgetData)

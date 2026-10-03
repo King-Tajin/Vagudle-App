@@ -35,7 +35,7 @@ class DailyRefreshReceiver : BroadcastReceiver() {
 }
 
 private fun performDailyRefresh(context: Context) {
-    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+    val prefs = WidgetKind.DAILY.prefs(context)
     try {
         rolloverIfNeeded(context)
         refreshRank(context)
@@ -50,7 +50,7 @@ fun refreshWidgetDataIfStale(context: Context) {
     CoroutineScope(Dispatchers.IO).launch {
         try {
             val data = loadDailyWidgetData(appContext) ?: return@launch
-            val prefs = appContext.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+            val prefs = WidgetKind.DAILY.prefs(appContext)
             val isDateStale = data.date != currentDailyDateUtc()
             val isOverdue = System.currentTimeMillis() - lastRefreshAttemptAt(prefs) >= MIN_SELF_HEAL_INTERVAL_MS
             if (!isDateStale && !isOverdue) return@launch
@@ -64,7 +64,7 @@ private fun rolloverIfNeeded(context: Context) {
     val previous = loadDailyWidgetData(context) ?: return
     val today = currentDailyDateUtc()
     if (previous.date == today) return
-    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+    val prefs = WidgetKind.DAILY.prefs(context)
     saveDailyWidgetData(prefs, rolledOverDailyWidgetData(previous, today))
     requestWidgetUpdate(context, WidgetKind.DAILY)
 }
@@ -80,7 +80,7 @@ private fun refreshRank(context: Context) {
 
     val rank = fetchDailyLeaderboardRank(idToken) ?: return
     val current = loadDailyWidgetData(context) ?: return
-    val prefs = context.getSharedPreferences(DAILY_WIDGET_PREFS_NAME, Context.MODE_PRIVATE)
+    val prefs = WidgetKind.DAILY.prefs(context)
     saveDailyWidgetData(prefs, current.copy(rank = rank))
     requestWidgetUpdate(context, WidgetKind.DAILY)
 }

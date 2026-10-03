@@ -51,16 +51,11 @@ fun clearWidgetSetupFailure(
 internal fun openWidgetIntent(
     context: Context,
     kind: WidgetKind,
-    deepLinkUrl: String? = null,
+    deepLinkUrl: String = kind.deepLinkUrl,
 ): Intent {
     val needsQuickSetup = !isWidgetFirstSyncCompleted(kind.prefs(context))
-    val launchIntent =
-        if (deepLinkUrl == null) context.packageManager.getLaunchIntentForPackage(context.packageName) else null
-    val baseIntent =
-        launchIntent ?: Intent(Intent.ACTION_VIEW, (deepLinkUrl ?: DEEP_LINK_URL).toUri()).apply {
-            setPackage(context.packageName)
-        }
-    return baseIntent.apply {
+    return Intent(Intent.ACTION_VIEW, deepLinkUrl.toUri()).apply {
+        setPackage(context.packageName)
         if (needsQuickSetup) {
             putExtra(EXTRA_QUICK_WIDGET_SETUP, true)
             putExtra(EXTRA_QUICK_WIDGET_SETUP_KIND, kind.key)

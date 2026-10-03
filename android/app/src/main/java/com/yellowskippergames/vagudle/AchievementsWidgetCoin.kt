@@ -36,7 +36,6 @@ private const val PILL_CHAR_WIDTH = 3.64f
 private const val PILL_PADDING = 5f
 private const val COUNT_BASELINE = 31.2f
 private const val COUNT_TEXT_SIZE = 6.5f
-private const val FAILED_TRACK_ARGB = 0xFFC41E3A.toInt()
 private const val WHITE_ARGB = 0xFFFFFFFF.toInt()
 
 internal data class CoinModel(
@@ -54,7 +53,7 @@ internal fun coinModel(
     val label = context.getString(R.string.achievements_widget_label)
     return when (data) {
         null if viewState.setupFailed ->
-            CoinModel(context.getString(R.string.widget_achievements_retry), 0f, FAILED_TRACK_ARGB, label)
+            CoinModel(context.getString(R.string.widget_achievements_retry), 0f, NOT_PLAYED_RED_ARGB, label)
         null ->
             CoinModel(context.getString(R.string.widget_achievements_tap), 0f, PLAQUE_BORDER_ARGB, label)
         else ->
