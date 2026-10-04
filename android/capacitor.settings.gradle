@@ -12,10 +12,10 @@ include ':capacitor-firebase-crashlytics'
 project(':capacitor-firebase-crashlytics').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+crashlytics@8.5.2_@capacitor+core@8.5.2/node_modules/@capacitor-firebase/crashlytics/android')
 
 include ':capacitor-app'
-project(':capacitor-app').projectDir = new File('../node_modules/.pnpm/@capacitor+app@8.1.1_@capacitor+core@8.5.2/node_modules/@capacitor/app/android')
+project(':capacitor-app').projectDir = new File('../node_modules/.pnpm/@capacitor+app@8.1.2_@capacitor+core@8.5.2/node_modules/@capacitor/app/android')
 
 include ':capacitor-browser'
-project(':capacitor-browser').projectDir = new File('../node_modules/.pnpm/@capacitor+browser@8.0.4_@capacitor+core@8.5.2/node_modules/@capacitor/browser/android')
+project(':capacitor-browser').projectDir = new File('../node_modules/.pnpm/@capacitor+browser@8.0.5_@capacitor+core@8.5.2/node_modules/@capacitor/browser/android')
 
 include ':capacitor-haptics'
 project(':capacitor-haptics').projectDir = new File('../node_modules/.pnpm/@capacitor+haptics@8.0.1_@capacitor+core@8.5.2/node_modules/@capacitor/haptics/android')
@@ -27,4 +27,4 @@ include ':capacitor-network'
 project(':capacitor-network').projectDir = new File('../node_modules/.pnpm/@capacitor+network@8.0.1_@capacitor+core@8.5.2/node_modules/@capacitor/network/android')
 
 include ':capacitor-share'
-project(':capacitor-share').projectDir = new File('../node_modules/.pnpm/@capacitor+share@8.0.2_@capacitor+core@8.5.2/node_modules/@capacitor/share/android')
+project(':capacitor-share').projectDir = new File('../node_modules/.pnpm/@capacitor+share@8.0.3_@capacitor+core@8.5.2/node_modules/@capacitor/share/android')
