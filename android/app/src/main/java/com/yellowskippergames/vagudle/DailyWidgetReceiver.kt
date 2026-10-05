@@ -4,6 +4,10 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import com.yellowskippergames.vagudle.widget.core.WidgetResizeTipNotifier
+import com.yellowskippergames.vagudle.widget.daily.DailyWidget
+import com.yellowskippergames.vagudle.widget.daily.cancelDailyRefresh
+import com.yellowskippergames.vagudle.widget.daily.scheduleDailyRefresh
 
 class DailyWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = DailyWidget()

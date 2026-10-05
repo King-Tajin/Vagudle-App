@@ -5,6 +5,17 @@ import android.content.Context
 import android.content.Intent
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
+import com.yellowskippergames.vagudle.widget.core.WidgetKind
+import com.yellowskippergames.vagudle.widget.core.requestWidgetUpdate
+import com.yellowskippergames.vagudle.widget.daily.DailyWidgetRank
+import com.yellowskippergames.vagudle.widget.daily.DailyWidgetRankStatus
+import com.yellowskippergames.vagudle.widget.daily.currentDailyDateUtc
+import com.yellowskippergames.vagudle.widget.daily.lastRefreshAttemptAt
+import com.yellowskippergames.vagudle.widget.daily.loadDailyWidgetData
+import com.yellowskippergames.vagudle.widget.daily.markRefreshAttemptNow
+import com.yellowskippergames.vagudle.widget.daily.rolledOverDailyWidgetData
+import com.yellowskippergames.vagudle.widget.daily.saveDailyWidgetData
+import com.yellowskippergames.vagudle.widget.daily.scheduleDailyRefresh
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

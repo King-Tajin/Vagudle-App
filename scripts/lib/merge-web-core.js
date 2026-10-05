@@ -16,7 +16,14 @@ const SYNC_EXCLUDES = new Set([
   ".eslintcache",
 ]);
 
-const SERVER_ONLY = ["functions", "migrations", "wrangler.toml", "workers"];
+const SERVER_ONLY = [
+  "functions",
+  "migrations",
+  "wrangler.toml",
+  "workers",
+  "docs",
+  path.join("public", "docs"),
+];
 
 const INSET_ENV_PATTERN =
   /env\(\s*safe-area-inset-(top|right|bottom|left)\s*(?:,[^)]*)?\)/g;

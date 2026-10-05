@@ -4,6 +4,8 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import com.yellowskippergames.vagudle.widget.core.WidgetResizeTipNotifier
+import com.yellowskippergames.vagudle.widget.stats.StatsWidget
 
 class StatsWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = StatsWidget()

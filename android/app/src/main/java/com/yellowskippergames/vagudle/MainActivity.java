@@ -34,6 +34,16 @@ import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.install.model.UpdateAvailability;
+import com.yellowskippergames.vagudle.plugins.AppInsetsPlugin;
+import com.yellowskippergames.vagudle.plugins.BackNavigationPlugin;
+import com.yellowskippergames.vagudle.plugins.NotificationPrimerPlugin;
+import com.yellowskippergames.vagudle.plugins.PlayGamesAuthPlugin;
+import com.yellowskippergames.vagudle.plugins.ReviewPromptPlugin;
+import com.yellowskippergames.vagudle.plugins.WidgetSyncPlugin;
+import com.yellowskippergames.vagudle.widget.core.WidgetKind;
+import com.yellowskippergames.vagudle.widget.sync.QuickWidgetSetupState;
+import com.yellowskippergames.vagudle.widget.sync.WidgetSyncNotifier;
+import com.yellowskippergames.vagudle.widget.sync.WidgetSyncStateKt;
 
 public class MainActivity extends BridgeActivity {
 
