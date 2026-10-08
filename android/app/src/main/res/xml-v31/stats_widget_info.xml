@@ -7,8 +7,6 @@
   android:targetCellHeight="2"
   android:resizeMode="horizontal|vertical"
   android:minResizeWidth="250dp"
-  android:minResizeHeight="80dp"
-  android:maxResizeWidth="310dp"
   android:maxResizeHeight="130dp"
   android:widgetCategory="home_screen"
   android:initialLayout="@layout/glance_default_loading_layout"

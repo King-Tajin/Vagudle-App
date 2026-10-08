@@ -25,6 +25,21 @@ window.fetch = (input, init?) => {
 };
 
 const DEEP_LINK_HOST = "vagudle.king-tajin.dev";
+const HANDLED_LAUNCH_URL_KEY = "vagudle-handled-launch-url";
+
+function wasLaunchUrlHandled(url: string): boolean {
+  try {
+    return sessionStorage.getItem(HANDLED_LAUNCH_URL_KEY) === url;
+  } catch {
+    return false;
+  }
+}
+
+function markLaunchUrlHandled(url: string): void {
+  try {
+    sessionStorage.setItem(HANDLED_LAUNCH_URL_KEY, url);
+  } catch {}
+}
 
 function toLocalPath(url: string): string | null {
   try {
@@ -40,7 +55,8 @@ async function applyColdStartDeepLink(): Promise<boolean> {
   if (!Capacitor.isNativePlatform()) return false;
 
   const launch = await CapacitorApp.getLaunchUrl();
-  if (!launch?.url) return false;
+  if (!launch?.url || wasLaunchUrlHandled(launch.url)) return false;
+  markLaunchUrlHandled(launch.url);
 
   const localPath = toLocalPath(launch.url);
   const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
