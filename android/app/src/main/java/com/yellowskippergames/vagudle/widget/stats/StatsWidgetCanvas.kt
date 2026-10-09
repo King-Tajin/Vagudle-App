@@ -32,6 +32,7 @@ import kotlin.math.sqrt
 internal const val STATS_LEFT_BOX_WIDTH = 88f
 internal const val STATS_RIGHT_BOX_WIDTH = 153f
 internal const val STATS_BOX_HEIGHT = 104f
+private const val MAX_EXTRA_HEIGHT = STATS_BOX_HEIGHT
 private const val MAX_STATS_BITMAP_PIXELS = 600_000f
 private const val LEFT_ORIGIN_X = 3f
 private const val RIGHT_ORIGIN_X = 94f
@@ -105,7 +106,10 @@ private class StatsPainter(
     private val originY: Float,
     private val designX: Float,
     private val font: Typeface?,
+    val extraHeight: Float,
 ) {
+    private var offsetY = 0f
+
     private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = font }
@@ -117,7 +121,17 @@ private class StatsPainter(
 
     private fun px(x: Float) = originX + (x - designX) * unit
 
-    private fun py(y: Float) = originY + (y - ORIGIN_Y) * unit
+    private fun py(y: Float) = originY + (y + offsetY - ORIGIN_Y) * unit
+
+    fun shifted(
+        amount: Float,
+        block: () -> Unit,
+    ) {
+        val previous = offsetY
+        offsetY = previous + amount
+        block()
+        offsetY = previous
+    }
 
     private fun len(value: Float) = value * unit
 
@@ -284,13 +298,15 @@ private fun zonePainter(
     visualUnit: Float,
 ): StatsPainter {
     val unit = minOf(visualUnit, bounds.width() / boxWidth, bounds.height() / STATS_BOX_HEIGHT)
+    val extra = (bounds.height() / unit - STATS_BOX_HEIGHT).coerceIn(0f, MAX_EXTRA_HEIGHT)
     return StatsPainter(
         canvas = canvas,
         unit = unit,
         originX = bounds.left + (bounds.width() - boxWidth * unit) / 2f,
-        originY = bounds.top + (bounds.height() - STATS_BOX_HEIGHT * unit) / 2f,
+        originY = bounds.top + (bounds.height() - (STATS_BOX_HEIGHT + extra) * unit) / 2f,
         designX = designX,
         font = font,
+        extraHeight = extra,
     )
 }
 
@@ -357,14 +373,6 @@ private fun StatsPainter.drawLeft(
 ) {
     val shown = data ?: emptyStatsWidgetData()
     dot(RING_CENTER_X, RING_CENTER_Y, DISC_RADIUS, NEAR_BLACK_ARGB)
-    plate(
-        LEGEND_PLATE_LEFT,
-        LEGEND_PLATE_TOP,
-        LEGEND_PLATE_RIGHT,
-        LEGEND_PLATE_BOTTOM,
-        LEGEND_PLATE_RADIUS,
-        NEAR_BLACK_ARGB,
-    )
     ring(RING_CENTER_X, RING_CENTER_Y, OUTER_RING_RADIUS, shown.normal.successRate / 100f, GOLD_ARGB)
     ring(RING_CENTER_X, RING_CENTER_Y, INNER_RING_RADIUS, shown.hard.successRate / 100f, PLAQUE_BORDER_ARGB)
     fittedText(
@@ -388,22 +396,32 @@ private fun StatsPainter.drawLeft(
         align = Paint.Align.CENTER,
         spacing = spacingEm(0.5f, 5.5f),
     )
-    legend(
-        context,
-        NORMAL_LEGEND_DOT_X,
-        NORMAL_LEGEND_TEXT_X,
-        GOLD_ARGB,
-        shown.normal.successRate,
-        R.string.widget_mode_normal,
-    )
-    legend(
-        context,
-        HARD_LEGEND_DOT_X,
-        HARD_LEGEND_TEXT_X,
-        PLAQUE_BORDER_ARGB,
-        shown.hard.successRate,
-        R.string.widget_mode_hard,
-    )
+    shifted(extraHeight) {
+        plate(
+            LEGEND_PLATE_LEFT,
+            LEGEND_PLATE_TOP,
+            LEGEND_PLATE_RIGHT,
+            LEGEND_PLATE_BOTTOM,
+            LEGEND_PLATE_RADIUS,
+            NEAR_BLACK_ARGB,
+        )
+        legend(
+            context,
+            NORMAL_LEGEND_DOT_X,
+            NORMAL_LEGEND_TEXT_X,
+            GOLD_ARGB,
+            shown.normal.successRate,
+            R.string.widget_mode_normal,
+        )
+        legend(
+            context,
+            HARD_LEGEND_DOT_X,
+            HARD_LEGEND_TEXT_X,
+            PLAQUE_BORDER_ARGB,
+            shown.hard.successRate,
+            R.string.widget_mode_hard,
+        )
+    }
 }
 
 private fun StatsPainter.legend(
@@ -442,9 +460,15 @@ private fun StatsPainter.drawRight(
 ) {
     val data = viewState.data
     if (data == null) {
-        message(context, viewState.setupFailed)
+        shifted(extraHeight / 2f) { message(context, viewState.setupFailed) }
     } else {
-        line(COLUMN_DIVIDER_X, COLUMN_DIVIDER_TOP, COLUMN_DIVIDER_X, COLUMN_DIVIDER_BOTTOM, STATS_DIVIDER_ARGB)
+        line(
+            COLUMN_DIVIDER_X,
+            COLUMN_DIVIDER_TOP,
+            COLUMN_DIVIDER_X,
+            COLUMN_DIVIDER_BOTTOM + extraHeight,
+            STATS_DIVIDER_ARGB,
+        )
         modeColumn(context, data.normal, NORMAL_COLUMN_X, GOLD_ARGB, R.string.widget_mode_normal)
         modeColumn(context, data.hard, HARD_COLUMN_X, PLAQUE_BORDER_ARGB, R.string.widget_mode_hard)
     }
@@ -502,70 +526,77 @@ private fun StatsPainter.modeColumn(
         spacing = spacingEm(0.6f, 6.5f),
     )
 
-    val highest = max(mode.distribution.maxOrNull() ?: 0, 0)
-    val topBucket = mode.mostCommonBucket
-    mode.distribution.forEachIndexed { index, count ->
-        val height = if (highest > 0) max(BAR_MIN_HEIGHT, BAR_MAX_HEIGHT * count / highest) else BAR_MIN_HEIGHT
-        val left = x0 + index * BAR_PITCH
-        bar(left, height, if (index == topBucket) SOLVED_GREEN_ARGB else SLATE_ARGB)
-        text(
-            value = bucketLabel(mode, index),
-            x = left + BAR_WIDTH / 2f,
-            baseline = BAR_LABEL_BASELINE,
-            size = 6f,
+    shifted(extraHeight) {
+        val highest = max(mode.distribution.maxOrNull() ?: 0, 0)
+        val topBucket = mode.mostCommonBucket
+        mode.distribution.forEachIndexed { index, count ->
+            val height =
+                if (highest > 0) {
+                    max(BAR_MIN_HEIGHT, (BAR_MAX_HEIGHT + extraHeight) * count / highest)
+                } else {
+                    BAR_MIN_HEIGHT
+                }
+            val left = x0 + index * BAR_PITCH
+            bar(left, height, if (index == topBucket) SOLVED_GREEN_ARGB else SLATE_ARGB)
+            text(
+                value = bucketLabel(mode, index),
+                x = left + BAR_WIDTH / 2f,
+                baseline = BAR_LABEL_BASELINE,
+                size = 6f,
+                color = MUTED_GRAY_ARGB,
+                align = Paint.Align.CENTER,
+            )
+        }
+
+        fittedText(
+            value = context.getString(R.string.widget_stats_guess_distribution),
+            x = center,
+            baseline = CAPTION_BASELINE,
+            maxSize = 5f,
+            budget = COLUMN_WIDTH,
+            minSize = CAPTION_MIN_SIZE,
             color = MUTED_GRAY_ARGB,
             align = Paint.Align.CENTER,
+            spacing = spacingEm(0.2f, 5f),
+        )
+        line(x0, CAPTION_DIVIDER_Y, x0 + COLUMN_WIDTH, CAPTION_DIVIDER_Y, STATS_RING_TRACK_ARGB)
+
+        icon(ContextCompat.getDrawable(context, R.drawable.ic_widget_flame), x0, FLAME_TOP, FLAME_WIDTH, FLAME_HEIGHT)
+        fittedText(
+            value = mode.currentStreak.toString(),
+            x = x0 + CURRENT_STREAK_OFFSET_X,
+            baseline = STREAK_BASELINE,
+            maxSize = 10f,
+            budget = 20f,
+            minSize = NUMBER_MIN_SIZE,
+            color = TEXT_WHITE_ARGB,
+        )
+        icon(
+            ContextCompat.getDrawable(context, R.drawable.ic_widget_trophy),
+            x0 + TROPHY_OFFSET_X,
+            TROPHY_TOP,
+            TROPHY_SIZE,
+            TROPHY_SIZE,
+        )
+        fittedText(
+            value = mode.bestStreak.toString(),
+            x = x0 + BEST_STREAK_OFFSET_X,
+            baseline = STREAK_BASELINE,
+            maxSize = 10f,
+            budget = 17f,
+            minSize = NUMBER_MIN_SIZE,
+            color = TEXT_WHITE_ARGB,
+        )
+        fittedText(
+            value = context.getString(R.string.widget_stats_streaks),
+            x = center,
+            baseline = STREAKS_BASELINE,
+            maxSize = 5.5f,
+            budget = COLUMN_WIDTH,
+            minSize = CAPTION_MIN_SIZE,
+            color = MUTED_GRAY_ARGB,
+            align = Paint.Align.CENTER,
+            spacing = spacingEm(0.6f, 5.5f),
         )
     }
-
-    fittedText(
-        value = context.getString(R.string.widget_stats_guess_distribution),
-        x = center,
-        baseline = CAPTION_BASELINE,
-        maxSize = 5f,
-        budget = COLUMN_WIDTH,
-        minSize = CAPTION_MIN_SIZE,
-        color = MUTED_GRAY_ARGB,
-        align = Paint.Align.CENTER,
-        spacing = spacingEm(0.2f, 5f),
-    )
-    line(x0, CAPTION_DIVIDER_Y, x0 + COLUMN_WIDTH, CAPTION_DIVIDER_Y, STATS_RING_TRACK_ARGB)
-
-    icon(ContextCompat.getDrawable(context, R.drawable.ic_widget_flame), x0, FLAME_TOP, FLAME_WIDTH, FLAME_HEIGHT)
-    fittedText(
-        value = mode.currentStreak.toString(),
-        x = x0 + CURRENT_STREAK_OFFSET_X,
-        baseline = STREAK_BASELINE,
-        maxSize = 10f,
-        budget = 20f,
-        minSize = NUMBER_MIN_SIZE,
-        color = TEXT_WHITE_ARGB,
-    )
-    icon(
-        ContextCompat.getDrawable(context, R.drawable.ic_widget_trophy),
-        x0 + TROPHY_OFFSET_X,
-        TROPHY_TOP,
-        TROPHY_SIZE,
-        TROPHY_SIZE,
-    )
-    fittedText(
-        value = mode.bestStreak.toString(),
-        x = x0 + BEST_STREAK_OFFSET_X,
-        baseline = STREAK_BASELINE,
-        maxSize = 10f,
-        budget = 17f,
-        minSize = NUMBER_MIN_SIZE,
-        color = TEXT_WHITE_ARGB,
-    )
-    fittedText(
-        value = context.getString(R.string.widget_stats_streaks),
-        x = center,
-        baseline = STREAKS_BASELINE,
-        maxSize = 5.5f,
-        budget = COLUMN_WIDTH,
-        minSize = CAPTION_MIN_SIZE,
-        color = MUTED_GRAY_ARGB,
-        align = Paint.Align.CENTER,
-        spacing = spacingEm(0.6f, 5.5f),
-    )
 }
