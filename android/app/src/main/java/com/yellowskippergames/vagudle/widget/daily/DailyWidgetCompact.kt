@@ -94,7 +94,7 @@ internal fun CompactPanelContent(
                 ) {
                     StreakRow(context, data, scale)
                     Spacer(modifier = GlanceModifier.height(4.dp.scaled(scale.visual)))
-                    StatusRow(context, data, isFresh, scale)
+                    StatusRow(context, data, isFresh, scale, rightZoneWidth)
                 }
             }
         }
@@ -137,9 +137,16 @@ private fun StatusRow(
     data: DailyWidgetData,
     isFresh: Boolean,
     scale: WidgetScale,
+    zoneWidth: Dp,
 ) {
-    val status = statusInfo(context, data, isFresh, scale)
     val (rankText, rankFontSize) = rankInfo(context, data.rank, scale)
+    val reservedWidth =
+        8.dp.scaled(scale.visual) * 2 +
+            5.6f.dp.scaled(scale.visual) +
+            2.dp.scaled(scale.visual) +
+            4.dp.scaled(scale.visual) +
+            measureTextWidth(context, rankText, rankFontSize)
+    val status = statusInfo(context, data, isFresh, scale, maxWidth = zoneWidth - reservedWidth)
     Row(
         modifier = GlanceModifier.fillMaxWidth(),
         verticalAlignment = Alignment.Vertical.CenterVertically,

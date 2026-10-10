@@ -129,7 +129,7 @@ internal fun ExpandedPanelContent(
                     modifier = GlanceModifier.fillMaxSize(),
                     verticalAlignment = Alignment.Vertical.CenterVertically,
                 ) {
-                    ExpandedStatusLine(context, data, isFresh, scale)
+                    ExpandedStatusLine(context, data, isFresh, scale, rightZoneWidth - sidePadding * 2)
                     Spacer(modifier = GlanceModifier.height(6.dp.scaled(scale.visual)))
                     ExpandedRankRow(context, data, scale)
                     Spacer(modifier = GlanceModifier.height(4.dp.scaled(scale.visual)))
@@ -170,8 +170,18 @@ private fun ExpandedStatusLine(
     data: DailyWidgetData,
     isFresh: Boolean,
     scale: WidgetScale,
+    maxWidth: Dp,
 ) {
-    val status = statusInfo(context, data, isFresh, scale, baseFontSize = 12.sp, uniformSize = true)
+    val status =
+        statusInfo(
+            context,
+            data,
+            isFresh,
+            scale,
+            baseFontSize = 12.sp,
+            uniformSize = true,
+            maxWidth = maxWidth,
+        )
     Text(
         text = status.text,
         style = TextStyle(fontWeight = FontWeight.Bold, fontSize = status.fontSize, color = status.color),

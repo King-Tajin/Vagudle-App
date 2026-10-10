@@ -93,6 +93,15 @@ private const val BEST_STREAK_OFFSET_X = 47f
 private const val STREAKS_BASELINE = 102f
 private const val CAPTION_MIN_SIZE = 3.5f
 private const val NUMBER_MIN_SIZE = 7f
+private const val STACKED_LEGEND_MIN_EXTRA = 8f
+private const val RING_SCALE_GROWTH = 0.2f
+private const val STACKED_PLATE_HEIGHT = 33f
+private const val STACKED_ROW_FIRST_BASELINE = 13.5f
+private const val STACKED_ROW_PITCH = 14f
+private const val STACKED_DOT_LIFT = 4.2f
+private const val STACKED_LABEL_RIGHT_X = 80f
+private const val STACKED_LABEL_BUDGET = 26f
+private const val BAR_EXTRA_SHARE = 0.4f
 
 private const val MESSAGE_CENTER_X = 170.5f
 private const val MESSAGE_TITLE_BASELINE = 50f
@@ -163,9 +172,10 @@ private class StatsPainter(
         radius: Float,
         fraction: Float,
         color: Int,
+        stroke: Float = RING_STROKE,
     ) {
         val bounds = RectF(px(cx) - len(radius), py(cy) - len(radius), px(cx) + len(radius), py(cy) + len(radius))
-        strokePaint.strokeWidth = len(RING_STROKE)
+        strokePaint.strokeWidth = len(stroke)
         strokePaint.strokeCap = Paint.Cap.ROUND
         strokePaint.color = STATS_RING_TRACK_ARGB
         canvas.drawOval(bounds, strokePaint)
@@ -372,31 +382,19 @@ private fun StatsPainter.drawLeft(
     data: StatsWidgetData?,
 ) {
     val shown = data ?: emptyStatsWidgetData()
-    dot(RING_CENTER_X, RING_CENTER_Y, DISC_RADIUS, NEAR_BLACK_ARGB)
-    ring(RING_CENTER_X, RING_CENTER_Y, OUTER_RING_RADIUS, shown.normal.successRate / 100f, GOLD_ARGB)
-    ring(RING_CENTER_X, RING_CENTER_Y, INNER_RING_RADIUS, shown.hard.successRate / 100f, PLAQUE_BORDER_ARGB)
-    fittedText(
-        value = NumberFormat.getIntegerInstance().format(shown.totalGames),
-        x = RING_CENTER_X,
-        baseline = GAMES_BASELINE,
-        maxSize = 12f,
-        budget = 30f,
-        minSize = NUMBER_MIN_SIZE,
-        color = TEXT_WHITE_ARGB,
-        align = Paint.Align.CENTER,
-    )
-    fittedText(
-        value = context.getString(R.string.widget_stats_games),
-        x = RING_CENTER_X,
-        baseline = GAMES_LABEL_BASELINE,
-        maxSize = 5.5f,
-        budget = 30f,
-        minSize = CAPTION_MIN_SIZE,
-        color = STATS_LABEL_ARGB,
-        align = Paint.Align.CENTER,
-        spacing = spacingEm(0.5f, 5.5f),
-    )
-    shifted(extraHeight) {
+    if (extraHeight >= STACKED_LEGEND_MIN_EXTRA) {
+        drawLeftStacked(context, shown)
+    } else {
+        drawLeftCompact(context, shown)
+    }
+}
+
+private fun StatsPainter.drawLeftCompact(
+    context: Context,
+    shown: StatsWidgetData,
+) {
+    shifted(extraHeight / 3f) { ringBlock(context, shown, RING_CENTER_Y, 1f) }
+    shifted(extraHeight * 2f / 3f) {
         plate(
             LEGEND_PLATE_LEFT,
             LEGEND_PLATE_TOP,
@@ -422,6 +420,103 @@ private fun StatsPainter.drawLeft(
             R.string.widget_mode_hard,
         )
     }
+}
+
+private fun StatsPainter.drawLeftStacked(
+    context: Context,
+    shown: StatsWidgetData,
+) {
+    val scale = 1f + RING_SCALE_GROWTH * (extraHeight / MAX_EXTRA_HEIGHT).coerceIn(0f, 1f)
+    val discDiameter = DISC_RADIUS * 2f * scale
+    val gap = (STATS_BOX_HEIGHT + extraHeight - discDiameter - STACKED_PLATE_HEIGHT) / 3f
+    val discTop = ORIGIN_Y + gap
+    val plateTop = discTop + discDiameter + gap
+    ringBlock(context, shown, discTop + discDiameter / 2f, scale)
+    plate(
+        LEGEND_PLATE_LEFT,
+        plateTop,
+        LEGEND_PLATE_RIGHT,
+        plateTop + STACKED_PLATE_HEIGHT,
+        LEGEND_PLATE_RADIUS,
+        NEAR_BLACK_ARGB,
+    )
+    stackedLegend(
+        context,
+        plateTop + STACKED_ROW_FIRST_BASELINE,
+        GOLD_ARGB,
+        shown.normal.successRate,
+        R.string.widget_mode_normal,
+    )
+    stackedLegend(
+        context,
+        plateTop + STACKED_ROW_FIRST_BASELINE + STACKED_ROW_PITCH,
+        PLAQUE_BORDER_ARGB,
+        shown.hard.successRate,
+        R.string.widget_mode_hard,
+    )
+}
+
+private fun StatsPainter.ringBlock(
+    context: Context,
+    shown: StatsWidgetData,
+    centerY: Float,
+    scale: Float,
+) {
+    val stroke = RING_STROKE * scale
+    dot(RING_CENTER_X, centerY, DISC_RADIUS * scale, NEAR_BLACK_ARGB)
+    ring(RING_CENTER_X, centerY, OUTER_RING_RADIUS * scale, shown.normal.successRate / 100f, GOLD_ARGB, stroke)
+    ring(RING_CENTER_X, centerY, INNER_RING_RADIUS * scale, shown.hard.successRate / 100f, PLAQUE_BORDER_ARGB, stroke)
+    fittedText(
+        value = NumberFormat.getIntegerInstance().format(shown.totalGames),
+        x = RING_CENTER_X,
+        baseline = centerY + (GAMES_BASELINE - RING_CENTER_Y) * scale,
+        maxSize = 12f * scale,
+        budget = 30f * scale,
+        minSize = NUMBER_MIN_SIZE,
+        color = TEXT_WHITE_ARGB,
+        align = Paint.Align.CENTER,
+    )
+    fittedText(
+        value = context.getString(R.string.widget_stats_games),
+        x = RING_CENTER_X,
+        baseline = centerY + (GAMES_LABEL_BASELINE - RING_CENTER_Y) * scale,
+        maxSize = 5.5f * scale,
+        budget = 30f * scale,
+        minSize = CAPTION_MIN_SIZE,
+        color = STATS_LABEL_ARGB,
+        align = Paint.Align.CENTER,
+        spacing = spacingEm(0.5f, 5.5f),
+    )
+}
+
+private fun StatsPainter.stackedLegend(
+    context: Context,
+    baseline: Float,
+    color: Int,
+    successRate: Int,
+    labelRes: Int,
+) {
+    dot(NORMAL_LEGEND_DOT_X, baseline - STACKED_DOT_LIFT, LEGEND_DOT_RADIUS, color)
+    fittedText(
+        value = "$successRate%",
+        x = NORMAL_LEGEND_TEXT_X,
+        baseline = baseline,
+        maxSize = 12f,
+        budget = 26f,
+        minSize = NUMBER_MIN_SIZE,
+        color = color,
+    )
+    fittedText(
+        value = context.getString(labelRes).uppercase(),
+        x = STACKED_LABEL_RIGHT_X,
+        baseline = baseline,
+        maxSize = 5f,
+        budget = STACKED_LABEL_BUDGET,
+        minSize = CAPTION_MIN_SIZE,
+        color = STATS_LABEL_ARGB,
+        align = Paint.Align.RIGHT,
+        spacing = spacingEm(0.5f, 5f),
+    )
 }
 
 private fun StatsPainter.legend(
@@ -526,13 +621,16 @@ private fun StatsPainter.modeColumn(
         spacing = spacingEm(0.6f, 6.5f),
     )
 
-    shifted(extraHeight) {
+    val barExtra = extraHeight * BAR_EXTRA_SHARE
+    val gap = (extraHeight - barExtra) / 2f
+
+    shifted(gap + barExtra) {
         val highest = max(mode.distribution.maxOrNull() ?: 0, 0)
         val topBucket = mode.mostCommonBucket
         mode.distribution.forEachIndexed { index, count ->
             val height =
                 if (highest > 0) {
-                    max(BAR_MIN_HEIGHT, (BAR_MAX_HEIGHT + extraHeight) * count / highest)
+                    max(BAR_MIN_HEIGHT, (BAR_MAX_HEIGHT + barExtra) * count / highest)
                 } else {
                     BAR_MIN_HEIGHT
                 }
@@ -560,7 +658,9 @@ private fun StatsPainter.modeColumn(
             spacing = spacingEm(0.2f, 5f),
         )
         line(x0, CAPTION_DIVIDER_Y, x0 + COLUMN_WIDTH, CAPTION_DIVIDER_Y, STATS_RING_TRACK_ARGB)
+    }
 
+    shifted(extraHeight) {
         icon(ContextCompat.getDrawable(context, R.drawable.ic_widget_flame), x0, FLAME_TOP, FLAME_WIDTH, FLAME_HEIGHT)
         fittedText(
             value = mode.currentStreak.toString(),
