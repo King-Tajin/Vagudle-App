@@ -23,7 +23,7 @@ android {
         applicationId "com.yellowskippergames.vagudle"
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        versionCode 32
+        versionCode 33
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
@@ -73,6 +73,11 @@ android {
     }
     lint {
         disable 'LoginCredentials'
+    }
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 }
 

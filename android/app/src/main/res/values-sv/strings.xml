@@ -92,4 +92,6 @@
     <string
     name="widget_stats_content_description"
   >Statistik: %1$d spel, Normalt %2$d%%, Svårt %3$d%%</string>
+    <string name="shortcut_daily_short">Dagens</string>
+    <string name="shortcut_daily_long">Spela dagligt läge</string>
 </resources>

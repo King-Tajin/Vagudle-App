@@ -91,4 +91,6 @@
     <string
     name="widget_stats_content_description"
   >Estatísticas: %1$d jogos, normal %2$d%%, difícil %3$d%%</string>
+    <string name="shortcut_daily_short">Diário</string>
+    <string name="shortcut_daily_long">Jogar o diário</string>
 </resources>

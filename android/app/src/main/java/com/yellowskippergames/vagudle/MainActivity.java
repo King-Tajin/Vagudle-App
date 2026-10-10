@@ -153,6 +153,7 @@ public class MainActivity extends BridgeActivity {
 
     WebSettings settings = webView.getSettings();
     settings.setSupportZoom(false);
+    settings.setTextZoom(100);
     settings.setBuiltInZoomControls(false);
     settings.setDisplayZoomControls(false);
 

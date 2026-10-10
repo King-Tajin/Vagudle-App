@@ -104,4 +104,6 @@
     <string
     name="widget_stats_content_description"
   >Statistics: %1$d games, Normal %2$d%%, Hard %3$d%%</string>
+    <string name="shortcut_daily_short">Daily</string>
+    <string name="shortcut_daily_long">Play Daily</string>
 </resources>

@@ -92,4 +92,6 @@
     <string
     name="widget_stats_content_description"
   >Statystyki: %1$d gier, normalny %2$d%%, trudny %3$d%%</string>
+    <string name="shortcut_daily_short">Dzienny</string>
+    <string name="shortcut_daily_long">Graj w tryb dzienny</string>
 </resources>
