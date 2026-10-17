@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.js",
-    "bundle": "pnpm run update:web && pnpm run build && node scripts/gradle.js bundleRelease",
+    "build:release": "node scripts/build.js --asset-packs",
+    "bundle": "pnpm run update:web && pnpm run build:release && node scripts/gradle.js bundleRelease",
     "update:web": "node scripts/update-web.js",
     "android:launch": "pnpm run build && pnpm exec cap open android",
     "webcore:typecheck": "node scripts/web-script.js typecheck",
@@ -30,10 +31,10 @@
   "devDependencies": {
     "@capacitor/cli": "^8.5.3",
     "@prettier/plugin-xml": "^3.4.2",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "prettier-plugin-java": "^2.11.0",
     "typescript": "^6.0.3",
     "typescript-7": "npm:typescript@^7.0.2"
   },
-  "packageManager": "pnpm@12.10.1"
+  "packageManager": "pnpm@12.14.0"
 }

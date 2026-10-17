@@ -2,9 +2,11 @@ import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { mergeWebCore } from "./lib/merge-web-core.js";
+import { createAssetPacks, removeAssetPacks } from "./lib/asset-packs.js";
 
 const root = process.cwd();
 const dist = path.join(root, "dist");
+const useAssetPacks = process.argv.includes("--asset-packs");
 
 function run(cmd, cwd = root) {
   execSync(cmd, { cwd, stdio: "inherit" });
@@ -23,5 +25,8 @@ run("pnpm exec vite build", tmp);
 run("node scripts/optimize-dist.mjs", tmp);
 
 copyDir(path.join(tmp, "dist"), dist);
+
+removeAssetPacks();
+if (useAssetPacks) createAssetPacks(dist);
 
 run("pnpm exec cap sync");

@@ -14,6 +14,7 @@ import { initCrashReporting } from "./lib/crashReporting";
 import { CrashBoundary } from "./components/CrashBoundary";
 import { listenForReminderNotificationTaps } from "./lib/notifications";
 import { DAILY_PATH } from "./lib/daily";
+import { initAssetPackPrefetch } from "./lib/assetPackPrefetch";
 
 const API_BASE = "https://vagudle.king-tajin.dev";
 const _fetch = window.fetch.bind(window);
@@ -93,6 +94,7 @@ async function bootstrap() {
 
   listenForWarmStartDeepLinks();
   listenForReminderNotificationTaps(openDailyFromNotification);
+  initAssetPackPrefetch();
 
   const isLinkDiscordRoute = window.location.pathname === "/link-discord";
   const isLinkPlayGamesRoute = window.location.pathname === "/link-playgames";

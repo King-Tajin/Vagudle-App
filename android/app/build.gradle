@@ -23,8 +23,8 @@ android {
         applicationId "com.yellowskippergames.vagudle"
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        versionCode 33
-        versionName "1.0.0"
+        versionCode 34
+        versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -79,6 +79,9 @@ android {
             enableSplit = false
         }
     }
+    assetPacks = rootProject.subprojects
+        .findAll { it.name.startsWith('bg_') }
+        .collect { ':' + it.name }
 }
 
 repositories {
@@ -93,6 +96,7 @@ dependencies {
     implementation libs.coordinatorlayout
     implementation libs.core.splashscreen
     implementation libs.app.update
+    implementation libs.asset.delivery
     implementation libs.review
     implementation project(':capacitor-android')
     implementation libs.play.services.games.v2

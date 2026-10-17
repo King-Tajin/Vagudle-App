@@ -13,6 +13,7 @@ pnpm-debug.log*
 /.idea/
 /dist/
 /android/.idea/
+/android/bg_*/
 /.web-tmp/
 
 *.jks

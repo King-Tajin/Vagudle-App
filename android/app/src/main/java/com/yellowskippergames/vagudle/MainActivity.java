@@ -35,6 +35,7 @@ import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.yellowskippergames.vagudle.plugins.AppInsetsPlugin;
+import com.yellowskippergames.vagudle.plugins.AssetPacksPlugin;
 import com.yellowskippergames.vagudle.plugins.BackNavigationPlugin;
 import com.yellowskippergames.vagudle.plugins.NotificationPrimerPlugin;
 import com.yellowskippergames.vagudle.plugins.PlayGamesAuthPlugin;
@@ -74,6 +75,7 @@ public class MainActivity extends BridgeActivity {
     registerPlugin(WidgetSyncPlugin.class);
     registerPlugin(BackNavigationPlugin.class);
     registerPlugin(AppInsetsPlugin.class);
+    registerPlugin(AssetPacksPlugin.class);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
       predictiveBackCallback = new OnBackAnimationCallback() {
