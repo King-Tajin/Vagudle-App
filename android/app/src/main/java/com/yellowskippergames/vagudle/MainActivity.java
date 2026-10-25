@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -26,6 +25,9 @@ import android.window.OnBackAnimationCallback;
 import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.splashscreen.SplashScreen;
 import com.getcapacitor.BridgeActivity;
@@ -33,6 +35,10 @@ import com.getcapacitor.PluginHandle;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.appupdate.AppUpdateOptions;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.yellowskippergames.vagudle.plugins.AppInsetsPlugin;
 import com.yellowskippergames.vagudle.plugins.AssetPacksPlugin;
@@ -63,6 +69,16 @@ public class MainActivity extends BridgeActivity {
   private View quickWidgetSetupOverlay;
   private Runnable quickWidgetSetupTimeoutRunnable;
   private volatile String quickWidgetSetupWidgetKey;
+
+  private AppUpdateManager appUpdateManager;
+  private ActivityResultLauncher<IntentSenderRequest> updateFlowLauncher;
+  private int pendingUpdateVersionCode;
+  private boolean restartPromptShowing = false;
+  private final InstallStateUpdatedListener installStateListener = (state) -> {
+    if (state.installStatus() == InstallStatus.DOWNLOADED) {
+      showRestartPrompt();
+    }
+  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +141,9 @@ public class MainActivity extends BridgeActivity {
     if (getActionBar() != null) {
       getActionBar().hide();
     }
-    getWindow().setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+    getWindow().setBackgroundDrawable(
+      new ColorDrawable(getColor(R.color.app_background))
+    );
 
     PluginHandle appInsetsPluginHandle = getBridge().getPlugin("AppInsets");
     if (appInsetsPluginHandle != null) {
@@ -159,6 +177,17 @@ public class MainActivity extends BridgeActivity {
     settings.setBuiltInZoomControls(false);
     settings.setDisplayZoomControls(false);
 
+    appUpdateManager = AppUpdateManagerFactory.create(this);
+    appUpdateManager.registerListener(installStateListener);
+    updateFlowLauncher = registerForActivityResult(
+      new ActivityResultContracts.StartIntentSenderForResult(),
+      (result) -> {
+        if (result.getResultCode() == RESULT_CANCELED) {
+          rememberDismissedVersion(pendingUpdateVersionCode);
+        }
+      }
+    );
+
     checkForUpdate();
     maybeBeginQuickWidgetSetup(getIntent());
   }
@@ -173,6 +202,9 @@ public class MainActivity extends BridgeActivity {
   @Override
   public void onDestroy() {
     super.onDestroy();
+    if (appUpdateManager != null) {
+      appUpdateManager.unregisterListener(installStateListener);
+    }
     quickWidgetSetupHandler.removeCallbacksAndMessages(null);
     quickWidgetSetupTimeoutRunnable = null;
     QuickWidgetSetupState.INSTANCE.setActive(false);
@@ -300,17 +332,36 @@ public class MainActivity extends BridgeActivity {
     super.onResume();
     DailyRefreshReceiverKt.refreshWidgetDataIfStale(getApplicationContext());
     updateBackInvocation();
+    resumeDownloadedUpdate();
   }
 
   private void checkForUpdate() {
-    AppUpdateManager appUpdateManager = AppUpdateManagerFactory.create(this);
     appUpdateManager
       .getAppUpdateInfo()
       .addOnSuccessListener(this::handleAppUpdateInfo)
       .addOnFailureListener((error) -> {});
   }
 
+  private void resumeDownloadedUpdate() {
+    if (appUpdateManager == null) {
+      return;
+    }
+    appUpdateManager
+      .getAppUpdateInfo()
+      .addOnSuccessListener((appUpdateInfo) -> {
+        if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+          showRestartPrompt();
+        }
+      })
+      .addOnFailureListener((error) -> {});
+  }
+
   private void handleAppUpdateInfo(AppUpdateInfo appUpdateInfo) {
+    if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+      showRestartPrompt();
+      return;
+    }
+
     if (
       appUpdateInfo.updateAvailability() != UpdateAvailability.UPDATE_AVAILABLE
     ) {
@@ -335,13 +386,77 @@ public class MainActivity extends BridgeActivity {
       return;
     }
 
-    Dialog dialog = getDialog(availableVersionCode);
+    showUpdatePrompt(appUpdateInfo, availableVersionCode);
+  }
 
+  private void showUpdatePrompt(
+    AppUpdateInfo appUpdateInfo,
+    int availableVersionCode
+  ) {
+    Dialog dialog = createPromptDialog(
+      R.string.update_available_title,
+      R.string.update_available_message,
+      R.string.update_available_not_now,
+      R.string.update_available_update,
+      () -> rememberDismissedVersion(availableVersionCode),
+      () -> startInAppUpdate(appUpdateInfo, availableVersionCode)
+    );
+    dialog.show();
+  }
+
+  private void startInAppUpdate(
+    AppUpdateInfo appUpdateInfo,
+    int availableVersionCode
+  ) {
+    AppUpdateOptions options = AppUpdateOptions.newBuilder(
+      AppUpdateType.FLEXIBLE
+    ).build();
+    if (!appUpdateInfo.isUpdateTypeAllowed(options)) {
+      openPlayStoreListing();
+      return;
+    }
+    pendingUpdateVersionCode = availableVersionCode;
+    boolean started = appUpdateManager.startUpdateFlowForResult(
+      appUpdateInfo,
+      updateFlowLauncher,
+      options
+    );
+    if (!started) {
+      openPlayStoreListing();
+    }
+  }
+
+  private void showRestartPrompt() {
+    if (
+      restartPromptShowing ||
+      QuickWidgetSetupState.INSTANCE.isActive() ||
+      isFinishing() ||
+      isDestroyed()
+    ) {
+      return;
+    }
+    restartPromptShowing = true;
+    Dialog dialog = createPromptDialog(
+      R.string.update_downloaded_title,
+      R.string.update_downloaded_message,
+      R.string.update_downloaded_later,
+      R.string.update_downloaded_restart,
+      () -> {},
+      () -> appUpdateManager.completeUpdate()
+    );
+    dialog.setOnDismissListener((dismissed) -> restartPromptShowing = false);
     dialog.show();
   }
 
   @NonNull
-  private Dialog getDialog(int availableVersionCode) {
+  private Dialog createPromptDialog(
+    int titleRes,
+    int messageRes,
+    int secondaryRes,
+    int primaryRes,
+    Runnable onSecondary,
+    Runnable onPrimary
+  ) {
     Dialog dialog = new Dialog(this, R.style.PixelDialogTheme);
     dialog.setContentView(R.layout.dialog_prompt);
     dialog.setCancelable(true);
@@ -351,19 +466,18 @@ public class MainActivity extends BridgeActivity {
     Button secondaryButton = dialog.findViewById(R.id.btn_secondary);
     Button primaryButton = dialog.findViewById(R.id.btn_primary);
 
-    titleView.setText(R.string.update_available_title);
-    messageView.setText(R.string.update_available_message);
-    secondaryButton.setText(R.string.update_available_not_now);
-    primaryButton.setText(R.string.update_available_update);
+    titleView.setText(titleRes);
+    messageView.setText(messageRes);
+    secondaryButton.setText(secondaryRes);
+    primaryButton.setText(primaryRes);
 
     secondaryButton.setOnClickListener((view) -> {
       dialog.dismiss();
-      rememberDismissedVersion(availableVersionCode);
+      onSecondary.run();
     });
     primaryButton.setOnClickListener((view) -> {
       dialog.dismiss();
-      rememberDismissedVersion(availableVersionCode);
-      openPlayStoreListing();
+      onPrimary.run();
     });
     return dialog;
   }

@@ -6,6 +6,12 @@
   >Uma nova versão do Vagudle está pronta. Atualize agora para ter os recursos e as correções mais recentes.</string>
     <string name="update_available_update">Atualizar</string>
     <string name="update_available_not_now">Jogar sem atualizar</string>
+    <string name="update_downloaded_title">Atualização pronta</string>
+    <string
+    name="update_downloaded_message"
+  >A nova versão foi baixada. Reinicie o Vagudle para concluir a instalação.</string>
+    <string name="update_downloaded_restart">Reiniciar</string>
+    <string name="update_downloaded_later">Depois</string>
     <string name="notification_primer_title">Mantenha a sua sequência</string>
     <string
     name="notification_primer_message"

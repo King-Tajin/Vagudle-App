@@ -6,6 +6,12 @@
   >En ny version av Vagudle är redo. Uppdatera nu för de senaste funktionerna och rättningarna.</string>
     <string name="update_available_update">Uppdatera</string>
     <string name="update_available_not_now">Spela utan att uppdatera</string>
+    <string name="update_downloaded_title">Uppdatering redo</string>
+    <string
+    name="update_downloaded_message"
+  >Den nya versionen har laddats ned. Starta om Vagudle för att slutföra installationen.</string>
+    <string name="update_downloaded_restart">Starta om</string>
+    <string name="update_downloaded_later">Senare</string>
     <string name="notification_primer_title">Håll liv i din svit</string>
     <string
     name="notification_primer_message"

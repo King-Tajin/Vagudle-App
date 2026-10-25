@@ -4,6 +4,7 @@ const config: CapacitorConfig = {
   appId: "com.yellowskippergames.vagudle",
   appName: "Vagudle",
   webDir: "dist",
+  backgroundColor: "#0a0a0a",
   plugins: {
     FirebaseAuthentication: {
       skipNativeAuth: false,

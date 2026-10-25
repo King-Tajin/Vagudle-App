@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#0D1322</color>
     <color name="colorPrimaryDark">#000000</color>
+    <color name="app_background">#0A0A0A</color>
     <color name="colorAccent">#E3C31E</color>
 
     <color name="dialogPanelStart">#1C0033</color>

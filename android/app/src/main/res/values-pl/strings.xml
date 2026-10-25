@@ -6,6 +6,12 @@
   >Nowa wersja Vagudle jest gotowa. Zaktualizuj teraz, aby zyskać najnowsze funkcje i poprawki.</string>
     <string name="update_available_update">Aktualizuj</string>
     <string name="update_available_not_now">Graj bez aktualizacji</string>
+    <string name="update_downloaded_title">Aktualizacja gotowa</string>
+    <string
+    name="update_downloaded_message"
+  >Nowa wersja została pobrana. Uruchom ponownie Vagudle, aby dokończyć instalację.</string>
+    <string name="update_downloaded_restart">Uruchom ponownie</string>
+    <string name="update_downloaded_later">Później</string>
     <string name="notification_primer_title">Utrzymaj swoją passę</string>
     <string
     name="notification_primer_message"
