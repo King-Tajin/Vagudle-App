@@ -126,10 +126,30 @@ jobs:
           echo "lang_lines=$lang_lines" >> "$GITHUB_OUTPUT"
 
       - name: Generate stats card
+        env:
+          MSG_LINES: ${{ steps.stats.outputs.msg_lines }}
+          LANG_LINES: ${{ steps.stats.outputs.lang_lines }}
+          MSG_LINE1: ${{ steps.stats.outputs.msg_line1 }}
+          MSG_LINE2: ${{ steps.stats.outputs.msg_line2 }}
+          MSG_LINE3: ${{ steps.stats.outputs.msg_line3 }}
+          MSG_LINE4: ${{ steps.stats.outputs.msg_line4 }}
+          MSG_LINE5: ${{ steps.stats.outputs.msg_line5 }}
+          LANG_LINE1: ${{ steps.stats.outputs.lang_line1 }}
+          LANG_LINE2: ${{ steps.stats.outputs.lang_line2 }}
+          LANG_LINE3: ${{ steps.stats.outputs.lang_line3 }}
+          COMMITS: ${{ steps.stats.outputs.commits }}
+          STARS: ${{ steps.stats.outputs.stars }}
+          FORKS: ${{ steps.stats.outputs.forks }}
+          ISSUES: ${{ steps.stats.outputs.issues }}
+          WATCHERS: ${{ steps.stats.outputs.watchers }}
+          REPO_SIZE: ${{ steps.stats.outputs.repo_size }}
+          COMMIT_SHA: ${{ steps.stats.outputs.commit_sha }}
+          COMMIT_DATE: ${{ steps.stats.outputs.commit_date }}
+          LANGUAGE: ${{ steps.stats.outputs.language }}
         run: |
           mkdir -p stats
 
-          msg_lines="${{ steps.stats.outputs.msg_lines }}"
+          msg_lines="$MSG_LINES"
           extra_height=$(( (msg_lines - 1) * 14 ))
 
           msg_y1=257
@@ -140,7 +160,7 @@ jobs:
           sep_y=$((msg_y1 + 13 + extra_height))
           lang1_y=$((sep_y + 20))
 
-          lang_lines="${{ steps.stats.outputs.lang_lines }}"
+          lang_lines="$LANG_LINES"
           langB1_y=$((lang1_y + 18))
           langB2_y=$((langB1_y + 18))
           langB3_y=$((langB2_y + 18))
@@ -152,26 +172,26 @@ jobs:
           line4_svg=""
           line5_svg=""
           if [ "$msg_lines" -ge 2 ]; then
-            line2_svg='<text x="20" y="'"$msg_y2"'" font-family="monospace" font-size="11" fill="#6b7280">${{ steps.stats.outputs.msg_line2 }}</text>'
+            line2_svg='<text x="20" y="'"$msg_y2"'" font-family="monospace" font-size="11" fill="#6b7280">'"$MSG_LINE2"'</text>'
           fi
           if [ "$msg_lines" -ge 3 ]; then
-            line3_svg='<text x="20" y="'"$msg_y3"'" font-family="monospace" font-size="11" fill="#6b7280">${{ steps.stats.outputs.msg_line3 }}</text>'
+            line3_svg='<text x="20" y="'"$msg_y3"'" font-family="monospace" font-size="11" fill="#6b7280">'"$MSG_LINE3"'</text>'
           fi
           if [ "$msg_lines" -ge 4 ]; then
-            line4_svg='<text x="20" y="'"$msg_y4"'" font-family="monospace" font-size="11" fill="#6b7280">${{ steps.stats.outputs.msg_line4 }}</text>'
+            line4_svg='<text x="20" y="'"$msg_y4"'" font-family="monospace" font-size="11" fill="#6b7280">'"$MSG_LINE4"'</text>'
           fi
           if [ "$msg_lines" -ge 5 ]; then
-            line5_svg='<text x="20" y="'"$msg_y5"'" font-family="monospace" font-size="11" fill="#6b7280">${{ steps.stats.outputs.msg_line5 }}</text>'
+            line5_svg='<text x="20" y="'"$msg_y5"'" font-family="monospace" font-size="11" fill="#6b7280">'"$MSG_LINE5"'</text>'
           fi
 
-          lang_line1_svg='<text x="20" y="'"$langB1_y"'" font-family="monospace" font-size="11" fill="#9ca3af">${{ steps.stats.outputs.lang_line1 }}</text>'
+          lang_line1_svg='<text x="20" y="'"$langB1_y"'" font-family="monospace" font-size="11" fill="#9ca3af">'"$LANG_LINE1"'</text>'
           lang_line2_svg=""
           lang_line3_svg=""
           if [ "$lang_lines" -ge 2 ]; then
-            lang_line2_svg='<text x="20" y="'"$langB2_y"'" font-family="monospace" font-size="11" fill="#9ca3af">${{ steps.stats.outputs.lang_line2 }}</text>'
+            lang_line2_svg='<text x="20" y="'"$langB2_y"'" font-family="monospace" font-size="11" fill="#9ca3af">'"$LANG_LINE2"'</text>'
           fi
           if [ "$lang_lines" -ge 3 ]; then
-            lang_line3_svg='<text x="20" y="'"$langB3_y"'" font-family="monospace" font-size="11" fill="#9ca3af">${{ steps.stats.outputs.lang_line3 }}</text>'
+            lang_line3_svg='<text x="20" y="'"$langB3_y"'" font-family="monospace" font-size="11" fill="#9ca3af">'"$LANG_LINE3"'</text>'
           fi
 
           cat > stats/vagudle-stats.svg << SVG_EOF
@@ -182,26 +202,26 @@ jobs:
             <line x1="20" y1="64" x2="360" y2="64" stroke="#2a2a2a" stroke-width="1"/>
 
             <text x="20" y="90" font-family="monospace" font-size="13" fill="#ffffff">Commits</text>
-            <text x="360" y="90" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.commits }}</text>
+            <text x="360" y="90" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">$COMMITS</text>
 
             <text x="20" y="115" font-family="monospace" font-size="13" fill="#ffffff">Stars</text>
-            <text x="360" y="115" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.stars }}</text>
+            <text x="360" y="115" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">$STARS</text>
 
             <text x="20" y="140" font-family="monospace" font-size="13" fill="#ffffff">Forks</text>
-            <text x="360" y="140" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.forks }}</text>
+            <text x="360" y="140" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">$FORKS</text>
 
             <text x="20" y="165" font-family="monospace" font-size="13" fill="#ffffff">Open Issues</text>
-            <text x="360" y="165" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.issues }}</text>
+            <text x="360" y="165" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">$ISSUES</text>
 
             <text x="20" y="190" font-family="monospace" font-size="13" fill="#ffffff">Watchers</text>
-            <text x="360" y="190" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.watchers }}</text>
+            <text x="360" y="190" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">$WATCHERS</text>
 
             <text x="20" y="215" font-family="monospace" font-size="13" fill="#ffffff">Repo Size</text>
-            <text x="360" y="215" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.repo_size }}</text>
+            <text x="360" y="215" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">$REPO_SIZE</text>
 
             <text x="20" y="240" font-family="monospace" font-size="13" fill="#ffffff">Latest Commit</text>
-            <text x="360" y="240" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">${{ steps.stats.outputs.commit_sha }} (${{ steps.stats.outputs.commit_date }})</text>
-            <text x="20" y="$msg_y1" font-family="monospace" font-size="11" fill="#6b7280">${{ steps.stats.outputs.msg_line1 }}</text>
+            <text x="360" y="240" font-family="monospace" font-size="13" fill="#FFD700" text-anchor="end">$COMMIT_SHA ($COMMIT_DATE)</text>
+            <text x="20" y="$msg_y1" font-family="monospace" font-size="11" fill="#6b7280">$MSG_LINE1</text>
             $line2_svg
             $line3_svg
             $line4_svg
@@ -209,7 +229,7 @@ jobs:
 
             <line x1="20" y1="$sep_y" x2="360" y2="$sep_y" stroke="#2a2a2a" stroke-width="1"/>
 
-            <text x="20" y="$lang1_y" font-family="monospace" font-size="11" fill="#9ca3af">Primary language: ${{ steps.stats.outputs.language }}</text>
+            <text x="20" y="$lang1_y" font-family="monospace" font-size="11" fill="#9ca3af">Primary language: $LANGUAGE</text>
             $lang_line1_svg
             $lang_line2_svg
             $lang_line3_svg
