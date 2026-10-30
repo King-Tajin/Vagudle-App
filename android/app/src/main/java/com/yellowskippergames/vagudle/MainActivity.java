@@ -45,6 +45,7 @@ import com.yellowskippergames.vagudle.plugins.AssetPacksPlugin;
 import com.yellowskippergames.vagudle.plugins.BackNavigationPlugin;
 import com.yellowskippergames.vagudle.plugins.NotificationPrimerPlugin;
 import com.yellowskippergames.vagudle.plugins.PlayGamesAuthPlugin;
+import com.yellowskippergames.vagudle.plugins.PlayIntegrityPlugin;
 import com.yellowskippergames.vagudle.plugins.ReviewPromptPlugin;
 import com.yellowskippergames.vagudle.plugins.WidgetSyncPlugin;
 import com.yellowskippergames.vagudle.widget.core.WidgetKind;
@@ -92,6 +93,7 @@ public class MainActivity extends BridgeActivity {
     registerPlugin(BackNavigationPlugin.class);
     registerPlugin(AppInsetsPlugin.class);
     registerPlugin(AssetPacksPlugin.class);
+    registerPlugin(PlayIntegrityPlugin.class);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
       predictiveBackCallback = new OnBackAnimationCallback() {

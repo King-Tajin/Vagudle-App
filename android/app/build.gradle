@@ -23,8 +23,8 @@ android {
         applicationId "com.yellowskippergames.vagudle"
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        versionCode 36
-        versionName "1.0.3"
+        versionCode 37
+        versionName "1.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -98,6 +98,7 @@ dependencies {
     implementation libs.app.update
     implementation libs.asset.delivery
     implementation libs.review
+    implementation libs.play.integrity
     implementation project(':capacitor-android')
     implementation libs.play.services.games.v2
     implementation libs.glance.appwidget
