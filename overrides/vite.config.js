@@ -3,8 +3,19 @@ import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import path from "path";
 
+const buildInfo = () => ({
+  name: "build-info",
+  generateBundle() {
+    this.emitFile({
+      type: "asset",
+      fileName: "build-info.json",
+      source: JSON.stringify({ builtAt: new Date().toISOString() }),
+    });
+  },
+});
+
 export default defineConfig({
-  plugins: [react(), svgr()],
+  plugins: [react(), svgr(), buildInfo()],
   define: {
     "process.env": "import.meta.env",
   },

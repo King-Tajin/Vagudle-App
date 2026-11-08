@@ -3,13 +3,13 @@ include ':capacitor-android'
 project(':capacitor-android').projectDir = new File('../node_modules/.pnpm/@capacitor+android@8.6.0_@capacitor+core@8.6.0/node_modules/@capacitor/android/capacitor')
 
 include ':capacitor-firebase-app'
-project(':capacitor-firebase-app').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+app@8.5.2_@capacitor+core@8.6.0/node_modules/@capacitor-firebase/app/android')
+project(':capacitor-firebase-app').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+app@8.6.0_@capacitor+core@8.6.0/node_modules/@capacitor-firebase/app/android')
 
 include ':capacitor-firebase-authentication'
-project(':capacitor-firebase-authentication').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+authent_7f9fced48eec9b72f808ac8e5f619365/node_modules/@capacitor-firebase/authentication/android')
+project(':capacitor-firebase-authentication').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+authent_d9a59c6324e61ab504e037f7a4363e35/node_modules/@capacitor-firebase/authentication/android')
 
 include ':capacitor-firebase-crashlytics'
-project(':capacitor-firebase-crashlytics').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+crashlytics@8.5.2_@capacitor+core@8.6.0/node_modules/@capacitor-firebase/crashlytics/android')
+project(':capacitor-firebase-crashlytics').projectDir = new File('../node_modules/.pnpm/@capacitor-firebase+crashlytics@8.6.0_@capacitor+core@8.6.0/node_modules/@capacitor-firebase/crashlytics/android')
 
 include ':capacitor-app'
 project(':capacitor-app').projectDir = new File('../node_modules/.pnpm/@capacitor+app@8.1.2_@capacitor+core@8.6.0/node_modules/@capacitor/app/android')

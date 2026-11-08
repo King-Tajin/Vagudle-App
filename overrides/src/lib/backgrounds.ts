@@ -196,6 +196,16 @@ export const loadBackgroundId = (
   return isMobile ? "flakes" : "sprinkles";
 };
 
+export const loadExplicitBackgroundId = (): BackgroundId | null => {
+  migrateLegacyStorageKey(LEGACY_BG_KEY, BG_KEY);
+  try {
+    const stored = localStorage.getItem(BG_KEY);
+    if (stored && BACKGROUNDS.some((b) => b.id === stored))
+      return stored as BackgroundId;
+  } catch {}
+  return null;
+};
+
 export const saveBackgroundId = (id: BackgroundId): void => {
   try {
     localStorage.setItem(BG_KEY, id);
