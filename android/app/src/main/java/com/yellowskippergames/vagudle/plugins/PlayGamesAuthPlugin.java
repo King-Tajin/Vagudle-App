@@ -44,12 +44,32 @@ public class PlayGamesAuthPlugin extends Plugin {
     });
   }
 
+  @SuppressWarnings("unused")
+  @PluginMethod
+  public void getServerAuthCode(PluginCall call) {
+    GamesSignInClient signInClient = PlayGames.getGamesSignInClient(
+      getActivity()
+    );
+
+    signInClient.isAuthenticated().addOnCompleteListener((isAuthTask) -> {
+      boolean isAuthenticated =
+        isAuthTask.isSuccessful() && isAuthTask.getResult().isAuthenticated();
+
+      if (!isAuthenticated) {
+        call.reject("Not signed in to Play Games.", "NOT_AUTHENTICATED");
+        return;
+      }
+
+      requestServerAuthCode(call, signInClient);
+    });
+  }
+
   private void requestServerAuthCode(
     PluginCall call,
     GamesSignInClient signInClient
   ) {
     signInClient
-      .requestServerSideAccess(WEB_CLIENT_ID, false)
+      .requestServerSideAccess(WEB_CLIENT_ID, true)
       .addOnCompleteListener((codeTask) -> {
         if (codeTask.isSuccessful()) {
           JSObject result = new JSObject();
